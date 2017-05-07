@@ -65,7 +65,7 @@ class Dispatcher(threading.Thread):
         self.layer_4_volume = None
         self.layer_5_volume = None
 
-  def check_if_all_values_initialized(self):
+    def check_if_all_values_initialized(self):
         try:
             assert self.transport_pos_relative != None
             assert self.layer_speed != None
