@@ -196,7 +196,7 @@ class Dispatcher(threading.Thread):
         print "----- 1"
         while True:
             print "----- 2"
-            transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
+            transport_pos = self.normalize_transport()
 
             print "calculate_voice_data", calculate_voice_data(0)
 
