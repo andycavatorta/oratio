@@ -53,18 +53,18 @@ pause_until_online(PAUSE_UNTIL_ONLINE_MAX_SECONDS)
 ### AUTO UPDATE ###
 ###############
 
-args = sys.argv[1:]
-#try:
-pos = args.index("-u")
-au = args[pos+1]
-assert au in ["true","True"]
-from thirtybirds_2_0.Updates.manager import init as updates_init
-result = updates_init(THIRTYBIRDS_PATH, True, True)
-print result
-result = updates_init(BASE_PATH, True, True)
-print result
-#except Exception as E:
-#    pass
+#args = sys.argv[1:]
+try:
+    #pos = args.index("-u")
+    #au = args[pos+1]
+    #assert au in ["true","True"]
+    from thirtybirds_2_0.Updates.manager import init as updates_init
+    result = updates_init(THIRTYBIRDS_PATH, True, True)
+    print result
+    result = updates_init(BASE_PATH, True, True)
+    print result
+except Exception as e:
+    print "Exception in main.py", e
 
 #########################
 ### LOAD DEVICE-SPECIFIC CODE ###
