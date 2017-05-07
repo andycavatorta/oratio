@@ -187,7 +187,7 @@ class Dispatcher(threading.Thread):
         }
 
         lookup[name] = val
-        #print "****", name, lookup[name], val
+        print "****", name, lookup[name], val
 
     def run(self):
         #while self.all_topics_initialized == False:
