@@ -36,9 +36,11 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.hostname = hostname
 
-
-
     def run(self):
+            network.send("pitch_key_event", random.randrange(0,47))
+            network.send("voice_key_1_position", random.randrange(0,47))
+            network.send("voice_key_2_position", random.randrange(0,47))
+            network.send("voice_key_3_position", random.randrange(0,47))
         while True:
             network.send("pitch_key_event", random.randrange(0,47))
             time.sleep(random.randrange(0,10))

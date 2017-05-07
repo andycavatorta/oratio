@@ -91,6 +91,7 @@ def init(HOSTNAME):
     )
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
+    network.subscribe_to_topic("voice_2")  
     #network.subscribe_to_topic("sensor_data")  
     main = Main(HOSTNAME)
     main.start()
