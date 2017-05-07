@@ -132,12 +132,12 @@ class Dispatcher(threading.Thread):
 
     def calculate_voice_data(self,voice_num):
         voice = self.voices[voice_num]
-        base_pitch = self.calculate_base_pitch(voice.db_harmonic, voice.db_fine)
-        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice.db_h1_harmonic, voice.db_h1_fine)
-        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice.db_h2_harmonic, voice.db_h2_fine)
+        base_pitch = self.calculate_base_pitch(voice["db_harmonic"], voice["db_fine"])
+        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h1_harmonic"], voice["db_h1_fine"])
+        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h2_harmonic"], voice["db_h2_fine"])
         base_volume = voice["voice_key_position"]
-        harmonic_1_volume = self.calculate_harmonic_volume(base_volume, voice.db_h1_vol)
-        harmonic_2_volume = self.calculate_harmonic_volume(base_volume, voice.db_h2_vol)
+        harmonic_1_volume = self.calculate_harmonic_volume(base_volume, voice["db_h1_vol"])
+        harmonic_2_volume = self.calculate_harmonic_volume(base_volume, voice["db_h2_vol"])
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume]
 
     def updateValue(self, name, val):
