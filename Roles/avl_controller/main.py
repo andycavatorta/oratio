@@ -95,29 +95,76 @@ class Dispatcher(threading.Thread):
     def normalize_transport(self):
         pass
 
-    def calculate_base_pitch(self, pitch_key, transport_pos):
-        return
+    def calculate_base_pitch(self, db_harmonic, db_fine):
+        self.pitch_key_event
+        self.transport_pos_relative
+        return 300
 
 
-    def calculate_harmonic_pitch(self, base_pitch, db_h2_harmonic, db_h2_fine):
-        return
+    def calculate_harmonic_pitch(self, base_pitch, harmonic, fine):
+        return 500
 
 
     def calculate_harmonic_volume(self, base_volume, harm_voluime):
-        return
+        return 50
 
 
     def calculate_voice_data(self,voice_num):
-        voice_1_base_pitch = self.calculate_base_pitch(self.pitch_key_event, self.transport_pos, self.voice_1_db_harmonic, self.voice_1_db_fine)
-        voice_1_harmonic_1_pitch = self.calculate_harmonic_pitch(voice_1_base_pitch, self.voice_1_db_h1_harmonic, self.voice_1_db_h1_fine)
-        voice_1_harmonic_2_pitch = self.calculate_harmonic_pitch(voice_1_base_pitch, self.voice_1_db_h2_harmonic, self.voice_1_db_h2_fine)
-        voice_1_base_volume = self.self.voice_key_1_position
-        voice_1_harmonic_1_volume = self.calculate_harmonic_volume(voice_1_base_volume, self.voice_1_db_h1_vol)
-        voice_1_harmonic_2_volume = self.calculate_harmonic_volume(voice_1_base_volume, self.voice_1_db_h2_vol)
-        return [voice_1_base_pitch, voice_1_base_volume, voice_1_harmonic_1_pitch, voice_1_harmonic_1_volume, voice_1_harmonic_2_pitch,voice_1_harmonic_2_volume]
+        voice = self.voices[voice_num]
+        base_pitch = self.calculate_base_pitch(voice.db_harmonic, voice.db_fine)
+        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice.db_h1_harmonic, voice.db_h1_fine)
+        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice.db_h2_harmonic, voice.db_h2_fine)
+        base_volume = voice["voice_key_position"]
+        harmonic_1_volume = self.calculate_harmonic_volume(base_volume, voice.db_h1_vol)
+        harmonic_2_volume = self.calculate_harmonic_volume(base_volume, voice.db_h2_vol)
+        return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume]
 
     def updateValue(self, name, val):
         print "updateValue", name, val
+        lookup = [
+            "voice_key_1_position":voices[0]["voice_key_position"],
+            "voice_key_2_position":voices[1]["voice_key_position"],
+            "voice_key_3_position":voices[2]["voice_key_position"],
+            "pitch_key_event":self.pitch_key_event,
+            "transport_pos_relative":self.transport_pos_relative,
+            "layer_speed":self.layer_speed,
+            "layer_1_volume":self.layer_1_volume,
+            "layer_2_volume":self.layer_2_volume,
+            "layer_3_volume":self.layer_3_volume,
+            "layer_4_volume":self.layer_4_volume,
+            "layer_5_volume":self.layer_5_volume,
+            "voice_1_db_harmonic":voices[0]["db_harmonic"],
+            "voice_1_db_fine":voices[0]["db_fine"],
+            "voice_1_db_h1_harmonic":voices[0]["db_h1_harmonic"],
+            "voice_1_db_h1_fine":voices[0]["db_h1_fine"],
+            "voice_1_db_h1_vol":voices[0]["db_h1_vol"],
+            "voice_1_db_h2_harmonic":voices[0]["db_h2_harmonic"],
+            "voice_1_db_h2_fine":voices[0]["db_h2_fine"],
+            "voice_1_db_h2_vol":voices[0]["db_h2_vol"],
+            "voice_1_db_filter_a":voices[0]["db_filter_a"],
+            "voice_1_db_filter_b":voices[0]["db_filter_b"],
+            "voice_2_db_harmonic":voices[1]["db_harmonic"],
+            "voice_2_db_fine":voices[1]["db_fine"],
+            "voice_2_db_h1_harmonic":voices[1]["db_h1_harmonic"],
+            "voice_2_db_h1_fine":voices[1]["db_h1_fine"],
+            "voice_2_db_h1_vol":voices[1]["db_h1_vol"],
+            "voice_2_db_h2_harmonic":voices[1]["db_h2_harmonic"],
+            "voice_2_db_h2_fine":voices[1]["db_h2_fine"],
+            "voice_2_db_h2_vol":voices[1]["db_h2_vol"],
+            "voice_2_db_filter_a":voices[1]["db_filter_a"],
+            "voice_2_db_filter_b":voices[1]["db_filter_b"],
+            "voice_2_db_harmonic":voices[1]["db_harmonic"],
+            "voice_2_db_fine":voices[1]["db_fine"],
+            "voice_2_db_h1_harmonic":voices[2]["db_h1_harmonic"],
+            "voice_2_db_h1_fine":voices[2]["db_h1_fine"],
+            "voice_2_db_h1_vol":voices[2]["db_h1_vol"],
+            "voice_2_db_h2_harmonic":voices[2]["db_h2_harmonic"],
+            "voice_2_db_h2_fine":voices[2]["db_h2_fine"],
+            "voice_2_db_h2_vol":voices[2]["db_h2_vol"],
+            "voice_2_db_filter_a":voices[2]["db_filter_a"],
+            "voice_2_db_filter_b":voices[2]["db_filter_b"]
+        ]
+        lookup[name] = val
 
     def run(self):
         while self.all_topics_initialized == False:
@@ -178,15 +225,15 @@ def network_message_handler(msg):
             "voice_2_db_filter_a",
             "voice_2_db_filter_b",
             "voice_2_db_harmonic",
-            "voice_2_db_fine",
-            "voice_2_db_h1_harmonic",
-            "voice_2_db_h1_fine",
-            "voice_2_db_h1_vol",
-            "voice_2_db_h2_harmonic",
-            "voice_2_db_h2_fine",
-            "voice_2_db_h2_vol",
-            "voice_2_db_filter_a",
-            "voice_2_db_filter_b"
+            "voice_3_db_fine",
+            "voice_3_db_h1_harmonic",
+            "voice_3_db_h1_fine",
+            "voice_3_db_h1_vol",
+            "voice_3_db_h2_harmonic",
+            "voice_3_db_h2_fine",
+            "voice_3_db_h2_vol",
+            "voice_3_db_filter_a",
+            "voice_3_db_filter_b"
         ]:
             global dispatcher
             dispatcher.updateValue(topic, msg[0])
@@ -244,16 +291,16 @@ def init(HOSTNAME):
     network.subscribe_to_topic("voice_2_db_filter_a")
     network.subscribe_to_topic("voice_2_db_filter_b")
 
-    network.subscribe_to_topic("voice_2_db_harmonic")
-    network.subscribe_to_topic("voice_2_db_fine")
-    network.subscribe_to_topic("voice_2_db_h1_harmonic")
-    network.subscribe_to_topic("voice_2_db_h1_fine")
-    network.subscribe_to_topic("voice_2_db_h1_vol")
-    network.subscribe_to_topic("voice_2_db_h2_harmonic")
-    network.subscribe_to_topic("voice_2_db_h2_fine")
-    network.subscribe_to_topic("voice_2_db_h2_vol")
-    network.subscribe_to_topic("voice_2_db_filter_a")
-    network.subscribe_to_topic("voice_2_db_filter_b")
+    network.subscribe_to_topic("voice_3_db_harmonic")
+    network.subscribe_to_topic("voice_3_db_fine")
+    network.subscribe_to_topic("voice_3_db_h1_harmonic")
+    network.subscribe_to_topic("voice_3_db_h1_fine")
+    network.subscribe_to_topic("voice_3_db_h1_vol")
+    network.subscribe_to_topic("voice_3_db_h2_harmonic")
+    network.subscribe_to_topic("voice_3_db_h2_fine")
+    network.subscribe_to_topic("voice_3_db_h2_vol")
+    network.subscribe_to_topic("voice_3_db_filter_a")
+    network.subscribe_to_topic("voice_3_db_filter_b")
 
     dispatcher = Dispatcher(network)
     dispatcher.start()
