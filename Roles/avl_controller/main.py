@@ -268,17 +268,16 @@ class Dispatcher(threading.Thread):
     def run(self):
         while True:
             scope_of_update = self.queue.get(True)
-            #print "self.voices[0]=", self.voices[0]
-            print "got queue", scope_of_update
-            #transport_pos = self.normalize_transport()
-
-            #network.send("voice_1", self.calculate_voice_data(0))
-            #network.send("voice_2", self.calculate_voice_data(1))
-            #network.send("voice_3", self.calculate_voice_data(2))
-            #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
-            #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
-            #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
-            #time.sleep(1)
+            if scope_of_update == "a":
+                network.send("voice_1", self.calculate_voice_data(0))
+                network.send("voice_2", self.calculate_voice_data(1))
+                network.send("voice_3", self.calculate_voice_data(2))
+            if scope_of_update == "1":
+                network.send("voice_1", self.calculate_voice_data(0))
+            if scope_of_update == "2":
+                network.send("voice_2", self.calculate_voice_data(1))
+            if scope_of_update == "3":
+                network.send("voice_3", self.calculate_voice_data(2))
 
 def network_status_handler(msg):
     print "network_status_handler", msg
