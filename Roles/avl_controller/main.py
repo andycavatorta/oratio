@@ -85,9 +85,9 @@ class Dispatcher(threading.Thread):
         return 50
 
 
-    def calculate_voice_data(self,voice_num):
+    def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
-        base_pitch = self.calculate_base_pitch(voice["db_harmonic"], voice["db_fine"])
+        base_pitch = self.calculate_base_pitch(voice["db_harmonic"], voice["db_fine"], priority)
         harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h1_harmonic"], voice["db_h1_fine"])
         harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h2_harmonic"], voice["db_h2_fine"])
         base_volume = voice["voice_key_position"]
