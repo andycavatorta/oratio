@@ -40,78 +40,30 @@ class Dispatcher(threading.Thread):
     def __init__(self, network):
         threading.Thread.__init__(self)
         self.network = network
-        self.all_topics_initialized = False
 
-        self.pitch_key_event = None
-        self.transport_pos_relative = None
+        self.pitch_key_event = 0
+        self.transport_pos_relative = 0
         self.voices = [
             {
-                "voice_key_position":None,
-                "db_harmonic":None,
-                "db_fine":None,
-                "db_h1_harmonic":None,
-                "db_h1_fine":None,
-                "db_h1_vol":None,
-                "db_h2_harmonic":None,
-                "db_h2_fine":None,
-                "db_h2_vol":None,
-                "db_filter_a":None,
-                "db_filter_b":None
+                "voice_key_position":0,
+                "db_harmonic":0,
+                "db_fine":0,
+                "db_h1_harmonic":0,
+                "db_h1_fine":0,
+                "db_h1_vol":0,
+                "db_h2_harmonic":0,
+                "db_h2_fine":0,
+                "db_h2_vol":0,
+                "db_filter_a":0,
+                "db_filter_b":0
             }
         ] *3
-        self.layer_speed = None
-        self.layer_1_volume = None
-        self.layer_2_volume = None
-        self.layer_3_volume = None
-        self.layer_4_volume = None
-        self.layer_5_volume = None
-
-    def check_if_all_values_initialized(self):
-        try:
-            print "0 >>>>>>>>>>>>>>>>>>>>>>", self.transport_pos_relative
-            assert self.transport_pos_relative != None
-            print "1 >>>>>>>>>>>>>>>>>>>>>>", self.layer_speed
-            assert self.layer_speed != None
-            print "2 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.layer_1_volume != None
-            print "3 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.layer_2_volume != None
-            print "4 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.layer_3_volume != None
-            print "5 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.layer_4_volume != None
-            print "6 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.layer_5_volume != None
-            print "7 >>>>>>>>>>>>>>>>>>>>>>"
-            assert self.pitch_key_event != None
-            print "8 >>>>>>>>>>>>>>>>>>>>>>"
-            for v in self.voices:
-                print "9 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["voice_key_position"] != None
-                print "10 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_harmonic"] != None
-                print "11 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_fine"] != None
-                print "12 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h1_harmonic"] != None
-                print "13 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h1_fine"] != None
-                print "14 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h1_vol"] != None
-                print "15 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h2_harmonic"] != None
-                print "16 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h2_fine"] != None
-                print "17 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_h2_vol"] != None
-                print "18 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_filter_a"] != None
-                print "19 >>>>>>>>>>>>>>>>>>>>>>"
-                assert v["db_filter_b"] != None
-                print "20 >>>>>>>>>>>>>>>>>>>>>>"
-            self.all_topics_initialized = True
-        except:
-            self.all_topics_initialized = False
+        self.layer_speed = 0
+        self.layer_1_volume = 0
+        self.layer_2_volume = 0
+        self.layer_3_volume = 0
+        self.layer_4_volume = 0
+        self.layer_5_volume = 0
 
     def normalize_transport(self):
         pass
@@ -119,6 +71,7 @@ class Dispatcher(threading.Thread):
     def calculate_base_pitch(self, db_harmonic, db_fine):
         self.pitch_key_event
         self.transport_pos_relative
+        print self.voices[0]
         return 300
 
 
@@ -190,9 +143,6 @@ class Dispatcher(threading.Thread):
         print "****", name, lookup[name], val
 
     def run(self):
-        #while self.all_topics_initialized == False:
-        #    self.check_if_all_values_initialized()
-        #    time.sleep(1)
         while True:
             print "self.transport_pos_relative=", self.transport_pos_relative
 
