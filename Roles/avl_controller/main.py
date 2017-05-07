@@ -116,7 +116,7 @@ class Dispatcher(threading.Thread):
         return [voice_1_base_pitch, voice_1_base_volume, voice_1_harmonic_1_pitch, voice_1_harmonic_1_volume, voice_1_harmonic_2_pitch,voice_1_harmonic_2_volume]
 
     def run(self):
-        while self.all_topics_initialized = False:
+        while self.all_topics_initialized == False:
             self.check_if_all_values_initialized()
             sleep(1)
         while True:
