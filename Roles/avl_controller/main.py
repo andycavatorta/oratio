@@ -37,7 +37,7 @@ network = None # for global
 dispatcher = None # for global
 
 class Dispatcher(threading.Thread):
-    def __init(self, network):
+    def __init__(self, network):
         threading.Thread.__init__(self)
         self.network = network
         self.all_topics_initialized = False
