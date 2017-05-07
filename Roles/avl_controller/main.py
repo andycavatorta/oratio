@@ -24,11 +24,12 @@ Dashboard:
 """
 
 
-import time
-import threading
-import settings
-import yaml
 import json
+import Queue
+import settings
+import threading
+import time
+import yaml
 
 from thirtybirds_2_0.Logs.main import Exception_Collector
 from thirtybirds_2_0.Network.manager import init as network_init
@@ -40,7 +41,7 @@ class Dispatcher(threading.Thread):
     def __init__(self, network):
         threading.Thread.__init__(self)
         self.network = network
-
+        self.queue = Queue.Queue()
         self.pitch_key_event = 0
         self.transport_pos_relative = 0
         self.voices = [
@@ -180,17 +181,18 @@ class Dispatcher(threading.Thread):
             self.voices[2]["db_filter_a"] = val
         if name == "voice_3_db_filter_b":
             self.voices[2]["db_filter_b"] = val
+        self.queue.put("a")
 
     def run(self):
         while True:
-            print "self.voices[0]=", self.voices[0]
+            self.queue.get(True)
+            #print "self.voices[0]=", self.voices[0]
+            print "got queue"
+            #transport_pos = self.normalize_transport()
 
-
-            transport_pos = self.normalize_transport()
-
-            network.send("voice_1", self.calculate_voice_data(0))
-            network.send("voice_2", self.calculate_voice_data(1))
-            network.send("voice_3", self.calculate_voice_data(2))
+            #network.send("voice_1", self.calculate_voice_data(0))
+            #network.send("voice_2", self.calculate_voice_data(1))
+            #network.send("voice_3", self.calculate_voice_data(2))
             #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
             #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
             #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
