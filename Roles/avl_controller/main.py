@@ -121,7 +121,7 @@ class Dispatcher(threading.Thread):
 
     def updateValue(self, name, val):
         print "updateValue", name, val
-        lookup = [
+        lookup = {
             "voice_key_1_position":voices[0]["voice_key_position"],
             "voice_key_2_position":voices[1]["voice_key_position"],
             "voice_key_3_position":voices[2]["voice_key_position"],
@@ -163,7 +163,7 @@ class Dispatcher(threading.Thread):
             "voice_2_db_h2_vol":voices[2]["db_h2_vol"],
             "voice_2_db_filter_a":voices[2]["db_filter_a"],
             "voice_2_db_filter_b":voices[2]["db_filter_b"]
-        ]
+        }
         lookup[name] = val
 
     def run(self):
