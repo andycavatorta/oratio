@@ -68,9 +68,9 @@ class Dispatcher(threading.Thread):
 
     def check_if_all_values_initialized(self):
         try:
-            print "0 >>>>>>>>>>>>>>>>>>>>>>"
+            print "0 >>>>>>>>>>>>>>>>>>>>>>", self.transport_pos_relative
             assert self.transport_pos_relative != None
-            print "1 >>>>>>>>>>>>>>>>>>>>>>"
+            print "1 >>>>>>>>>>>>>>>>>>>>>>", self.layer_speed
             assert self.layer_speed != None
             print "2 >>>>>>>>>>>>>>>>>>>>>>"
             assert self.layer_1_volume != None
