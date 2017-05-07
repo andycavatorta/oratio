@@ -174,18 +174,20 @@ class Dispatcher(threading.Thread):
             "voice_2_db_h2_vol" : self.voices[1]["db_h2_vol"],
             "voice_2_db_filter_a" : self.voices[1]["db_filter_a"],
             "voice_2_db_filter_b" : self.voices[1]["db_filter_b"],
-            "voice_2_db_harmonic" : self.voices[1]["db_harmonic"],
-            "voice_2_db_fine" : self.voices[1]["db_fine"],
-            "voice_2_db_h1_harmonic" : self.voices[2]["db_h1_harmonic"],
-            "voice_2_db_h1_fine" : self.voices[2]["db_h1_fine"],
-            "voice_2_db_h1_vol" : self.voices[2]["db_h1_vol"],
-            "voice_2_db_h2_harmonic" : self.voices[2]["db_h2_harmonic"],
-            "voice_2_db_h2_fine" : self.voices[2]["db_h2_fine"],
-            "voice_2_db_h2_vol" : self.voices[2]["db_h2_vol"],
-            "voice_2_db_filter_a" : self.voices[2]["db_filter_a"],
-            "voice_2_db_filter_b" : self.voices[2]["db_filter_b"]
+            "voice_3_db_harmonic" : self.voices[1]["db_harmonic"],
+            "voice_3_db_fine" : self.voices[1]["db_fine"],
+            "voice_3_db_h1_harmonic" : self.voices[2]["db_h1_harmonic"],
+            "voice_3_db_h1_fine" : self.voices[2]["db_h1_fine"],
+            "voice_3_db_h1_vol" : self.voices[2]["db_h1_vol"],
+            "voice_3_db_h2_harmonic" : self.voices[2]["db_h2_harmonic"],
+            "voice_3_db_h2_fine" : self.voices[2]["db_h2_fine"],
+            "voice_3_db_h2_vol" : self.voices[2]["db_h2_vol"],
+            "voice_3_db_filter_a" : self.voices[2]["db_filter_a"],
+            "voice_3_db_filter_b" : self.voices[2]["db_filter_b"]
         }
+
         lookup[name] = val
+        print "****", name, lookup[name], val
 
     def run(self):
         while self.all_topics_initialized == False:
