@@ -34,6 +34,7 @@ from thirtybirds_2_0.Logs.main import Exception_Collector
 from thirtybirds_2_0.Network.manager import init as network_init
 
 network = None # for global
+dispatcher = None # for global
 
 class Dispatcher(threading.Thread):
     def __init(self):
@@ -115,6 +116,9 @@ class Dispatcher(threading.Thread):
         voice_1_harmonic_2_volume = self.calculate_harmonic_volume(voice_1_base_volume, self.voice_1_db_h2_vol)
         return [voice_1_base_pitch, voice_1_base_volume, voice_1_harmonic_1_pitch, voice_1_harmonic_1_volume, voice_1_harmonic_2_pitch,voice_1_harmonic_2_volume]
 
+    def updateValue(name, val):
+        print "updateValue", name, val
+
     def run(self):
         while self.all_topics_initialized == False:
             self.check_if_all_values_initialized()
@@ -138,15 +142,62 @@ def network_message_handler(msg):
     try:
         print "network_message_handler", msg
         topic = msg[0]
-        #print "topic", topic 
         if topic == "__heartbeat__":
             print "heartbeat received", msg
+        if topic in [
+            "system",
+            "voice_key_1_position",
+            "voice_key_2_position",
+            "voice_key_3_position",
+            "pitch_key_event",
+            "transport_pos_relative",
+            "layer_speed",
+            "layer_1_volume",
+            "layer_2_volume",
+            "layer_3_volume",
+            "layer_4_volume",
+            "layer_5_volume",
+            "voice_1_db_harmonic",
+            "voice_1_db_fine",
+            "voice_1_db_h1_harmonic",
+            "voice_1_db_h1_fine",
+            "voice_1_db_h1_vol",
+            "voice_1_db_h2_harmonic",
+            "voice_1_db_h2_fine",
+            "voice_1_db_h2_vol",
+            "voice_1_db_filter_a",
+            "voice_1_db_filter_b",
+            "voice_2_db_harmonic",
+            "voice_2_db_fine",
+            "voice_2_db_h1_harmonic",
+            "voice_2_db_h1_fine",
+            "voice_2_db_h1_vol",
+            "voice_2_db_h2_harmonic",
+            "voice_2_db_h2_fine",
+            "voice_2_db_h2_vol",
+            "voice_2_db_filter_a",
+            "voice_2_db_filter_b",
+            "voice_2_db_harmonic",
+            "voice_2_db_fine",
+            "voice_2_db_h1_harmonic",
+            "voice_2_db_h1_fine",
+            "voice_2_db_h1_vol",
+            "voice_2_db_h2_harmonic",
+            "voice_2_db_h2_fine",
+            "voice_2_db_h2_vol",
+            "voice_2_db_filter_a",
+            "voice_2_db_filter_b"
+        ]:
+            global dispatcher
+            dispatcher.updateValue(topic, msg[0])
+        #print "topic", topic 
     except Exception as e:
         print "exception in network_message_handler", e
 
 
 def init(HOSTNAME):
     global network
+    global dispatcher
     network = network_init(
         hostname=HOSTNAME,
         role="server",
@@ -203,3 +254,6 @@ def init(HOSTNAME):
     network.subscribe_to_topic("voice_2_db_h2_vol")
     network.subscribe_to_topic("voice_2_db_filter_a")
     network.subscribe_to_topic("voice_2_db_filter_b")
+
+    dispatcher = Dispatcher(network)
+    dispatcher.start()
