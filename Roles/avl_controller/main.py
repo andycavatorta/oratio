@@ -194,6 +194,9 @@ class Dispatcher(threading.Thread):
         #    self.check_if_all_values_initialized()
         #    time.sleep(1)
         while True:
+            print "self.transport_pos_relative=", self.transport_pos_relative
+
+
             transport_pos = self.normalize_transport()
 
             network.send("voice_1", self.calculate_voice_data(0))
@@ -202,7 +205,7 @@ class Dispatcher(threading.Thread):
             #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
             #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
             #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
-            time.sleep(0.1)
+            time.sleep(1)
 
 def network_status_handler(msg):
     print "network_status_handler", msg
