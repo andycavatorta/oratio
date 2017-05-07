@@ -91,22 +91,22 @@ class Dispatcher(threading.Thread):
         except:
             self.all_topics_initialized = False
 
-  def normalize_transport(self):
-    pass
+    def normalize_transport(self):
+        pass
 
-  def calculate_base_pitch(self, pitch_key, transport_pos):
-    return
-
-
-  def calculate_harmonic_pitch(self, base_pitch, db_h2_harmonic, db_h2_fine):
-    return
+    def calculate_base_pitch(self, pitch_key, transport_pos):
+        return
 
 
-  def calculate_harmonic_volume(self, base_volume, harm_voluime):
-    return
+    def calculate_harmonic_pitch(self, base_pitch, db_h2_harmonic, db_h2_fine):
+        return
 
 
-  def calculate_voice_data(self,voice_num):
+    def calculate_harmonic_volume(self, base_volume, harm_voluime):
+        return
+
+
+    def calculate_voice_data(self,voice_num):
         voice_1_base_pitch = self.calculate_base_pitch(self.pitch_key_event, self.transport_pos, self.voice_1_db_harmonic, self.voice_1_db_fine)
         voice_1_harmonic_1_pitch = self.calculate_harmonic_pitch(voice_1_base_pitch, self.voice_1_db_h1_harmonic, self.voice_1_db_h1_fine)
         voice_1_harmonic_2_pitch = self.calculate_harmonic_pitch(voice_1_base_pitch, self.voice_1_db_h2_harmonic, self.voice_1_db_h2_fine)
@@ -115,20 +115,20 @@ class Dispatcher(threading.Thread):
         voice_1_harmonic_2_volume = self.calculate_harmonic_volume(voice_1_base_volume, self.voice_1_db_h2_vol)
         return [voice_1_base_pitch, voice_1_base_volume, voice_1_harmonic_1_pitch, voice_1_harmonic_1_volume, voice_1_harmonic_2_pitch,voice_1_harmonic_2_volume]
 
-  def run(self):
-    while self.all_topics_initialized = False:
-        self.check_if_all_values_initialized()
-        sleep(1)
-    while True:
+    def run(self):
+        while self.all_topics_initialized = False:
+            self.check_if_all_values_initialized()
+            sleep(1)
+        while True:
 
-        transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
+            transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
 
-        network.send("voice_1", calculate_voice_data(0))
-        network.send("voice_2", calculate_voice_data(1))
-        network.send("voice_3", calculate_voice_data(2))
-        #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
-        #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
-        #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
+            network.send("voice_1", calculate_voice_data(0))
+            network.send("voice_2", calculate_voice_data(1))
+            network.send("voice_3", calculate_voice_data(2))
+            #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
+            #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
+            #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
 
 def network_status_handler(msg):
     print "network_status_handler", msg
