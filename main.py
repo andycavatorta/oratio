@@ -5,7 +5,7 @@
 import importlib
 import json
 import os
-import settings 
+import settings     
 import sys
 #import threading
 #import time

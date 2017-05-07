@@ -20,9 +20,9 @@ git clone https://github.com/andycavatorta/thirtybirds-2.0.git
 cd thirtybirds-2.0
 git remote add upstream https://github.com/andycavatorta/thirtybirds-2.0.git
 cd ..
-git clone https://github.com/andycavatorta/supercooler.git
-cd supercooler
-git remote add upstream https://github.com/andycavatorta/supercooler.git
+git clone https://github.com/andycavatorta/oratio.git
+cd oratio
+git remote add upstream https://github.com/andycavatorta/oratio.git
 cd ..
 
 echo
@@ -33,7 +33,7 @@ sudo cp /home/pi/scripts/rc.local /etc/rc.local
 
 #sudo ssh-keygen
 #echo 
-#echo "copy the key below to github /setting/deploy keys for the supercooler repo"
+#echo "copy the key below to github /setting/deploy keys for the oratio repo"
 #echo 
 #sudo more /root/.ssh/id_rsa.pub
 

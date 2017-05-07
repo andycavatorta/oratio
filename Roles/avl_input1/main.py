@@ -1,34 +1,20 @@
 """
-TASKS:
-    init:
-        maintain SSH tunnel to conductor
-        listen to Web API
-        open DB connection
-    runtime:
-        maintain DB of inventory histories?
-        generate HTML reports
-        serve reports on request
-
-API for conductor:
-    receive_inventory_and_map
-
-Dashboard:
-    web interface
-    websocket push
-    status of all camera_units
-        connected
-        current status ( color coded )
-        inventory
-        exceptions
+inputs:
+    4 cap sensors on I2C
+    3 rotary encoders on SPI
+    
+output topics:
+    pitch_key_event
+    voice_key_1_position
+    voice_key_2_position
+    voice_key_3_position
 
 """
-
-
-
 
 import importlib
 import json
 import os
+import random
 import settings 
 import sys
 import threading
@@ -49,18 +35,19 @@ class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.hostname = hostname
-        ### NETWORK ###
 
-
-        ### SET UP SUBSCRIPTIONS AND LISTENERS ###
-
-
-        ### SET UP ATTAR ### so any exceptions can be reported
 
 
     def run(self):
         while True:
-            time.sleep(60)
+            network.send("pitch_key_event", random.randrange(0,47))
+            time.sleep(random.randrange(0,10))
+            network.send("voice_key_1_position", random.randrange(0,47))
+            time.sleep(random.randrange(0,10))
+            network.send("voice_key_2_position", random.randrange(0,47))
+            time.sleep(random.randrange(0,10))
+            network.send("voice_key_3_position", random.randrange(0,47))
+            time.sleep(random.randrange(0,10))
 
         ###  ###
 

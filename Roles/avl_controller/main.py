@@ -24,9 +24,6 @@ Dashboard:
 """
 
 
-
-
-
 import time
 import threading
 import settings
@@ -66,8 +63,8 @@ def init(HOSTNAME):
         status_callback=network_status_handler
     )
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("sensor_data")  
-    network.subscribe_to_topic("cell_data")
-    network.subscribe_to_topic("incubator_data")
-    network.subscribe_to_topic("algorithm_data")
+    network.subscribe_to_topic("voice_key_1_position")  
+    network.subscribe_to_topic("voice_key_2_position")
+    network.subscribe_to_topic("voice_key_3_position")
+    network.subscribe_to_topic("pitch_key_event")
     
