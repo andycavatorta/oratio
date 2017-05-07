@@ -116,7 +116,7 @@ class Dispatcher(threading.Thread):
         voice_1_harmonic_2_volume = self.calculate_harmonic_volume(voice_1_base_volume, self.voice_1_db_h2_vol)
         return [voice_1_base_pitch, voice_1_base_volume, voice_1_harmonic_1_pitch, voice_1_harmonic_1_volume, voice_1_harmonic_2_pitch,voice_1_harmonic_2_volume]
 
-    def updateValue(name, val):
+    def updateValue(self, name, val):
         print "updateValue", name, val
 
     def run(self):
