@@ -260,7 +260,7 @@ def network_message_handler(msg):
             "voice_3_db_filter_b"
         ]:
             global dispatcher
-            dispatcher.updateValue(topic, msg[0])
+            dispatcher.updateValue(topic, msg[1])
         #print "topic", topic 
     except Exception as e:
         print "exception in network_message_handler", e
