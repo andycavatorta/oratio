@@ -269,19 +269,19 @@ class Dispatcher(threading.Thread):
         while True:
             scope_of_update = self.queue.get(True)
             if scope_of_update == "all_pitch_key":
-                network.send("voice_1", self.calculate_voice_data(0), "pitch_key")
-                network.send("voice_2", self.calculate_voice_data(1), "pitch_key")
-                network.send("voice_3", self.calculate_voice_data(2), "pitch_key")
+                network.send("voice_1", self.calculate_voice_data(0, "pitch_key"))
+                network.send("voice_2", self.calculate_voice_data(1, "pitch_key"))
+                network.send("voice_3", self.calculate_voice_data(2, "pitch_key"))
             if scope_of_update == "all_transport":
-                network.send("voice_1", self.calculate_voice_data(0), "transport")
-                network.send("voice_2", self.calculate_voice_data(1), "transport")
-                network.send("voice_3", self.calculate_voice_data(2), "transport")
+                network.send("voice_1", self.calculate_voice_data(0, "transport"))
+                network.send("voice_2", self.calculate_voice_data(1, "transport"))
+                network.send("voice_3", self.calculate_voice_data(2, "transport"))
             if scope_of_update == "1":
-                network.send("voice_1", self.calculate_voice_data(0), "transport")
+                network.send("voice_1", self.calculate_voice_data(0, "transport"))
             if scope_of_update == "2":
-                network.send("voice_2", self.calculate_voice_data(1), "transport")
+                network.send("voice_2", self.calculate_voice_data(1, "transport"))
             if scope_of_update == "3":
-                network.send("voice_3", self.calculate_voice_data(2), "transport")
+                network.send("voice_3", self.calculate_voice_data(2, "transport"))
 
 def network_status_handler(msg):
     print "network_status_handler", msg
