@@ -71,7 +71,7 @@ class Dispatcher(threading.Thread):
     def calculate_base_pitch(self, db_harmonic, db_fine):
         self.pitch_key_event
         self.transport_pos_relative
-        print self.voices[0]
+        #print self.voices[0]
         return 300
 
 
@@ -101,54 +101,85 @@ class Dispatcher(threading.Thread):
             self.voices[1]["voice_key_position"] = val
         if name == "voice_key_3_position":
             self.voices[2]["voice_key_position"] = val
-        """
-        lookup = {
-            "voice_key_1_position" : self.voices[0]["voice_key_position"],
-            "voice_key_2_position" : self.voices[1]["voice_key_position"],
-            "voice_key_3_position" : self.voices[2]["voice_key_position"],
-            "pitch_key_event":self.pitch_key_event,
-            "transport_pos_relative":self.transport_pos_relative,
-            "layer_speed":self.layer_speed,
-            "layer_1_volume":self.layer_1_volume,
-            "layer_2_volume":self.layer_2_volume,
-            "layer_3_volume":self.layer_3_volume,
-            "layer_4_volume":self.layer_4_volume,
-            "layer_5_volume":self.layer_5_volume,
-            "voice_1_db_harmonic" : self.voices[0]["db_harmonic"],
-            "voice_1_db_fine" : self.voices[0]["db_fine"],
-            "voice_1_db_h1_harmonic" : self.voices[0]["db_h1_harmonic"],
-            "voice_1_db_h1_fine" : self.voices[0]["db_h1_fine"],
-            "voice_1_db_h1_vol" : self.voices[0]["db_h1_vol"],
-            "voice_1_db_h2_harmonic" : self.voices[0]["db_h2_harmonic"],
-            "voice_1_db_h2_fine" : self.voices[0]["db_h2_fine"],
-            "voice_1_db_h2_vol" : self.voices[0]["db_h2_vol"],
-            "voice_1_db_filter_a" : self.voices[0]["db_filter_a"],
-            "voice_1_db_filter_b" : self.voices[0]["db_filter_b"],
-            "voice_2_db_harmonic" : self.voices[1]["db_harmonic"],
-            "voice_2_db_fine" : self.voices[1]["db_fine"],
-            "voice_2_db_h1_harmonic" : self.voices[1]["db_h1_harmonic"],
-            "voice_2_db_h1_fine" : self.voices[1]["db_h1_fine"],
-            "voice_2_db_h1_vol" : self.voices[1]["db_h1_vol"],
-            "voice_2_db_h2_harmonic" : self.voices[1]["db_h2_harmonic"],
-            "voice_2_db_h2_fine" : self.voices[1]["db_h2_fine"],
-            "voice_2_db_h2_vol" : self.voices[1]["db_h2_vol"],
-            "voice_2_db_filter_a" : self.voices[1]["db_filter_a"],
-            "voice_2_db_filter_b" : self.voices[1]["db_filter_b"],
-            "voice_3_db_harmonic" : self.voices[1]["db_harmonic"],
-            "voice_3_db_fine" : self.voices[1]["db_fine"],
-            "voice_3_db_h1_harmonic" : self.voices[2]["db_h1_harmonic"],
-            "voice_3_db_h1_fine" : self.voices[2]["db_h1_fine"],
-            "voice_3_db_h1_vol" : self.voices[2]["db_h1_vol"],
-            "voice_3_db_h2_harmonic" : self.voices[2]["db_h2_harmonic"],
-            "voice_3_db_h2_fine" : self.voices[2]["db_h2_fine"],
-            "voice_3_db_h2_vol" : self.voices[2]["db_h2_vol"],
-            "voice_3_db_filter_a" : self.voices[2]["db_filter_a"],
-            "voice_3_db_filter_b" : self.voices[2]["db_filter_b"]
-        }
-        """
-        #print "+++++", name, lookup[name], val
-        #lookup[name] = val
-        #print "****", name, lookup[name], val
+        if name == "pitch_key_event":
+            self.pitch_key_event = val
+        if name == "transport_pos_relative":
+            self.transport_pos_relative = val
+        if name == "layer_speed":
+            self.layer_speed = val
+        if name == "layer_1_volume":
+            self.layer_1_volume = val
+        if name == "layer_2_volume":
+            self.layer_2_volume = val
+        if name == "layer_3_volume":
+            self.layer_3_volume = val
+        if name == "layer_4_volume":
+            self.layer_4_volume = val
+        if name == "layer_5_volume":
+            self.layer_5_volume= val
+
+        if name == "voice_1_db_harmonic":
+            self.voices[0]["db_harmonic"] = val
+        if name == "voice_1_db_fine":
+            self.voices[0]["db_fine"] = val
+        if name == "voice_1_db_h1_harmonic":
+            self.voices[0]["db_h1_harmonic"] = val
+        if name == "voice_1_db_h1_fine":
+            self.voices[0]["db_h1_fine"] = val
+        if name == "voice_1_db_h1_vol":
+            self.voices[0]["db_h1_vol"] = val
+        if name == "voice_1_db_h2_harmonic":
+            self.voices[0]["db_h2_harmonic"] = val
+        if name == "voice_1_db_h2_fine":
+            self.voices[0]["db_h2_fine"] = val
+        if name == "voice_1_db_h2_vol":
+            self.voices[0]["db_h2_vol"] = val
+        if name == "voice_1_db_filter_a":
+            self.voices[0]["db_filter_a"] = val
+        if name == "voice_1_db_filter_b":
+            self.voices[0]["db_filter_b"] = val
+
+        if name == "voice_2_db_harmonic":
+            self.voices[1]["db_harmonic"] = val
+        if name == "voice_2_db_fine":
+            self.voices[1]["db_fine"] = val
+        if name == "voice_2_db_h1_harmonic":
+            self.voices[1]["db_h1_harmonic"] = val
+        if name == "voice_2_db_h1_fine":
+            self.voices[1]["db_h1_fine"] = val
+        if name == "voice_2_db_h1_vol":
+            self.voices[1]["db_h1_vol"] = val
+        if name == "voice_2_db_h2_harmonic":
+            self.voices[1]["db_h2_harmonic"] = val
+        if name == "voice_2_db_h2_fine":
+            self.voices[1]["db_h2_fine"] = val
+        if name == "voice_2_db_h2_vol":
+            self.voices[1]["db_h2_vol"] = val
+        if name == "voice_2_db_filter_a":
+            self.voices[1]["db_filter_a"] = val
+        if name == "voice_2_db_filter_b":
+            self.voices[1]["db_filter_b"] = val
+
+        if name == "voice_3_db_harmonic":
+            self.voices[2]["db_harmonic"] = val
+        if name == "voice_3_db_fine":
+            self.voices[2]["db_fine"] = val
+        if name == "voice_3_db_h1_harmonic":
+            self.voices[2]["db_h1_harmonic"] = val
+        if name == "voice_3_db_h1_fine":
+            self.voices[2]["db_h1_fine"] = val
+        if name == "voice_3_db_h1_vol":
+            self.voices[2]["db_h1_vol"] = val
+        if name == "voice_3_db_h2_harmonic":
+            self.voices[2]["db_h2_harmonic"] = val
+        if name == "voice_3_db_h2_fine":
+            self.voices[2]["db_h2_fine"] = val
+        if name == "voice_3_db_h2_vol":
+            self.voices[2]["db_h2_vol"] = val
+        if name == "voice_3_db_filter_a":
+            self.voices[2]["db_filter_a"] = val
+        if name == "voice_3_db_filter_b":
+            self.voices[2]["db_filter_b"] = val
 
     def run(self):
         while True:
