@@ -95,6 +95,13 @@ class Dispatcher(threading.Thread):
 
     def updateValue(self, name, val):
         print "updateValue", name, val
+        if name == "voice_key_1_position":
+            self.voices[0]["voice_key_position"] = val
+        if name == "voice_key_2_position":
+            self.voices[1]["voice_key_position"] = val
+        if name == "voice_key_3_position":
+            self.voices[2]["voice_key_position"] = val
+        """
         lookup = {
             "voice_key_1_position" : self.voices[0]["voice_key_position"],
             "voice_key_2_position" : self.voices[1]["voice_key_position"],
@@ -138,14 +145,14 @@ class Dispatcher(threading.Thread):
             "voice_3_db_filter_a" : self.voices[2]["db_filter_a"],
             "voice_3_db_filter_b" : self.voices[2]["db_filter_b"]
         }
-
-        print "+++++", name, lookup[name], val
-        lookup[name] = val
-        print "****", name, lookup[name], val
+        """
+        #print "+++++", name, lookup[name], val
+        #lookup[name] = val
+        #print "****", name, lookup[name], val
 
     def run(self):
         while True:
-            print "self.transport_pos_relative=", self.transport_pos_relative
+            print "self.voices[0]=", self.voices[0]
 
 
             transport_pos = self.normalize_transport()
