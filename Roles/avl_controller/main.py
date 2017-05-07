@@ -187,7 +187,7 @@ class Dispatcher(threading.Thread):
         }
 
         lookup[name] = val
-        print "****", name, lookup[name], val
+        #print "****", name, lookup[name], val
 
     def run(self):
         #while self.all_topics_initialized == False:
@@ -196,7 +196,7 @@ class Dispatcher(threading.Thread):
         while True:
             transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
 
-            print calculate_voice_data(0)
+            print "calculate_voice_data", calculate_voice_data(0)
 
             #network.send("voice_1", calculate_voice_data(0))
             #network.send("voice_2", calculate_voice_data(1))
