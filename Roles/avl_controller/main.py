@@ -122,7 +122,7 @@ class Dispatcher(threading.Thread):
     def run(self):
         while self.all_topics_initialized == False:
             self.check_if_all_values_initialized()
-            sleep(1)
+            time.sleep(1)
         while True:
 
             transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
