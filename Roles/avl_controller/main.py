@@ -139,6 +139,7 @@ class Dispatcher(threading.Thread):
             "voice_3_db_filter_b" : self.voices[2]["db_filter_b"]
         }
 
+        print "+++++", name, lookup[name], val
         lookup[name] = val
         print "****", name, lookup[name], val
 
