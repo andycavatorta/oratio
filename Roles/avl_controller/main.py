@@ -198,7 +198,7 @@ class Dispatcher(threading.Thread):
             print "----- 2"
             transport_pos = self.normalize_transport()
 
-            print "calculate_voice_data", calculate_voice_data(0)
+            print "calculate_voice_data", self.calculate_voice_data(0)
 
             #network.send("voice_1", calculate_voice_data(0))
             #network.send("voice_2", calculate_voice_data(1))
