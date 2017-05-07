@@ -69,7 +69,8 @@ class Dispatcher(threading.Thread):
     def normalize_transport(self):
         pass
 
-    def calculate_base_pitch(self, db_harmonic, db_fine):
+    def calculate_base_pitch(self, db_harmonic, db_fine, priority):
+        print priority
         self.pitch_key_event
         self.transport_pos_relative
         #print self.voices[0]
@@ -98,26 +99,12 @@ class Dispatcher(threading.Thread):
         #print "updateValue", name, val
         if name == "pitch_key_event":
             self.pitch_key_event = val
-            self.queue.put("a")
+            self.queue.put("all_pitch_key")
             return
         if name == "transport_pos_relative":
             self.transport_pos_relative = val
-            self.queue.put("a")
+            self.queue.put("all_transport")
             return
-        if name == "layer_speed":
-            self.layer_speed = val
-            self.queue.put("a")
-            return
-        if name == "layer_1_volume":
-            self.layer_1_volume = val
-        if name == "layer_2_volume":
-            self.layer_2_volume = val
-        if name == "layer_3_volume":
-            self.layer_3_volume = val
-        if name == "layer_4_volume":
-            self.layer_4_volume = val
-        if name == "layer_5_volume":
-            self.layer_5_volume= val
 
         if name == "voice_key_1_position":
             self.voices[0]["voice_key_position"] = val
@@ -264,20 +251,37 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         
+        if name == "layer_speed":
+            self.layer_speed = val
+        if name == "layer_1_volume":
+            self.layer_1_volume = val
+        if name == "layer_2_volume":
+            self.layer_2_volume = val
+        if name == "layer_3_volume":
+            self.layer_3_volume = val
+        if name == "layer_4_volume":
+            self.layer_4_volume = val
+        if name == "layer_5_volume":
+            self.layer_5_volume= val
+
 
     def run(self):
         while True:
             scope_of_update = self.queue.get(True)
-            if scope_of_update == "a":
-                network.send("voice_1", self.calculate_voice_data(0))
-                network.send("voice_2", self.calculate_voice_data(1))
-                network.send("voice_3", self.calculate_voice_data(2))
+            if scope_of_update == "all_pitch_key":
+                network.send("voice_1", self.calculate_voice_data(0), "pitch_key")
+                network.send("voice_2", self.calculate_voice_data(1), "pitch_key")
+                network.send("voice_3", self.calculate_voice_data(2), "pitch_key")
+            if scope_of_update == "all_transport":
+                network.send("voice_1", self.calculate_voice_data(0),"transport")
+                network.send("voice_2", self.calculate_voice_data(1)"transport")
+                network.send("voice_3", self.calculate_voice_data(2)"transport")
             if scope_of_update == "1":
-                network.send("voice_1", self.calculate_voice_data(0))
+                network.send("voice_1", self.calculate_voice_data(0)"transport")
             if scope_of_update == "2":
-                network.send("voice_2", self.calculate_voice_data(1))
+                network.send("voice_2", self.calculate_voice_data(1)"transport")
             if scope_of_update == "3":
-                network.send("voice_3", self.calculate_voice_data(2))
+                network.send("voice_3", self.calculate_voice_data(2)"transport")
 
 def network_status_handler(msg):
     print "network_status_handler", msg
