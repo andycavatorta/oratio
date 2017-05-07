@@ -174,9 +174,11 @@ class Dispatcher(threading.Thread):
 
             transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
 
-            network.send("voice_1", calculate_voice_data(0))
-            network.send("voice_2", calculate_voice_data(1))
-            network.send("voice_3", calculate_voice_data(2))
+            print calculate_voice_data(0)
+
+            #network.send("voice_1", calculate_voice_data(0))
+            #network.send("voice_2", calculate_voice_data(1))
+            #network.send("voice_3", calculate_voice_data(2))
             #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
             #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
             #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
