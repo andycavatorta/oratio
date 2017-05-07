@@ -1,0 +1,104 @@
+---------------------
+---- SERVER ----
+---------------------
+TASKS:
+    init:
+        maintain SSH tunnel to conductor
+        listen to Web API
+        open DB connection
+    runtime:
+        maintain DB of inventory histories?
+        generate HTML reports
+        serve reports on request
+
+API for conductor:
+    receive_inventory_and_map
+
+Dashboard:
+    web interface
+    websocket push
+    status of all camera_units
+        connected
+        current status ( color coded )
+        inventory
+        exceptions
+
+---------------------------
+---- CONDUCTOR ----
+---------------------------
+
+TASKS:
+    init:
+        open reverse SSH connection to server
+
+        listen to temp sensor
+        listen to door sensor
+
+    runtime:
+        control lights
+
+        send API messages to control camera_unit imaging processing
+        receive processed capture
+        receive inventory for each camera_unit ( including coordinates )
+        confirm receipt of all captures and inventories
+        
+        disambiguate product identies
+        produce inventory and map for bottles and cans
+
+        undistort and stitch captures to create full image of each shelf
+        parse capture for cases
+        classify parses images
+        create inventory and map for cases
+
+        track time of last image cycle
+
+        send report to server
+
+API for camera_units:
+    [ thirtybirds network stuff ]
+
+
+
+API for Dashboard:
+    pull
+        
+
+    push
+        all attar data
+
+
+----------------------------------
+---- CAMERA_UNIT[S] ----
+----------------------------------
+
+TASKS:
+    init:
+        listen to API
+        set up camera
+
+    runtime:
+        capture_image
+        parse_capture
+        classify_parsed_images
+        send inventory and captured image to conductor
+        send status data with attar
+
+API for Server:
+    capture_image
+    parse_capture
+    classify_parsed_images  ( sends images to Server when finished )
+    capture_parse_classify  ( macro process for all three )
+    send_status [ initialized | capture_image | parse_capture | classify_parsed_images | finished ]
+    send_captures
+    send_parsed_images
+    send_inventory
+    send_log ( loglevel )
+
+ATTAR:
+    writes to terminal, log file, and publishes to ZMQ
+    data types:
+        debug:
+        trace:
+        exceptions:
+        events: ( loaded, lost_connection, starting capture, finished can parse (10 found), etc )
+
