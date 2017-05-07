@@ -196,7 +196,7 @@ class Dispatcher(threading.Thread):
             #network.send("filter_1", [self.voices[0]["db_filter_a"],self.voices[0]["db_filter_b"]])
             #network.send("filter_2", [self.voices[1]["db_filter_a"],self.voices[1]["db_filter_b"]])
             #network.send("filter_3", [self.voices[2]["db_filter_a"],self.voices[2]["db_filter_b"]])
-            time.sleep(1)
+            #time.sleep(1)
 
 def network_status_handler(msg):
     print "network_status_handler", msg
