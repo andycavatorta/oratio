@@ -167,11 +167,13 @@ class Dispatcher(threading.Thread):
         lookup[name] = val
 
     def run(self):
+        print "0 >>>>>>>>>>>>>>>>>>>>>>"
         while self.all_topics_initialized == False:
             self.check_if_all_values_initialized()
             time.sleep(1)
+            print "1 >>>>>>>>>>>>>>>>>>>>>>"
         while True:
-
+            print "2 >>>>>>>>>>>>>>>>>>>>>>"
             transport_pos = self.normalize_transport(self.pitch_key_event, self.transport_pos_relative)
 
             print calculate_voice_data(0)
