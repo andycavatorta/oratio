@@ -90,7 +90,7 @@ class Dispatcher(threading.Thread):
             pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
             pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
 
-        harmonic_freq = (voice["db_harmonic"] + 1) * pitch_key_freq
+        harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
         final_freq = harmonic_freq * pow(2, (voice["db_fine"]/1200))
         return final_freq
 
@@ -98,11 +98,11 @@ class Dispatcher(threading.Thread):
     def calculate_harmonic_pitch(self, voice_num, base_pitch):
         voice = self.voices[voice_num]
         if harmonic == 0:
-            harmonic_freq = (voice["db_h1_harmonic"] + 1) * base_pitch
+            harmonic_freq = (int(voice["db_h1_harmonic"]) + 1) * base_pitch
             final_freq = harmonic_freq * pow(2, (voice["db_h1_fine"]/1200))
             return final_freq
         if harmonic == 1:
-            harmonic_freq = (voice["db_h2_harmonic"] + 1) * base_pitch
+            harmonic_freq = (int(voice["db_h2_harmonic"]) + 1) * base_pitch
             final_freq = harmonic_freq * pow(2, (voice["db_h2_fine"]/1200))
             return final_freq
             
