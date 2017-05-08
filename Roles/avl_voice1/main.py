@@ -45,24 +45,45 @@ THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
+"""
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.hostname = hostname
         ### NETWORK ###
 
-
         ### SET UP SUBSCRIPTIONS AND LISTENERS ###
 
-
         ### SET UP ATTAR ### so any exceptions can be reported
-
 
     def run(self):
         while True:
             time.sleep(60)
 
         ###  ###
+"""
+
+
+class ADC():
+    def __init__(self, spi_bus, slave_or_master):
+        self.spi_bus = spi_bus
+        self.slave_or_master = slave_or_master
+
+    def send(self, freq, vol):
+        print self.spi_bus, self.slave_or_master, freq, vol
+
+class ADCs():
+    def __init__(self):
+        adc0= ADC(0, 0)
+        adc1 = ADC(0, 1)
+        adc2 = ADC(1, 1)
+
+    def send(self, multi_msg):
+        adc0.send(multi_msg[0],multi_msg[1])
+        adc1.send(multi_msg[2],multi_msg[3])
+        adc2.send(multi_msg[4],multi_msg[5])
+
+adcs = ADCs()
 
 
 def network_status_handler(msg):
@@ -74,6 +95,8 @@ def network_message_handler(msg):
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
         print "heartbeat received", msg
+    if topic == "voice_1":
+        adcs.send(msg[1])
 
 network = None # makin' it global
 
@@ -91,8 +114,7 @@ def init(HOSTNAME):
     )
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_1")  
-    #network.subscribe_to_topic("sensor_data")  
-    main = Main(HOSTNAME)
-    main.start()
+    network.subscribe_to_topic("voice_1")
+    #main = Main(HOSTNAME)
+    #main.start()
 

@@ -116,7 +116,6 @@ class Dispatcher(threading.Thread):
         harmonic_1_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 0)
         harmonic_2_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 1)
         base_volume = voice["voice_key_position"]
-        print "!!!!!", repr(base_volume),  repr(voice["db_h1_vol"])
         harmonic_1_volume = base_volume *  voice["db_h1_vol"]
         harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume]

@@ -51,12 +51,9 @@ class Main(threading.Thread):
         self.hostname = hostname
         ### NETWORK ###
 
-
         ### SET UP SUBSCRIPTIONS AND LISTENERS ###
 
-
         ### SET UP ATTAR ### so any exceptions can be reported
-
 
     def run(self):
         while True:
