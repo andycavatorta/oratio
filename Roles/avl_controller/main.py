@@ -95,7 +95,7 @@ class Dispatcher(threading.Thread):
         return final_freq
 
 
-    def calculate_harmonic_pitch(self, base_pitch, harmonic, fine):
+    def calculate_harmonic_pitch(self, voice_num, base_pitch):
         voice = self.voices[voice_num]
         if harmonic == 0:
             harmonic_freq = (voice["db_h1_harmonic"] + 1) * base_pitch
@@ -113,8 +113,8 @@ class Dispatcher(threading.Thread):
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
         base_pitch = self.calculate_base_pitch(voice_num, priority)
-        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice_num, 0)
-        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice_num, 1)
+        harmonic_1_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 0)
+        harmonic_2_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 1)
         base_volume = voice["voice_key_position"]
         harmonic_1_volume = base_volume *  voice["db_h1_vol"]
         harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
