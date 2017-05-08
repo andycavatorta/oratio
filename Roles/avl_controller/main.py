@@ -42,21 +42,25 @@ class Dispatcher(threading.Thread):
         threading.Thread.__init__(self)
         self.network = network
         self.queue = Queue.Queue()
+        ### constants ###
+        self.transport_encoder_pulses_per_pitch = 765.0
+
+        ### from inputs ###
         self.pitch_key_event = 0
-        self.transport_pos_relative = 0
+        self.transport_pos_relative = 0 # extrapolation of raw encoder values
         self.voices = [
             {
-                "voice_key_position":0,
-                "db_harmonic":0,
-                "db_fine":0,
-                "db_h1_harmonic":0,
-                "db_h1_fine":0,
-                "db_h1_vol":0,
-                "db_h2_harmonic":0,
-                "db_h2_fine":0,
-                "db_h2_vol":0,
-                "db_filter_a":0,
-                "db_filter_b":0
+                "voice_key_position":0, # integet fom 0 to 47
+                "db_harmonic":0, # integer starting at 0
+                "db_fine":0,  # cents -50 t0 50
+                "db_h1_harmonic":0, # integer starting at 0
+                "db_h1_fine":0, # cents -50 t0 50
+                "db_h1_vol":0, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+                "db_h2_harmonic":0, # integer starting at 0
+                "db_h2_fine":0, # cents -50 t0 50
+                "db_h2_vol":0, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+                "db_filter_a":0, # float 0.0 to 1.0
+                "db_filter_b":0 # float 0.0 to 1.0
             }
         ] *3
         self.layer_speed = 0
@@ -66,33 +70,51 @@ class Dispatcher(threading.Thread):
         self.layer_4_volume = 0
         self.layer_5_volume = 0
 
-    def normalize_transport(self):
-        pass
+        ### calculated locally  ###
+        self.transport_pos_offset = 0 # extrapolation of raw encoder values
+        self.transport_pos_adjusted = 0 # extrapolation of raw encoder values
 
-    def calculate_base_pitch(self, db_harmonic, db_fine, priority):
-        print priority
-        self.pitch_key_event
-        self.transport_pos_relative
-        #print self.voices[0]
-        return 300
+
+    def calculate_base_pitch(self, voice_num, priority):
+        voice = self.voices[voice_num]
+        if priority == "pitch_key":
+
+            self.transport_pos_offset = self.transport_encoder_pulses_per_pitch + self.pitch_key_event
+            
+            pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
+        if priority == "transport":
+            self.transport_pos_adjusted = self.transport_pos_relative + self.transport_pos_offset
+            pitch_positon = self.transport_pos_adjusted / ENCODER_PULSES_PER_PITCH
+            pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
+
+        harmonic_freq = (voice["db_harmonic"] + 1) * pitch_key_freq
+        final_freq = harmonic_freq * pow(2, (voice["db_fine"]/1200))
+        return final_freq
 
 
     def calculate_harmonic_pitch(self, base_pitch, harmonic, fine):
-        return 500
-
-
+        voice = self.voices[voice_num]
+        if harmonic == 0:
+            harmonic_freq = (voice["db_h1_harmonic"] + 1) * base_pitch
+            final_freq = harmonic_freq * pow(2, (voice["db_h1_fine"]/1200))
+            return final_freq
+        if harmonic == 1:
+            harmonic_freq = (voice["db_h2_harmonic"] + 1) * base_pitch
+            final_freq = harmonic_freq * pow(2, (voice["db_h2_fine"]/1200))
+            return final_freq
+            
     def calculate_harmonic_volume(self, base_volume, harm_voluime):
         return 50
 
 
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
-        base_pitch = self.calculate_base_pitch(voice["db_harmonic"], voice["db_fine"], priority)
-        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h1_harmonic"], voice["db_h1_fine"])
-        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice["db_h2_harmonic"], voice["db_h2_fine"])
+        base_pitch = self.calculate_base_pitch(voice_num, priority)
+        harmonic_1_pitch = self.calculate_harmonic_pitch(base_pitch, voice_num, 0)
+        harmonic_2_pitch = self.calculate_harmonic_pitch(base_pitch, voice_num, 1)
         base_volume = voice["voice_key_position"]
-        harmonic_1_volume = self.calculate_harmonic_volume(base_volume, voice["db_h1_vol"])
-        harmonic_2_volume = self.calculate_harmonic_volume(base_volume, voice["db_h2_vol"])
+        harmonic_1_volume = base_volume *  voice["db_h1_vol"]
+        harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume]
 
     def updateValue(self, name, val):
