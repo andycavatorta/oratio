@@ -37,19 +37,23 @@ class Main(threading.Thread):
         self.hostname = hostname
 
     def run(self):
-            network.send("pitch_key_event", random.randrange(0,47))
-            network.send("voice_key_1_position", random.randrange(0,100)/100.0)
-            network.send("voice_key_2_position", random.randrange(0,100)/100.0)
-            network.send("voice_key_3_position", random.randrange(0,100)/100.0)
         while True:
             network.send("pitch_key_event", random.randrange(0,47))
-            time.sleep(random.randrange(0,10))
+            time.sleep(random.randrange(0,3))
             network.send("voice_key_1_position", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,10))
+            time.sleep(random.randrange(0,3))
             network.send("voice_key_2_position", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,10))
+            time.sleep(random.randrange(0,3))
             network.send("voice_key_3_position", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,10))
+            time.sleep(random.randrange(0,3))
+            network.send("pitch_key_event", random.randrange(0,47))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_key_1_position", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_key_2_position", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_key_3_position", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
 
         ###  ###
 
