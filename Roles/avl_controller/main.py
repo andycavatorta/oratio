@@ -185,8 +185,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_fine":
-            self.voices[1]["db_fine"] = val
-            self.voices[1]["voice_key_position"] = int(val)
+            self.voices[1]["db_fine"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_harmonic":
