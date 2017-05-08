@@ -96,7 +96,7 @@ def network_message_handler(msg):
     if topic == "__heartbeat__":
         print "heartbeat received", msg
     if topic == "voice_1":
-        adcs.send(msg[1])
+        adcs.send(eval(msg[1]))
 
 network = None # makin' it global
 
