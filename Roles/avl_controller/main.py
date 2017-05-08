@@ -99,11 +99,11 @@ class Dispatcher(threading.Thread):
         voice = self.voices[voice_num]
         if db_harmonic_num == 0:
             harmonic_freq = (int(voice["db_h1_harmonic"]) + 1) * base_pitch
-            final_freq = harmonic_freq * pow(2, (voice["db_h1_fine"]/1200))
+            final_freq = harmonic_freq * pow(2, (float(voice["db_h1_fine"])/1200))
             return final_freq
         if db_harmonic_num == 1:
             harmonic_freq = (int(voice["db_h2_harmonic"]) + 1) * base_pitch
-            final_freq = harmonic_freq * pow(2, (voice["db_h2_fine"]/1200))
+            final_freq = harmonic_freq * pow(2, (float(voice["db_h2_fine"])/1200))
             return final_freq
             
     def calculate_harmonic_volume(self, base_volume, harm_voluime):
