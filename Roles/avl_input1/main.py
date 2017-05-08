@@ -4,10 +4,10 @@ inputs:
     3 rotary encoders on SPI
     
 output topics:
-    pitch_key_event
-    voice_key_1_position
-    voice_key_2_position
-    voice_key_3_position
+    pitch_key_event - integer from 0 to 47
+    voice_key_1_position - float from 0.0 to 1.0
+    voice_key_2_position - float from 0.0 to 1.0
+    voice_key_3_position - float from 0.0 to 1.0
 
 """
 
@@ -38,17 +38,17 @@ class Main(threading.Thread):
 
     def run(self):
             network.send("pitch_key_event", random.randrange(0,47))
-            network.send("voice_key_1_position", random.randrange(0,47))
-            network.send("voice_key_2_position", random.randrange(0,47))
-            network.send("voice_key_3_position", random.randrange(0,47))
+            network.send("voice_key_1_position", random.randrange(0,100)/100.0)
+            network.send("voice_key_2_position", random.randrange(0,100)/100.0)
+            network.send("voice_key_3_position", random.randrange(0,100)/100.0)
         while True:
             network.send("pitch_key_event", random.randrange(0,47))
             time.sleep(random.randrange(0,10))
-            network.send("voice_key_1_position", random.randrange(0,47))
+            network.send("voice_key_1_position", random.randrange(0,100)/100.0)
             time.sleep(random.randrange(0,10))
-            network.send("voice_key_2_position", random.randrange(0,47))
+            network.send("voice_key_2_position", random.randrange(0,100)/100.0)
             time.sleep(random.randrange(0,10))
-            network.send("voice_key_3_position", random.randrange(0,47))
+            network.send("voice_key_3_position", random.randrange(0,100)/100.0)
             time.sleep(random.randrange(0,10))
 
         ###  ###

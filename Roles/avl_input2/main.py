@@ -4,46 +4,46 @@ inputs:
     1 rotary encoder on SPI
     
 output topics:
-    transport_pos_relative
-    layer_speed
-    layer_1_volume
-    layer_2_volume
-    layer_3_volume
-    layer_4_volume
-    layer_5_volume
+    transport_pos_relative - integer from -8000 to 8000
+    layer_speed - seconds in float from 0.5 to 10.0 
+    layer_1_volume - float from 0.0 to 1.0
+    layer_2_volume - float from 0.0 to 1.0
+    layer_3_volume - float from 0.0 to 1.0
+    layer_4_volume - float from 0.0 to 1.0
+    layer_5_volume - float from 0.0 to 1.0
 
-    voice_1_db_harmonic
-    voice_1_db_fine
-    voice_1_db_h1_harmonic
-    voice_1_db_h1_fine
-    voice_1_db_h1_vol
-    voice_1_db_h2_harmonic
-    voice_1_db_h2_fine
-    voice_1_db_h2_vol
-    voice_1_db_filter_a
-    voice_1_db_filter_b
+    voice_1_db_harmonic - integer from 0 to 16 (?)
+    voice_1_db_fine - cents in integer from  -50 to +50
+    voice_1_db_h1_harmonic - integer from 0 to 16 (?)
+    voice_1_db_h1_fine - cents in integer from  -50 to +50
+    voice_1_db_h1_vol - float from 0.0 to 1.0
+    voice_1_db_h2_harmonic - integer from 0 to 16 (?)
+    voice_1_db_h2_fine - cents in integer from  -50 to +50
+    voice_1_db_h2_vol - float from 0.0 to 1.0
+    voice_1_db_filter_a - float from 0.0 to 1.0
+    voice_1_db_filter_b - float from 0.0 to 1.0
 
-    voice_2_db_harmonic
-    voice_2_db_fine
-    voice_2_db_h1_harmonic
-    voice_2_db_h1_fine
-    voice_2_db_h1_vol
-    voice_2_db_h2_harmonic
-    voice_2_db_h2_fine
-    voice_2_db_h2_vol
-    voice_2_db_filter_a
-    voice_2_db_filter_b
+    voice_2_db_harmonic - integer from 0 to 16 (?)
+    voice_2_db_fine - cents in integer from  -50 to +50
+    voice_2_db_h1_harmonic - integer from 0 to 16 (?)
+    voice_2_db_h1_fine - cents in integer from  -50 to +50
+    voice_2_db_h1_vol - float from 0.0 to 1.0
+    voice_2_db_h2_harmonic - integer from 0 to 16 (?)
+    voice_2_db_h2_fine - cents in integer from  -50 to +50
+    voice_2_db_h2_vol - float from 0.0 to 1.0
+    voice_2_db_filter_a - float from 0.0 to 1.0
+    voice_2_db_filter_b - float from 0.0 to 1.0
 
-    voice_3_db_harmonic
-    voice_3_db_fine
-    voice_3_db_h1_harmonic
-    voice_3_db_h1_fine
-    voice_3_db_h1_vol
-    voice_3_db_h2_harmonic
-    voice_3_db_h2_fine
-    voice_3_db_h2_vol
-    voice_3_db_filter_a
-    voice_3_db_filter_b
+    voice_3_db_harmonic - integer from 0 to 16 (?)
+    voice_3_db_fine - cents in integer from  -50 to +50
+    voice_3_db_h1_harmonic - integer from 0 to 16 (?)
+    voice_3_db_h1_fine - cents in integer from  -50 to +50
+    voice_3_db_h1_vol - float from 0.0 to 1.0
+    voice_3_db_h2_harmonic - integer from 0 to 16 (?)
+    voice_3_db_h2_fine - cents in integer from  -50 to +50
+    voice_3_db_h2_vol - float from 0.0 to 1.0
+    voice_3_db_filter_a - float from 0.0 to 1.0
+    voice_3_db_filter_b - float from 0.0 to 1.0
 
 """
 
@@ -75,121 +75,120 @@ class Main(threading.Thread):
     def run(self):
         network.send("transport_pos_relative", random.randrange(-8000,8000))
         network.send("layer_speed", random.randrange(0,10000) /1000.0)
-        network.send("layer_1_volume", random.randrange(0,1000))
-        network.send("layer_2_volume", random.randrange(0,1000))
-        network.send("layer_3_volume", random.randrange(0,1000))
-        network.send("layer_4_volume", random.randrange(0,1000))
-        network.send("layer_5_volume", random.randrange(0,1000))
-        network.send("voice_1_db_harmonic", random.randrange(0,1000))
-        network.send("voice_1_db_fine", random.randrange(0,1000))
-        network.send("voice_1_db_h1_harmonic", random.randrange(0,1000))
-        network.send("voice_1_db_h1_fine", random.randrange(0,1000))
-        network.send("voice_1_db_h1_vol", random.randrange(0,1000))
-        network.send("voice_1_db_h2_harmonic", random.randrange(0,1000))
-        network.send("voice_1_db_h2_fine", random.randrange(0,1000))
-        network.send("voice_1_db_h2_vol", random.randrange(0,1000))
-        network.send("voice_1_db_filter_a", random.randrange(0,1000))
-        network.send("voice_1_db_filter_b", random.randrange(0,1000))
+        network.send("layer_1_volume", random.randrange(0,100)/100.0)
+        network.send("layer_2_volume", random.randrange(0,100)/100.0)
+        network.send("layer_3_volume", random.randrange(0,100)/100.0)
+        network.send("layer_4_volume", random.randrange(0,100)/100.0)
+        network.send("layer_5_volume", random.randrange(0,100)/100.0)
+        network.send("voice_1_db_harmonic", random.randrange(0,16))
+        network.send("voice_1_db_fine", random.randrange(-50,50))
+        network.send("voice_1_db_h1_harmonic", random.randrange(0,16))
+        network.send("voice_1_db_h1_fine", random.randrange(-50,50))
+        network.send("voice_1_db_h1_vol", random.randrange(0,100)/100.0)
+        network.send("voice_1_db_h2_harmonic", random.randrange(0,16))
+        network.send("voice_1_db_h2_fine", random.randrange(-50,50))
+        network.send("voice_1_db_h2_vol", random.randrange(0,100)/100.0)
+        network.send("voice_1_db_filter_a", random.randrange(0,100)/100.0)
+        network.send("voice_1_db_filter_b", random.randrange(0,100)/100.0)
 
-        network.send("voice_2_db_harmonic", random.randrange(0,1000))
-        network.send("voice_2_db_fine", random.randrange(0,1000))
-        network.send("voice_2_db_h1_harmonic", random.randrange(0,1000))
-        network.send("voice_2_db_h1_fine", random.randrange(0,1000))
-        network.send("voice_2_db_h1_vol", random.randrange(0,1000))
-        network.send("voice_2_db_h2_harmonic", random.randrange(0,1000))
-        network.send("voice_2_db_h2_fine", random.randrange(0,1000))
-        network.send("voice_2_db_h2_vol", random.randrange(0,1000))
-        network.send("voice_2_db_filter_a", random.randrange(0,1000))
-        network.send("voice_2_db_filter_b", random.randrange(0,1000))
+        network.send("voice_2_db_harmonic", random.randrange(0,16))
+        network.send("voice_2_db_fine", random.randrange(-50,50))
+        network.send("voice_2_db_h1_harmonic", random.randrange(0,16))
+        network.send("voice_2_db_h1_fine", random.randrange(-50,50))
+        network.send("voice_2_db_h1_vol", random.randrange(0,100)/100.0)
+        network.send("voice_2_db_h2_harmonic", random.randrange(0,16))
+        network.send("voice_2_db_h2_fine", random.randrange(-50,50))
+        network.send("voice_2_db_h2_vol", random.randrange(0,100)/100.0)
+        network.send("voice_2_db_filter_a", random.randrange(0,100)/100.0)
+        network.send("voice_2_db_filter_b", random.randrange(0,100)/100.0)
 
-        network.send("voice_3_db_harmonic", random.randrange(0,1000))
-        network.send("voice_3_db_fine", random.randrange(0,1000))
-        network.send("voice_3_db_h1_harmonic", random.randrange(0,1000))
-        network.send("voice_3_db_h1_fine", random.randrange(0,1000))
-        network.send("voice_3_db_h1_vol", random.randrange(0,1000))
-        network.send("voice_3_db_h2_harmonic", random.randrange(0,1000))
-        network.send("voice_3_db_h2_fine", random.randrange(0,1000))
-        network.send("voice_3_db_h2_vol", random.randrange(0,1000))
-        network.send("voice_3_db_filter_a", random.randrange(0,1000))
-        network.send("voice_3_db_filter_b", random.randrange(0,1000))
+        network.send("voice_3_db_harmonic", random.randrange(0,16))
+        network.send("voice_3_db_fine", random.randrange(-50,50))
+        network.send("voice_3_db_h1_harmonic", random.randrange(0,16))
+        network.send("voice_3_db_h1_fine", random.randrange(-50,50))
+        network.send("voice_3_db_h1_vol", random.randrange(0,100)/100.0)
+        network.send("voice_3_db_h2_harmonic", random.randrange(0,16))
+        network.send("voice_3_db_h2_fine", random.randrange(-50,50))
+        network.send("voice_3_db_h2_vol", random.randrange(0,100)/100.0)
+        network.send("voice_3_db_filter_a", random.randrange(0,100)/100.0)
+        network.send("voice_3_db_filter_b", random.randrange(0,100)/100.0)
         while True:
             network.send("transport_pos_relative", random.randrange(-8000,8000))
-            time.sleep(random.randrange(0,2))
+            time.sleep(random.randrange(0,3))
             network.send("layer_speed", random.randrange(0,10000) /1000.0)
-            time.sleep(random.randrange(0,2))
-            network.send("layer_1_volume", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("layer_2_volume", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("layer_3_volume", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("layer_4_volume", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("layer_5_volume", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h1_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h1_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h1_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h2_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h2_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_h2_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_filter_a", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_1_db_filter_b", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-    
-            network.send("voice_2_db_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h1_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h1_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h1_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h2_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h2_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_h2_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_filter_a", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_2_db_filter_b", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-    
-            network.send("voice_3_db_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h1_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h1_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h1_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h2_harmonic", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h2_fine", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_h2_vol", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_filter_a", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-            network.send("voice_3_db_filter_b", random.randrange(0,1000))
-            time.sleep(random.randrange(0,2))
-    
+            time.sleep(random.randrange(0,3))
+            network.send("layer_1_volume", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("layer_2_volume", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("layer_3_volume", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("layer_4_volume", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("layer_5_volume", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h1_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h1_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h1_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h2_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h2_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_h2_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_filter_a", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_1_db_filter_b", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+
+            network.send("voice_2_db_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h1_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h1_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h1_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h2_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h2_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_h2_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_filter_a", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_2_db_filter_b", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+
+            network.send("voice_3_db_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h1_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h1_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h1_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h2_harmonic", random.randrange(0,16))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h2_fine", random.randrange(-50,50))
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_h2_vol", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_filter_a", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
+            network.send("voice_3_db_filter_b", random.randrange(0,100)/100.0)
+            time.sleep(random.randrange(0,3))
 
 
         ###  ###

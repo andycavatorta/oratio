@@ -48,6 +48,9 @@ class Dispatcher(threading.Thread):
         ### from inputs ###
         self.pitch_key_event = 0
         self.transport_pos_relative = 0 # extrapolation of raw encoder values
+        self.voice_key_1_position = 0 # float from 0.0 to 1.0
+        self.voice_key_2_position = 0 # float from 0.0 to 1.0
+        self.voice_key_3_position = 0 # float from 0.0 to 1.0
         self.voices = [
             {
                 "voice_key_position":0, # integet fom 0 to 47
@@ -84,7 +87,7 @@ class Dispatcher(threading.Thread):
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
         if priority == "transport":
             self.transport_pos_adjusted = self.transport_pos_relative + self.transport_pos_offset
-            pitch_positon = self.transport_pos_adjusted / ENCODER_PULSES_PER_PITCH
+            pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
             pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
 
         harmonic_freq = (voice["db_harmonic"] + 1) * pitch_key_freq
