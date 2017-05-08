@@ -82,7 +82,7 @@ class Dispatcher(threading.Thread):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
 
-            self.transport_pos_offset = self.transport_encoder_pulses_per_pitch + self.pitch_key_event
+            self.transport_pos_offset = self.transport_encoder_pulses_per_pitch + float(self.pitch_key_event)
             
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
         if priority == "transport":
