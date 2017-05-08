@@ -74,14 +74,14 @@ class ADC():
 
 class ADCs():
     def __init__(self):
-        adc0= ADC(0, 0)
-        adc1 = ADC(0, 1)
-        adc2 = ADC(1, 1)
+        self.adc0= ADC(0, 0)
+        self.adc1 = ADC(0, 1)
+        self.adc2 = ADC(1, 1)
 
     def send(self, multi_msg):
-        adc0.send(multi_msg[0],multi_msg[1])
-        adc1.send(multi_msg[2],multi_msg[3])
-        adc2.send(multi_msg[4],multi_msg[5])
+        self.adc0.send(multi_msg[0],multi_msg[1])
+        self.adc1.send(multi_msg[2],multi_msg[3])
+        self.adc2.send(multi_msg[4],multi_msg[5])
 
 adcs = ADCs()
 
