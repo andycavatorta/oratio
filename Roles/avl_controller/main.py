@@ -123,171 +123,164 @@ class Dispatcher(threading.Thread):
     def updateValue(self, name, val):
         #print "updateValue", name, val
         if name == "pitch_key_event":
-            self.pitch_key_event = val
+            self.pitch_key_event = int(val)
             self.queue.put("all_pitch_key")
             return
         if name == "transport_pos_relative":
-            self.transport_pos_relative = val
+            self.transport_pos_relative = int(val)
             self.queue.put("all_transport")
             return
 
         if name == "voice_key_1_position":
-            self.voices[0]["voice_key_position"] = val
+            self.voices[0]["voice_key_position"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_harmonic":
-            self.voices[0]["db_harmonic"] = val
+            self.voices[0]["db_harmonic"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_fine":
-            self.voices[0]["db_fine"] = val
+            self.voices[0]["db_fine"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_harmonic":
-            self.voices[0]["db_h1_harmonic"] = val
+            self.voices[0]["db_h1_harmonic"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_fine":
-            self.voices[0]["db_h1_fine"] = val
+            self.voices[0]["db_h1_fine"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_vol":
-            self.voices[0]["db_h1_vol"] = val
+            self.voices[0]["db_h1_vol"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_harmonic":
-            self.voices[0]["db_h2_harmonic"] = val
+            self.voices[0]["db_h2_harmonic"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_fine":
-            self.voices[0]["db_h2_fine"] = val
+            self.voices[0]["db_h2_fine"] = int(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_vol":
-            self.voices[0]["db_h2_vol"] = val
+            self.voices[0]["db_h2_vol"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_filter_a":
-            self.voices[0]["db_filter_a"] = val
+            self.voices[0]["db_filter_a"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_filter_b":
-            self.voices[0]["db_filter_b"] = val
+            self.voices[0]["db_filter_b"] = float(val)
             self.queue.put("1")
             return
 
         if name == "voice_key_2_position":
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["voice_key_position"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_harmonic":
-            self.voices[1]["db_harmonic"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_harmonic"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_fine":
             self.voices[1]["db_fine"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["voice_key_position"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_harmonic":
-            self.voices[1]["db_h1_harmonic"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_h1_harmonic"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_fine":
             self.voices[1]["db_h1_fine"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["voice_key_position"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_vol":
             self.voices[1]["db_h1_vol"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["voice_key_position"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_harmonic":
-            self.voices[1]["db_h2_harmonic"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_h2_harmonic"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_fine":
-            self.voices[1]["db_h2_fine"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_h2_fine"] = int(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_vol":
-            self.voices[1]["db_h2_vol"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_h2_vol"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_filter_a":
-            self.voices[1]["db_filter_a"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_filter_a"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_filter_b":
-            self.voices[1]["db_filter_b"] = val
-            self.voices[1]["voice_key_position"] = val
+            self.voices[1]["db_filter_b"] = float(val)
             self.queue.put("2")
             return
 
         if name == "voice_key_3_position":
-            self.voices[2]["voice_key_position"] = val
+            self.voices[2]["voice_key_position"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_harmonic":
-            self.voices[2]["db_harmonic"] = val
+            self.voices[2]["db_harmonic"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_fine":
-            self.voices[2]["db_fine"] = val
+            self.voices[2]["db_fine"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_harmonic":
-            self.voices[2]["db_h1_harmonic"] = val
+            self.voices[2]["db_h1_harmonic"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_fine":
-            self.voices[2]["db_h1_fine"] = val
+            self.voices[2]["db_h1_fine"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_vol":
-            self.voices[2]["db_h1_vol"] = val
+            self.voices[2]["db_h1_vol"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_harmonic":
-            self.voices[2]["db_h2_harmonic"] = val
+            self.voices[2]["db_h2_harmonic"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_fine":
-            self.voices[2]["db_h2_fine"] = val
+            self.voices[2]["db_h2_fine"] = int(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_vol":
-            self.voices[2]["db_h2_vol"] = val
+            self.voices[2]["db_h2_vol"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_filter_a":
-            self.voices[2]["db_filter_a"] = val
+            self.voices[2]["db_filter_a"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_filter_b":
-            self.voices[2]["db_filter_b"] = val
+            self.voices[2]["db_filter_b"] = float(val)
             self.queue.put("3")
             return
         
         if name == "layer_speed":
-            self.layer_speed = val
+            self.layer_speed = float(val)
         if name == "layer_1_volume":
-            self.layer_1_volume = val
+            self.layer_1_volume = float(val)
         if name == "layer_2_volume":
-            self.layer_2_volume = val
+            self.layer_2_volume = float(val)
         if name == "layer_3_volume":
-            self.layer_3_volume = val
+            self.layer_3_volume = float(val)
         if name == "layer_4_volume":
-            self.layer_4_volume = val
+            self.layer_4_volume = float(val)
         if name == "layer_5_volume":
-            self.layer_5_volume= val
+            self.layer_5_volume= float(val)
 
 
     def run(self):
