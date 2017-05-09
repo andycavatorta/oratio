@@ -86,7 +86,7 @@ class Main(threading.Thread):
 
 class Transport(threading.Thread):
     def __init__(self, bus, deviceId):
-        threading.Thread.__init__(self, bus, deviceId)
+        threading.Thread.__init__(self)
         self.bus = bus
         self.deviceId = deviceId
         print "creating amt203 object"
