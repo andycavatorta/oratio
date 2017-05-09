@@ -114,9 +114,11 @@ def network_message_handler(msg):
         print "heartbeat received", msg
 
 network = None # makin' it global
+main = None # also makin' it global
 
 def init(HOSTNAME):
     global network
+    global main
     network = network_init(
         hostname=HOSTNAME,
         role="client",
