@@ -85,7 +85,7 @@ class Main(threading.Thread):
             network.send(topic_msg[0], topic_msg[1])
 
 class Transport(threading.Thread):
-    def __init__(self):
+    def __init__(self, bus, deviceId):
         threading.Thread.__init__(self, bus, deviceId)
         self.bus = bus
         self.deviceId = deviceId
