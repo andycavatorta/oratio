@@ -66,7 +66,7 @@ class MPR121Array(threading.Thread):
         print "class CapSensorArray thread started"
         for sensor_id in range(4):
             self.last_touched[sensor_id] = self.capsensors[sensor_id].touched()
-            global_position = 1
+            global_position = 0
         while True:
             for sensor_id in range(4):
                 current_touched = self.capsensors[sensor_id].touched()
@@ -78,7 +78,7 @@ class MPR121Array(threading.Thread):
                     if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
                         print('{0} released!'.format(i))
                 self.last_touched[sensor_id] = current_touched
-            if global_position > 1:
+            if global_position > 0:
                 time.sleep(0.01)
                 main.add_to_queue("pitch_key_event", global_position)
 
