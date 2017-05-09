@@ -58,6 +58,7 @@ import time
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
+from thirtybirds_2_0.Adaptors.Sensors import AMT203
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -67,131 +68,38 @@ THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
+
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.hostname = hostname
+        self.queue = Queue.Queue()
+
+    def add_to_queue(self, topic, msg):
+        self.queue.put([topic, msg])
 
     def run(self):
-        network.send("transport_pos_relative", random.randrange(-8000,8000))
-        network.send("layer_speed", random.randrange(0,10000) /1000.0)
-        network.send("layer_1_volume", random.randrange(0,100)/100.0)
-        network.send("layer_2_volume", random.randrange(0,100)/100.0)
-        network.send("layer_3_volume", random.randrange(0,100)/100.0)
-        network.send("layer_4_volume", random.randrange(0,100)/100.0)
-        network.send("layer_5_volume", random.randrange(0,100)/100.0)
-        network.send("voice_1_db_harmonic", random.randrange(0,16))
-        network.send("voice_1_db_fine", random.randrange(-50,50))
-        network.send("voice_1_db_h1_harmonic", random.randrange(0,16))
-        network.send("voice_1_db_h1_fine", random.randrange(-50,50))
-        network.send("voice_1_db_h1_vol", random.randrange(0,100)/100.0)
-        network.send("voice_1_db_h2_harmonic", random.randrange(0,16))
-        network.send("voice_1_db_h2_fine", random.randrange(-50,50))
-        network.send("voice_1_db_h2_vol", random.randrange(0,100)/100.0)
-        network.send("voice_1_db_filter_a", random.randrange(0,100)/100.0)
-        network.send("voice_1_db_filter_b", random.randrange(0,100)/100.0)
-
-        network.send("voice_2_db_harmonic", random.randrange(0,16))
-        network.send("voice_2_db_fine", random.randrange(-50,50))
-        network.send("voice_2_db_h1_harmonic", random.randrange(0,16))
-        network.send("voice_2_db_h1_fine", random.randrange(-50,50))
-        network.send("voice_2_db_h1_vol", random.randrange(0,100)/100.0)
-        network.send("voice_2_db_h2_harmonic", random.randrange(0,16))
-        network.send("voice_2_db_h2_fine", random.randrange(-50,50))
-        network.send("voice_2_db_h2_vol", random.randrange(0,100)/100.0)
-        network.send("voice_2_db_filter_a", random.randrange(0,100)/100.0)
-        network.send("voice_2_db_filter_b", random.randrange(0,100)/100.0)
-
-        network.send("voice_3_db_harmonic", random.randrange(0,16))
-        network.send("voice_3_db_fine", random.randrange(-50,50))
-        network.send("voice_3_db_h1_harmonic", random.randrange(0,16))
-        network.send("voice_3_db_h1_fine", random.randrange(-50,50))
-        network.send("voice_3_db_h1_vol", random.randrange(0,100)/100.0)
-        network.send("voice_3_db_h2_harmonic", random.randrange(0,16))
-        network.send("voice_3_db_h2_fine", random.randrange(-50,50))
-        network.send("voice_3_db_h2_vol", random.randrange(0,100)/100.0)
-        network.send("voice_3_db_filter_a", random.randrange(0,100)/100.0)
-        network.send("voice_3_db_filter_b", random.randrange(0,100)/100.0)
         while True:
-            network.send("transport_pos_relative", random.randrange(-8000,8000))
-            time.sleep(random.randrange(0,3))
-            network.send("layer_speed", random.randrange(0,10000) /1000.0)
-            time.sleep(random.randrange(0,3))
-            network.send("layer_1_volume", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("layer_2_volume", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("layer_3_volume", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("layer_4_volume", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("layer_5_volume", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h1_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h1_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h1_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h2_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h2_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_h2_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_filter_a", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_1_db_filter_b", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
+            topic_msg = self.queue.get(True)
+            network.send(topic_msg[0], topic_msg[1])
 
-            network.send("voice_2_db_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h1_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h1_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h1_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h2_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h2_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_h2_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_filter_a", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_2_db_filter_b", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
+class Transport(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self, bus, deviceId)
+        self.bus = bus
+        self.deviceId = deviceId
+        print "creating amt203 object"
+        self.encoder = AMT203.AMT203(bus, deviceId)
+        print "setting zero ", self.bus, self.deviceId
+        self.encoder.set_zero()
+        print "after zero ", self.bus, self.deviceId 
+        print "class Transport instantiated with values", bus, deviceId
 
-            network.send("voice_3_db_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h1_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h1_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h1_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h2_harmonic", random.randrange(0,16))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h2_fine", random.randrange(-50,50))
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_h2_vol", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_filter_a", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-            network.send("voice_3_db_filter_b", random.randrange(0,100)/100.0)
-            time.sleep(random.randrange(0,3))
-
-
-        ###  ###
+    def run(self):
+        print "class Transport thread started"
+        while True:
+            main.add_to_queue("transport_pos_raw", self.encoder.get_position())
+            time.sleep(0.01)
 
 
 def network_status_handler(msg):
@@ -223,4 +131,5 @@ def init(HOSTNAME):
     #network.subscribe_to_topic("sensor_data")  
     main = Main(HOSTNAME)
     main.start()
-
+    transport = Transport(0,0)
+    transport.start()

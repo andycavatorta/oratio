@@ -47,7 +47,7 @@ class Dispatcher(threading.Thread):
 
         ### from inputs ###
         self.pitch_key_event = 0
-        self.transport_pos_relative = 0 # extrapolation of raw encoder values
+        self.transport_pos_raw = 0 # extrapolation of raw encoder values
         self.voice_key_1_position = 0 # float from 0.0 to 1.0
         self.voice_key_2_position = 0 # float from 0.0 to 1.0
         self.voice_key_3_position = 0 # float from 0.0 to 1.0
@@ -86,7 +86,7 @@ class Dispatcher(threading.Thread):
             
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
         if priority == "transport":
-            self.transport_pos_adjusted = self.transport_pos_relative + self.transport_pos_offset
+            self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
             pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
             pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
 
@@ -126,8 +126,8 @@ class Dispatcher(threading.Thread):
             self.pitch_key_event = int(val)
             self.queue.put("all_pitch_key")
             return
-        if name == "transport_pos_relative":
-            self.transport_pos_relative = int(val)
+        if name == "transport_pos_raw":
+            self.transport_pos_raw = int(val)
             self.queue.put("all_transport")
             return
 
@@ -314,7 +314,7 @@ def network_message_handler(msg):
             "voice_key_2_position",
             "voice_key_3_position",
             "pitch_key_event",
-            "transport_pos_relative",
+            "transport_pos_raw",
             "layer_speed",
             "layer_1_volume",
             "layer_2_volume",
@@ -378,7 +378,7 @@ def init(HOSTNAME):
     network.subscribe_to_topic("voice_key_3_position")
     network.subscribe_to_topic("pitch_key_event")
 
-    network.subscribe_to_topic("transport_pos_relative")
+    network.subscribe_to_topic("transport_pos_raw")
     network.subscribe_to_topic("layer_speed")
     network.subscribe_to_topic("layer_1_volume")
     network.subscribe_to_topic("layer_2_volume")
