@@ -106,16 +106,19 @@ class Transport(threading.Thread):
         current_position = self.encoder.get_position()
         self.direction = True if (self.last_position < current_position and  current_position - self.last_position < self.gap) or  (self.last_position - current_position > self.gap) else False
         if current_position < self.last_position and self.direction:
-            self.lap -=  1
+            self.lap +=  1
         elif self.last_position - current_position < 0 and not self.direction:
-            self.lap += 1
+            self.lap -= 1
         self.last_position = current_position
         return (self.lap*self.resolution) + current_position
 
     def run(self):
         print "class Transport thread started"
         while True:
-            main.add_to_queue("transport_pos_raw", self.get_relative_position())
+            current_relative_position = self.get_relative_position()
+            if current_relative_position != self.last_relative_position:
+                self.last_relative_position = current_relative_position
+                main.add_to_queue("transport_pos_raw", current_relative_position)
             time.sleep(0.01)
 
 
