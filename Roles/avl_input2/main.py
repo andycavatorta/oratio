@@ -94,6 +94,12 @@ class Transport(threading.Thread):
         print "setting zero ", self.bus, self.deviceId
         self.encoder.set_zero()
         print "after zero ", self.bus, self.deviceId 
+        self.last_position = self.encoder.get_position()
+        self.last_relative_position = int(self.last_position)
+        self.resolution = self.encoder.get_resolution()
+        self.gap = 2000
+        self.lap = 0
+        self.direction = None
         print "class Transport instantiated with values", bus, deviceId
 
     def get_relative_position(self):
