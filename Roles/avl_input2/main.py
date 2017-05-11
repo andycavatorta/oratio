@@ -113,6 +113,44 @@ class Key(threading.Thread):
         mapped_value = (((value - encoder_min))/(encoder_max - encoder_min))
         return mapped_value
 
+class Transport(threading.Thread):
+    def __init__(self, bus, deviceId):
+        threading.Thread.__init__(self)
+        self.bus = bus
+        self.deviceId = deviceId
+        print "creating amt203 object"
+        self.encoder = AMT203.AMT203(bus, deviceId)
+        print "setting zero ", self.bus, self.deviceId
+        self.encoder.set_zero()
+        print "after zero ", self.bus, self.deviceId 
+        self.last_position = self.encoder.get_position()
+        self.last_relative_position = int(self.last_position)
+        self.resolution = self.encoder.get_resolution()
+        self.gap = 2000
+        self.lap = 0
+        self.direction = None
+        print "class Transport instantiated with values", bus, deviceId
+
+    def get_relative_position(self):
+        current_position = self.encoder.get_position()
+        self.direction = True if (self.last_position < current_position and  current_position - self.last_position < self.gap) or  (self.last_position - current_position > self.gap) else False
+        if current_position < self.last_position and self.direction:
+            self.lap +=  1
+        elif self.last_position - current_position < 0 and not self.direction:
+            self.lap -= 1
+        self.last_position = current_position
+        return (self.lap*self.resolution) + current_position
+
+    def run(self):
+        print "class Transport thread started"
+        while True:
+            current_relative_position = self.get_relative_position()
+            if current_relative_position != self.last_relative_position:
+                self.last_relative_position = current_relative_position
+                main.add_to_queue("transport_pos_raw", current_relative_position)
+            time.sleep(0.01)
+
+
 def network_status_handler(msg):
     print "network_status_handler", msg
 
@@ -146,6 +184,8 @@ def init(HOSTNAME):
     main.start()
     mpr121array = MPR121Array([0x5a, 0x5b, 0x5c, 0x5d])
     mpr121array.start()
+     transport = Transport(0,0)
+     transport.start()
     # key_0 = Key("voice_key_1_position",0,0)
     # key_1 = Key("voice_key_2_position",0,1)
     # key_2 = Key("voice_key_3_position",1,1)
