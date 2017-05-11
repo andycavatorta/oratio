@@ -96,13 +96,16 @@ class Key(threading.Thread):
         print "class Key instantiated with values", name, bus, deviceId
         self.encoder_min = 0
         self.encoder_max = 100
+        self.last_pos = 0
 
     def run(self):
         print "class Key thread started"
         while True:
             pos = self.encoder.get_position()
-            mapped_pos = self.map_key(self.name, pos)
-            main.add_to_queue(self.name, mapped_pos)
+            if self.last_pos != pos:
+                mapped_pos = self.map_key(self.name, pos)
+                main.add_to_queue(self.name, mapped_pos)
+                self.last_pos = pos
             time.sleep(0.01)
 
     def map_key(self, name, value):
