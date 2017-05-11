@@ -54,6 +54,7 @@ class MPR121Array(threading.Thread):
         self.i2c_address = i2c_address
         self.capsensors = []
         self.last_touched = [0,0,0,0]
+        self.last_global_position  = -1
         
         for sensor_id in range(4):
             self.capsensors.append(MPR121.MPR121())
@@ -78,9 +79,10 @@ class MPR121Array(threading.Thread):
                     if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
                         print('{0} released!'.format(i))
                 self.last_touched[sensor_id] = current_touched
-            if global_position > 1:
+            if global_position > 1 and self.last_global_position != global_position:
+                main.add_to_queue("pitch_key_event", position)
+                self.last_global_position = global_position
                 time.sleep(0.01)
-                main.add_to_queue("pitch_key_event", global_position)
 
 class Key(threading.Thread):
     def __init__(self, name, bus, deviceId):
@@ -108,7 +110,7 @@ class Key(threading.Thread):
     def map_key(self, name, value):
         value = encoder_max if value > encoder_max else value
         value = encoder_min if value < encoder_min else value
-        mapped_value = (((value - encoder_min))/(encoder_max - encoder_min))
+        mapped_value = (((value - encoder_min))/(encoder_max - encoder_min))z
         return mapped_value
 
 def network_status_handler(msg):
