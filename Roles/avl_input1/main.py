@@ -106,9 +106,9 @@ class Key(threading.Thread):
             time.sleep(0.01)
 
     def map_key(self, name, value):
-        value = encoder_max if value > encoder_max else value
-        value = encoder_min if value < encoder_min else value
-        mapped_value = (((value - encoder_min))/(encoder_max - encoder_min))
+        value = self.encoder_max if value > self.encoder_max else value
+        value = self.encoder_min if value < self.encoder_min else value
+        mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
         return mapped_value
 
 def network_status_handler(msg):
