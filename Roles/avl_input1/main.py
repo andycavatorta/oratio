@@ -94,9 +94,9 @@ class Key(threading.Thread):
         self.encoder.set_zero()
         print "after zero ", self.bus, self.deviceId 
         print "class Key instantiated with values", name, bus, deviceId
-        self.encoder_min = 0
-        self.encoder_max = 100
-        self.last_pos = 0
+        self.encoder_min = 0.0
+        self.encoder_max = 100.0
+        self.last_pos = 0.0
 
     def run(self):
         print "class Key thread started"
