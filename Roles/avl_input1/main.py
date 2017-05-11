@@ -95,7 +95,7 @@ class Key(threading.Thread):
         print "after zero ", self.bus, self.deviceId 
         print "class Key instantiated with values", name, bus, deviceId
         self.encoder_min = 0.0
-        self.encoder_max = 100.0
+        self.encoder_max = 140.0
         self.last_pos = 0.0
 
     def run(self):
