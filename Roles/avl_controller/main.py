@@ -33,6 +33,7 @@ import yaml
 
 from thirtybirds_2_0.Logs.main import Exception_Collector
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Adaptors.Sensors import AMT203
 
 network = None # for global
 dispatcher = None # for global
@@ -298,6 +299,43 @@ class Dispatcher(threading.Thread):
             if scope_of_update == "3":
                 network.send("voice_3", self.calculate_voice_data(2, "transport"))
 
+
+class Key(threading.Thread):
+    def __init__(self, name, bus, deviceId):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.bus = bus
+        self.deviceId = deviceId
+        print "creating amt203 object"
+        self.encoder = AMT203.AMT203(bus, deviceId)
+        print "setting zero ", self.bus, self.deviceId
+        self.encoder.set_zero()
+        print "after zero ", self.bus, self.deviceId 
+        print "class Key instantiated with values", name, bus, deviceId
+        self.encoder_min = 0.0
+        self.encoder_max = 140.0
+        self.last_pos = 0.0
+
+    def run(self):
+        print "class Key thread started"
+        while True:
+            pos = self.encoder.get_position()
+            if self.last_pos != pos:
+                mapped_pos = self.map_key(self.name, pos)
+
+                #main.add_to_queue(self.name, mapped_pos)
+                network_message_handler(self.name, mapped_pos)
+
+                self.last_pos = pos
+            time.sleep(0.01)
+
+    def map_key(self, name, value):
+        value = self.encoder_max if value > self.encoder_max else value
+        value = self.encoder_min if value < self.encoder_min else value
+        mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
+        return mapped_value
+
+
 def network_status_handler(msg):
     print "network_status_handler", msg
 
@@ -421,3 +459,7 @@ def init(HOSTNAME):
 
     dispatcher = Dispatcher(network)
     dispatcher.start()
+
+    key_3 = Key("voice_key_3_position",0,0)
+    key_3.start()
+    time.sleep(5)
