@@ -324,7 +324,7 @@ class Key(threading.Thread):
                 mapped_pos = self.map_key(self.name, pos)
 
                 #main.add_to_queue(self.name, mapped_pos)
-                network_message_handler(self.name, mapped_pos)
+                network_message_handler([self.name, mapped_pos])
 
                 self.last_pos = pos
             time.sleep(0.01)
