@@ -119,7 +119,7 @@ class Dispatcher(threading.Thread):
         base_volume = voice["voice_key_position"]
         harmonic_1_volume = base_volume *  voice["db_h1_vol"]
         harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
-        return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume]
+        return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume, db_filter_a, db_filter_b]
 
     def updateValue(self, name, val):
         #print "updateValue", name, val
