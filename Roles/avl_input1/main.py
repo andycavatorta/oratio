@@ -104,7 +104,7 @@ class Key(threading.Thread):
             pos = self.encoder.get_position()
             if self.last_pos != pos:
                 mapped_pos = self.map_key(self.name, pos)
-                main.add_to_queue(self.name, mapped_pos)
+                main.add_to_queue([self.name, mapped_pos])
                 self.last_pos = pos
             time.sleep(0.01)
 
