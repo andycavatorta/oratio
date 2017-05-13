@@ -93,7 +93,7 @@ class Dispatcher(threading.Thread):
             print "calculate_base_pitch pitch_key pitch_key_freq = ", pitch_key_freq
 
         if priority == "transport":
-            print "calculate_base_pitch transport"
+            print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_offset
             self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
             print "calculate_base_pitch transport", self.transport_pos_adjusted
             pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
