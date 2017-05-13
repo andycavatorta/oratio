@@ -89,7 +89,7 @@ class Drawbar(threading.Thread):
         spi_master_slave,
         channels
         ):
-        threading.Thread.__init__(self, chip_select_pin, channels)
+        threading.Thread.__init__(self)
         self.channels = channels
         # channels format: {"name":"", "detent_adc_values": [ 234,345,... closest values]} OR {"name":"", "min": (int), "max": (int), }
         for channel in channels:
