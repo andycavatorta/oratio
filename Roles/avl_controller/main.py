@@ -81,13 +81,16 @@ class Dispatcher(threading.Thread):
         self.transport_pos_offset = 0 # extrapolation of raw encoder values
         self.transport_pos_adjusted = 0 # extrapolation of raw encoder values
         self.transport_pos_at_last_pitch_key_event = 0
+        self.last_pitch_key_value = 0
 
     def calculate_base_pitch(self, voice_num, priority):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
             self.transport_pos_at_last_pitch_key_event  = self.transport_pos_raw
-            print "calculate_base_pitch pitch_key", self.pitch_key_event, self.transport_pos_at_last_pitch_key_event
-            self.transport_pos_offset = self.transport_encoder_pulses_per_pitch * float(self.pitch_key_event)
+            self.last_pitch_key_value = self.pitch_key_event
+
+            #print "calculate_base_pitch pitch_key", self.pitch_key_event, self.transport_pos_at_last_pitch_key_event
+            #self.transport_pos_offset = self.transport_encoder_pulses_per_pitch * float(self.pitch_key_event)
 
             #print "calculate_base_pitch pitch_key self.transport_pos_offset = ", self.transport_pos_offset
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12.0 ) ) * 27.5
@@ -98,16 +101,18 @@ class Dispatcher(threading.Thread):
             #print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_offset
             print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_at_last_pitch_key_event, self.transport_pos_at_last_pitch_key_event - self.transport_pos_raw, (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
 
-            self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
+            pitch_diff_from_transport = (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
+
+            #self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
 
             #print "calculate_base_pitch transport", self.transport_pos_adjusted
 
-            pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
+            #pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
 
             #print "calculate_base_pitch transport pitch_positon", pitch_positon
 
-            pitch_key_freq = pow( 2, (  pitch_positon / 12.0 ) ) * 27.5
-
+            pitch_key_freq = pow( 2, (  self.last_pitch_key_value + pitch_diff_from_transport / 12.0 ) ) * 27.5
+            
             #print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
