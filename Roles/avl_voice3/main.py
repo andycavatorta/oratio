@@ -141,8 +141,9 @@ def network_message_handler(msg):
         # tones.send(eval(msg[1]))
 
         # quick hack -- will make this better later!
-        payload = msg[1]
+        payload = eval(msg[1])
         offset = 167700
+        print payload[0]
         c.send_freq(0, offset-int(payload[0]))
         c.send_freq(1, offset-int(payload[2]))
         c.send_freq(2, offset-int(payload[4]))
