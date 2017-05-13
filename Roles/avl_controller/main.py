@@ -103,6 +103,7 @@ class Dispatcher(threading.Thread):
 
             pitch_diff_from_transport = (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
 
+            pitch_diff_from_transport_and_last_key = self.last_pitch_key_value + pitch_diff_from_transport 
             #self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
 
             #print "calculate_base_pitch transport", self.transport_pos_adjusted
@@ -111,12 +112,9 @@ class Dispatcher(threading.Thread):
 
             #print "calculate_base_pitch transport pitch_positon", pitch_positon
 
-
-
-            pitch_key_freq = pow( 2, (  self.last_pitch_key_value + pitch_diff_from_transport / 12.0 ) ) * 27.5
-            print "------------>", pitch_diff_from_transport, self.last_pitch_key_value, self.last_pitch_key_value + pitch_diff_from_transport, pitch_key_freq
-
-
+            pitch_key_freq = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
+            print "------------>", pitch_diff_from_transport_and_last_key
+            #print "------------>", pitch_diff_from_transport, self.last_pitch_key_value, self.last_pitch_key_value + pitch_diff_from_transport, pitch_key_freq
             #print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
