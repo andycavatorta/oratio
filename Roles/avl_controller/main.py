@@ -111,8 +111,12 @@ class Dispatcher(threading.Thread):
 
             #print "calculate_base_pitch transport pitch_positon", pitch_positon
 
+
+
             pitch_key_freq = pow( 2, (  self.last_pitch_key_value + pitch_diff_from_transport / 12.0 ) ) * 27.5
-            print "------------>", pitch_diff_from_transport, self.last_pitch_key_value + pitch_diff_from_transport, pitch_key_freq
+            print "------------>", pitch_diff_from_transport, self.last_pitch_key_value, self.last_pitch_key_value + pitch_diff_from_transport, pitch_key_freq
+
+
             #print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
