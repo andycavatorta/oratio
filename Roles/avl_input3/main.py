@@ -157,7 +157,7 @@ def init(HOSTNAME):
     main.start()
 
 
-    voice_1_drawbar = Drawbar(0, 
+    voice_1_drawbar = Drawbar(0, 0, 
             [
                 {
                     "name":"voice_1_db_harmonic", 
