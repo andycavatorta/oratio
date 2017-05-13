@@ -46,6 +46,7 @@ output topics:
     layer_5_volume
 
 """
+import RPi.GPIO as GPIO
 import importlib
 import json
 import os
