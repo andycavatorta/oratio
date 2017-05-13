@@ -143,6 +143,7 @@ def network_message_handler(msg):
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         offset = 167700
+        print payload[0]
         c.send_freq(0, offset-int(payload[0]))
         c.send_freq(1, offset-int(payload[2]))
         c.send_freq(2, offset-int(payload[4]))
