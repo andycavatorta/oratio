@@ -46,7 +46,6 @@ output topics:
     layer_5_volume
 
 """
-import Adafruit_MPR121.MPR121 as MPR121
 import importlib
 import json
 import os
