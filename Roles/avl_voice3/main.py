@@ -63,28 +63,67 @@ class Main(threading.Thread):
         ###  ###
 """
 
+class FPGA():
+    def __init__(
+        self, 
+        spi_chipeselect, 
+        spi_masterslave
+    ):
+        self.spi_chipeselect = spi_chipeselect
+        self.spi_masterslave = spi_masterslave
+        self.spi_connection = None # to do
+        # create SPI connection
+    def send(self, filter_a, filter_b):
+        #self.spi_connection.send
+        print "FPGA: ", filter_a, filter_b
 
-class ADC():
-    def __init__(self, spi_bus, slave_or_master):
-        self.spi_bus = spi_bus
-        self.slave_or_master = slave_or_master
+class TONE():
+    def __init__(
+        self, 
+        spi_chipeselect_for_dac, 
+        spi_masterslave_for_dac
+    ):
+        self.spi_chipeselect_for_dac = spi_chipeselect_for_dac
+        self.spi_masterslave_for_dac = spi_masterslave_for_dac
+        self.spi_connection = None # to do
 
     def send(self, freq, vol):
-        print self.spi_bus, self.slave_or_master, freq, vol
+        #self.spi_connection.send
+        print "TONE: ", freq, vol
 
-class ADCs():
-    def __init__(self):
-        self.adc0= ADC(0, 0)
-        self.adc1 = ADC(0, 1)
-        self.adc2 = ADC(1, 1)
+class TONES():
+    def __init__(
+        self, 
+        spi_chipeselect_for_dac_1, 
+        spi_masterslave_for_dac_1,
+        spi_chipeselect_for_dac_2, 
+        spi_masterslave_for_dac_2,
+        spi_chipeselect_for_dac_3, 
+        spi_masterslave_for_dac_3,
+        spi_chipeselect_for_fpga, 
+        spi_masterslave_for_fpga
+    ):
+        self.tone_1 = TONE(spi_chipeselect_for_dac_1, spi_masterslave_for_dac_1)
+        self.tone_2 = TONE(spi_chipeselect_for_dac_2 , spi_masterslave_for_dac_2)
+        self.tone_3 = TONE(spi_chipeselect_for_dac_3, spi_masterslave_for_dac_3)
+        self.fpga = FPGA(spi_chipeselect_for_fpga,spi_masterslave_for_fpga)
 
     def send(self, multi_msg):
-        self.adc0.send(multi_msg[0],multi_msg[1])
-        self.adc1.send(multi_msg[2],multi_msg[3])
-        self.adc2.send(multi_msg[4],multi_msg[5])
+        self.tone_1.send(multi_msg[0],multi_msg[1])
+        self.tone_2.send(multi_msg[2],multi_msg[3])
+        self.tone_3.send(multi_msg[4],multi_msg[5])
+        self.fpga.send(multi_msg[6],multi_msg[7])
 
-adcs = ADCs()
-
+tones = TONES(
+        , #spi_chipeselect_for_dac_1, 
+        0, #spi_masterslave_for_dac_1,
+        , #spi_chipeselect_for_dac_2, 
+        0, #spi_masterslave_for_dac_2,
+        , #spi_chipeselect_for_dac_3, 
+        0, #spi_masterslave_for_dac_3,
+        , #spi_chipeselect_for_fpga, 
+         #spi_masterslave_for_fpga
+)
 
 def network_status_handler(msg):
     print "network_status_handler", msg
@@ -95,7 +134,7 @@ def network_message_handler(msg):
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
         print "heartbeat received", msg
-    if topic == "voice_3":
+    if topic == "voice_1":
         adcs.send(eval(msg[1]))
 
 network = None # makin' it global
