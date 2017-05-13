@@ -58,7 +58,7 @@ import time
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
-from thirtybirds_2_0.Adaptors.ADC import TLC1543IN
+#from thirtybirds_2_0.Adaptors.ADC import TLC1543IN
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -67,6 +67,18 @@ THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
 
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
+
+
+class TLC1543IN():
+    def __init__(self, bus=0, deviceId=0):
+        self.deviceId = deviceId
+        self.bus = bus
+        GPIO.setmode(GPIO.BCM)
+        
+    def read(self, channel):
+        return 0
+
+
 
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -97,7 +109,7 @@ class Drawbar(threading.Thread):
         self.spi_chip_select = spi_chip_select
         self.spi_master_slave = spi_master_slave
         self.channels = channels
-        self.adc = TLC1543IN.TLC1543IN()
+        self.adc = TLC1543IN(self.spi_chip_select, self.spi_master_slave)
 
     def detent_from_adc_value(self, channel_num, val):
         return min(self.channels[channel_num]["detent_adc_values"], key=lambda x:abs(x-val))
