@@ -221,6 +221,59 @@ def init(HOSTNAME):
                 },
             ]
         )
+    voice_1_drawbar.start()
+
+    voice_2_drawbar = Drawbar(3, 0, 
+            [
+                {
+                    "name":"voice_2_db_harmonic", 
+                    "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_2_db_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_h1_harmonic", 
+                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_2_db_h1_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_h1_vol", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_h2_harmonic", 
+                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_2_db_h2_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_h2_vol", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_filter_a", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_2_db_filter_a", 
+                    "min":100, 
+                    "max":800
+                },
+            ]
+        )
     voice_2_drawbar.start()
 
     voice_3_drawbar = Drawbar(3, 0, 
