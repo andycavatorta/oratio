@@ -170,7 +170,7 @@ def init(HOSTNAME):
     main.start()
 
 
-    voice_1_drawbar = Drawbar(0, 0, 
+    voice_1_drawbar = Drawbar(1, 0, 
             [
                 {
                     "name":"voice_1_db_harmonic", 
@@ -221,15 +221,61 @@ def init(HOSTNAME):
                 },
             ]
         )
-    voice_1_drawbar.start()
-    # key_0 = Key("voice_key_1_position",0,0)
-    # key_1 = Key("voice_key_2_position",0,1)
-    # key_2 = Key("voice_key_3_position",1,1)
-    # key_0.start()
-    # time.sleep(5)
-    # key_1.start()
-    # time.sleep(5)
-    # key_2.start()
+    voice_2_drawbar.start()
+
+    voice_3_drawbar = Drawbar(3, 0, 
+            [
+                {
+                    "name":"voice_3_db_harmonic", 
+                    "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_3_db_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_h1_harmonic", 
+                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_3_db_h1_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_h1_vol", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_h2_harmonic", 
+                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                },
+                {
+                    "name":"voice_3_db_h2_fine", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_h2_vol", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_filter_a", 
+                    "min":100, 
+                    "max":800
+                },
+                {
+                    "name":"voice_3_db_filter_a", 
+                    "min":100, 
+                    "max":800
+                },
+            ]
+        )
+    voice_3_drawbar.start()
+
 
 ############################################
 ###### PREVIOUS CODE FOR TRANSPORT #########
