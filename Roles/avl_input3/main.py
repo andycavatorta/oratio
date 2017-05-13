@@ -70,7 +70,7 @@ sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
 
-class TLC1543IN():
+class TLC1543():
     def __init__(self, bus=0, deviceId=0):
         self.deviceId = deviceId
         self.bus = bus
@@ -110,7 +110,7 @@ class Drawbar(threading.Thread):
         self.spi_chip_select = spi_chip_select
         self.spi_master_slave = spi_master_slave
         self.channels = channels
-        self.adc = TLC1543IN(self.spi_chip_select, self.spi_master_slave)
+        self.adc = TLC1543(self.spi_chip_select, self.spi_master_slave)
 
     def detent_from_adc_value(self, channel_num, val):
         return min(self.channels[channel_num]["detent_adc_values"], key=lambda x:abs(x-val))
