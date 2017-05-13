@@ -124,7 +124,7 @@ class Drawbar(threading.Thread):
     def run(self):
         while True:
             for channel_num, channel in enumerate(self.channels):
-                adc_value = self.adc(channel_num)
+                adc_value = self.adc.read(channel_num)
                 if "detent_adc_values" in channel:
                     detent = self.detent_from_adc_value(channel_num, adc_value)
                     if detent != channel["last_value"]:
