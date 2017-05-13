@@ -21,6 +21,9 @@ Dashboard:
         inventory
         exceptions
 
+Notes:
+    1450 pulses per semitone
+
 """
 
 
@@ -44,7 +47,7 @@ class Dispatcher(threading.Thread):
         self.network = network
         self.queue = Queue.Queue()
         ### constants ###
-        self.transport_encoder_pulses_per_pitch = 765.0
+        self.transport_encoder_pulses_per_pitch = 1444
 
         ### from inputs ###
         self.pitch_key_event = 0
