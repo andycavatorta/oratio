@@ -132,15 +132,12 @@ def init () :
   wpi.pinMode(pport_en2, wpi.OUTPUT)
   wpi.digitalWrite(pport_en2, 0)
 
-def send_freq (ch, freq, prnt=True, sine=True) :
+def send_freq (ch, freq, prnt=False) :
 
   word = freq_word(freq, prnt)
 
   if (prnt):
-    if (sine):
-      print spiRW(ch, chr(0b00100000) + chr(0b0))
-    else:
-      print spiRW(ch, chr(0b00100000) + chr(0b10))
+    print spiRW(ch, chr(0b00100000) + chr(0b0))
     print spiRW(ch, word[1])
     print spiRW(ch, word[0])
 
