@@ -89,7 +89,7 @@ class Dispatcher(threading.Thread):
             self.transport_pos_offset = self.transport_encoder_pulses_per_pitch * float(self.pitch_key_event)
 
             print "calculate_base_pitch pitch_key self.transport_pos_offset = ", self.transport_pos_offset
-            pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
+            pitch_key_freq = pow( 2, (  self.pitch_key_event / 12.0 ) ) * 27.5
             print "calculate_base_pitch pitch_key pitch_key_freq = ", pitch_key_freq
 
         if priority == "transport":
