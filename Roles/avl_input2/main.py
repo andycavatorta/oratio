@@ -79,7 +79,7 @@ class MPR121Array(threading.Thread):
                     if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
                         print('{0} released!'.format(i))
                 self.last_touched[sensor_id] = current_touched
-            if global_position > 1 and self.last_global_position != global_position:
+            if global_position > -1 and self.last_global_position != global_position:
                 main.add_to_queue("pitch_key_event", global_position)
                 self.last_global_position = global_position
                 time.sleep(0.01)
