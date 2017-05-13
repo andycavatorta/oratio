@@ -98,7 +98,7 @@ class Dispatcher(threading.Thread):
             print "calculate_base_pitch transport", self.transport_pos_adjusted
             pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
             print "calculate_base_pitch transport pitch_positon", pitch_positon
-            pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
+            pitch_key_freq = pow( 2, (  pitch_positon / 12.0 ) ) * 27.5
             print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
