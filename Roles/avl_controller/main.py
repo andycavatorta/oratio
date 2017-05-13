@@ -96,7 +96,7 @@ class Dispatcher(threading.Thread):
         if priority == "transport":
             #calculate number of semitones moved since last 
             #print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_offset
-            print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_at_last_pitch_key_event, self.transport_pos_at_last_pitch_key_event - self.transport_pos_raw
+            print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_at_last_pitch_key_event, self.transport_pos_at_last_pitch_key_event - self.transport_pos_raw, (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
 
             self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
 
