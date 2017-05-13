@@ -85,14 +85,21 @@ class Dispatcher(threading.Thread):
     def calculate_base_pitch(self, voice_num, priority):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
-
+            print "calculate_base_pitch pitch_key"
             self.transport_pos_offset = self.transport_encoder_pulses_per_pitch + float(self.pitch_key_event)
-            
+
+            print "calculate_base_pitch pitch_key self.transport_pos_offset = ", self.transport_pos_offset
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12 ) ) * 27.5
+            print "calculate_base_pitch pitch_key pitch_key_freq = ", pitch_key_freq
+
         if priority == "transport":
+            print "calculate_base_pitch transport"
             self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
+            print "calculate_base_pitch transport", self.transport_pos_adjusted
             pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
+            print "calculate_base_pitch transport pitch_positon", pitch_positon
             pitch_key_freq = pow( 2, (  pitch_positon / 12 ) ) * 27.5
+            print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
         final_freq = harmonic_freq * pow(2, (voice["db_fine"]/1200))
