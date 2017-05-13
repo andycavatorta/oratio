@@ -88,34 +88,12 @@ class Dispatcher(threading.Thread):
         if priority == "pitch_key":
             self.transport_pos_at_last_pitch_key_event  = self.transport_pos_raw
             self.last_pitch_key_value = self.pitch_key_event
-
-            #print "calculate_base_pitch pitch_key", self.pitch_key_event, self.transport_pos_at_last_pitch_key_event
-            #self.transport_pos_offset = self.transport_encoder_pulses_per_pitch * float(self.pitch_key_event)
-
-            #print "calculate_base_pitch pitch_key self.transport_pos_offset = ", self.transport_pos_offset
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12.0 ) ) * 27.5
-            #print "calculate_base_pitch pitch_key pitch_key_freq = ", pitch_key_freq
 
         if priority == "transport":
-            #calculate number of semitones moved since last 
-            #print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_offset
-            #print "calculate_base_pitch transport", self.transport_pos_raw, self.transport_pos_at_last_pitch_key_event, self.transport_pos_at_last_pitch_key_event - self.transport_pos_raw, (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
-
             pitch_diff_from_transport = (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
-
             pitch_diff_from_transport_and_last_key = self.last_pitch_key_value + pitch_diff_from_transport 
-            #self.transport_pos_adjusted = self.transport_pos_raw + self.transport_pos_offset
-
-            #print "calculate_base_pitch transport", self.transport_pos_adjusted
-
-            #pitch_positon = self.transport_pos_adjusted / self.transport_encoder_pulses_per_pitch
-
-            #print "calculate_base_pitch transport pitch_positon", pitch_positon
-
             pitch_key_freq = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
-            print "------------>", pitch_diff_from_transport_and_last_key
-            #print "------------>", pitch_diff_from_transport, self.last_pitch_key_value, self.last_pitch_key_value + pitch_diff_from_transport, pitch_key_freq
-            #print "calculate_base_pitch transport pitch_key_freq", pitch_key_freq
 
         harmonic_freq = (int(voice["db_harmonic"]) + 1) * pitch_key_freq
         final_freq = harmonic_freq * pow(2, (voice["db_fine"]/1200))
