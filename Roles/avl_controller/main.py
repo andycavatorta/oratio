@@ -85,7 +85,7 @@ class Dispatcher(threading.Thread):
     def calculate_base_pitch(self, voice_num, priority):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
-            print "calculate_base_pitch pitch_key", pitch_key_event
+            print "calculate_base_pitch pitch_key", self.pitch_key_event
             self.transport_pos_offset = self.transport_encoder_pulses_per_pitch * float(self.pitch_key_event)
 
             print "calculate_base_pitch pitch_key self.transport_pos_offset = ", self.transport_pos_offset
