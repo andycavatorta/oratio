@@ -98,6 +98,8 @@ class Drawbar():
         channel_range = self.channels[channel_num]["max"] - self.channels[channel_num]["min"]
         val_with_min_offset = val - self.channels[channel_num]["min"]
         value_normalized = float(val_with_min_offset) / float(channel_range)
+        value_normalized = value_normalized if value_normalized > 0.0 else 0.0
+        value_normalized = value_normalized if value_normalized < 1.0 else 1.0
         return value_normalized
 
     def spi_read_write(self,pin, msg):
@@ -316,7 +318,7 @@ class Drawbars(threading.Thread):
             for ordinal, pin in enumerate(self.chip_select_pins):
                 #self.set_chip_select(pin)
                 self.drawbars[ordinal].scan()
-                time.sleep(0.5)
+                time.sleep(2)
 
 """
 class Main(threading.Thread):
