@@ -77,10 +77,10 @@ class Dispatcher(threading.Thread):
             "db_fine":0,  # cents -50 t0 50
             "db_h1_harmonic":2, # integer starting at 0
             "db_h1_fine":0.5, # cents -50 t0 50
-            "db_h1_vol":0.25, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_h1_vol":0.10, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
             "db_h2_harmonic":3, # integer starting at 0
             "db_h2_fine":0.5, # cents -50 t0 50
-            "db_h2_vol":0.20, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_h2_vol":0.10, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
             "db_filter_a":0, # float 0.0 to 1.0
             "db_filter_b":0 # float 0.0 to 1.0
         }
@@ -354,9 +354,7 @@ class Key(threading.Thread):
         value = value if value <= self.encoder_max else self.encoder_max
         value = value if value >= self.encoder_min else self.encoder_min 
         mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
-        print 
-        print value, mapped_value
-        print 
+        #print value, mapped_value
         return mapped_value
 
 
