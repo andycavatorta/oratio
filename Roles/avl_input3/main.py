@@ -100,7 +100,7 @@ class Drawbar():
         value_normalized = float(val_with_min_offset) / float(channel_range)
         value_normalized = value_normalized if value_normalized > 0.0 else 0.0
         value_normalized = value_normalized if value_normalized < 1.0 else 1.0
-        return value_normalized
+        return 1.0 - value_normalized
 
     def spi_read_write(self,pin, msg):
         wpi.digitalWrite(pin, 0); wpi.delayMicroseconds(1)
@@ -118,10 +118,10 @@ class Drawbar():
         return sum([self.read_channel(cs, ch) for i in xrange(n)]) / n
 
     def scan(self):
-        print "running scan"
+        #print "running scan"
         for channel_num, channel in enumerate(self.channels):
             adc_value = self.read_avg(self.spi_chip_select, channel_num)
-            print self.spi_chip_select, channel_num, adc_value
+            #print self.spi_chip_select, channel_num, adc_value
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
                 if detent != channel["last_value"]:
