@@ -145,7 +145,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_fine":
-            self.voices[0]["db_fine"] = int(val)
+            self.voices[0]["db_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_harmonic":
@@ -153,7 +153,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_fine":
-            self.voices[0]["db_h1_fine"] = int(val)
+            self.voices[0]["db_h1_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_vol":
@@ -165,7 +165,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_fine":
-            self.voices[0]["db_h2_fine"] = int(val)
+            self.voices[0]["db_h2_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_vol":
@@ -190,7 +190,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_fine":
-            self.voices[1]["db_fine"] = int(val)
+            self.voices[1]["db_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_harmonic":
@@ -198,7 +198,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_fine":
-            self.voices[1]["db_h1_fine"] = int(val)
+            self.voices[1]["db_h1_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_vol":
@@ -210,7 +210,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_fine":
-            self.voices[1]["db_h2_fine"] = int(val)
+            self.voices[1]["db_h2_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_vol":
@@ -235,7 +235,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_fine":
-            self.voices[2]["db_fine"] = int(val)
+            self.voices[2]["db_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_harmonic":
@@ -243,7 +243,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_fine":
-            self.voices[2]["db_h1_fine"] = int(val)
+            self.voices[2]["db_h1_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_vol":
@@ -255,7 +255,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_fine":
-            self.voices[2]["db_h2_fine"] = int(val)
+            self.voices[2]["db_h2_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_vol":
