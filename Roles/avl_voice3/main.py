@@ -169,11 +169,11 @@ def init(HOSTNAME):
 
     c.send_freq(0, 0)
     c.send_freq(1, 0)
-    c.send_freq(1, 0)
+    c.send_freq(2, 0)
 
     c.set_levels(0, 0)
-    c.set_levels(1, 0)
-    c.set_levels(2, 0)
+    #c.set_levels(1, 0)
+    #c.set_levels(2, 0)
 
     global network
     network = network_init(
