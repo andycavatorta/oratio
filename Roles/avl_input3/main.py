@@ -109,11 +109,13 @@ class Drawbar():
                 detent = self.detent_from_adc_value(channel_num, adc_value)
                 if detent != channel["last_value"]:
                     channel["last_value"] = detent
+                    print channel["name"], detent
                     network.send(channel["name"], detent)
             else:
                 value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
                 if value_normalised != channel["last_value"]:
                     channel["last_value"] = value_normalised
+                    print channel["name"], value_normalised
                     network.send(channel["name"], value_normalised)
 
 
@@ -351,10 +353,6 @@ def init(HOSTNAME):
     #network.subscribe_to_topic("sensor_data")  
     drawbars = Drawbars()
     drawbars.start()
-    main = Main(HOSTNAME)
-    main.start()
-
-
 
 
 ############################################
