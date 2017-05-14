@@ -71,38 +71,18 @@ sys.path.append(UPPER_PATH)
 
 
 class TLC1543():
-    def __init__(self, bus=0, deviceId=0):
-        self.deviceId = deviceId
-        self.bus = bus
-        GPIO.setmode(GPIO.BCM)
-        
+    def __init__(self, spi_chip_select=0, spi_master_slave=0):
+        self.spi_master_slave = spi_master_slave
+        self.spi_chip_select = spi_chip_select
+
     def read(self, channel):
-        return 0
+        return 512
 
 
 
-class Main(threading.Thread):
-    def __init__(self, hostname):
-        threading.Thread.__init__(self)
-        self.hostname = hostname
-        self.queue = Queue.Queue()
 
-    def add_to_queue(self, topic, msg):
-        self.queue.put([topic, msg])
-
-    def run(self):
-        while True:
-            topic_msg = self.queue.get(True)
-            network.send(topic_msg[0], topic_msg[1])
-
-class Drawbar(threading.Thread):
-    def __init__(
-        self, 
-        spi_chip_select, 
-        spi_master_slave,
-        channels
-        ):
-        threading.Thread.__init__(self)
+class Drawbar():
+    def __init__(self, spi_chip_select, spi_master_slave,channels):
         self.channels = channels
         # channels format: {"name":"", "detent_adc_values": [ 234,345,... closest values]} OR {"name":"", "min": (int), "max": (int), }
         for channel in channels:
@@ -121,20 +101,223 @@ class Drawbar(threading.Thread):
         value_normalized = float(val_with_min_offset) / float(channel_range)
         return value_normalized
 
+    def scan(self):
+        print "running scan"
+        for channel_num, channel in enumerate(self.channels):
+            adc_value = self.adc.read(channel_num)
+            if "detent_adc_values" in channel:
+                detent = self.detent_from_adc_value(channel_num, adc_value)
+                if detent != channel["last_value"]:
+                    channel["last_value"] = detent
+                    network.send(channel["name"], detent)
+            else:
+                value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
+                if value_normalised != channel["last_value"]:
+                    channel["last_value"] = value_normalised
+                    network.send(channel["name"], value_normalised)
+
+
+class Drawbars(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.chip_select_pins = [12, 13]
+        self.drawbars = []
+        GPIO.setmode(GPIO.BCM)
+        for pin in self.chip_select_pins:
+            GPIO.setup(pin, GPIO.OUT)
+
+        self.drawbars.append(
+            Drawbar(self.chip_select_pins[0], 0, 
+                [
+                    {
+                        "name":"voice_1_db_harmonic", 
+                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_1_db_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_h1_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_1_db_h1_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_h1_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_h2_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_1_db_h2_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_h2_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_1_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                ]
+            )
+        )
+        self.drawbars.append(
+            Drawbar(self.chip_select_pins[1], 0, 
+                [
+                    {
+                        "name":"voice_2_db_harmonic", 
+                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h1_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_h1_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h1_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h2_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_h2_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h2_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                ]
+            )
+        )
+        """
+        self.drawbars.append(
+            Drawbar(self.chip_select_pins[2], 0, 
+                [
+                    {
+                        "name":"voice_2_db_harmonic", 
+                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h1_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_h1_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h1_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h2_harmonic", 
+                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                    },
+                    {
+                        "name":"voice_2_db_h2_fine", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_h2_vol", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                    {
+                        "name":"voice_2_db_filter_a", 
+                        "min":100, 
+                        "max":800
+                    },
+                ]
+            )
+        )
+        """
+
+
+    def set_chip_select(self, selected_pin):
+        for pin in self.chip_select_pins:
+            GPIO.output(pin, GPIO.LOW)
+        GPIO.output(selected_pin, GPIO.HIGH)
+
     def run(self):
         while True:
-            for channel_num, channel in enumerate(self.channels):
-                adc_value = self.adc.read(channel_num)
-                if "detent_adc_values" in channel:
-                    detent = self.detent_from_adc_value(channel_num, adc_value)
-                    if detent != channel["last_value"]:
-                        channel["last_value"] = detent
-                        network.send(channel["name"], detent)
-                else:
-                    value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
-                    if value_normalised != channel["last_value"]:
-                        channel["last_value"] = value_normalised
-                        network.send(channel["name"], value_normalised)
+            for ordinal, pin in enumerate(self.chip_select_pins):
+                self.set_chip_select(pin)
+                self.drawbars[ordinal].scan()
+                time.sleep(0.1)
+
+"""
+class Main(threading.Thread):
+    def __init__(self, hostname):
+        threading.Thread.__init__(self)
+        self.hostname = hostname
+        self.queue = Queue.Queue()
+
+    def add_to_queue(self, topic, msg):
+        self.queue.put([topic, msg])
+
+    def run(self):
+        while True:
+            topic_msg = self.queue.get(True)
+            network.send(topic_msg[0], topic_msg[1])
+
+"""
+            
 
 
 def network_status_handler(msg):
@@ -166,168 +349,12 @@ def init(HOSTNAME):
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
     #network.subscribe_to_topic("sensor_data")  
+    drawbars = Drawbars()
+    drawbars.start()
     main = Main(HOSTNAME)
     main.start()
 
 
-    voice_1_drawbar = Drawbar(1, 0, 
-            [
-                {
-                    "name":"voice_1_db_harmonic", 
-                    "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_1_db_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_h1_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_1_db_h1_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_h1_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_h2_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_1_db_h2_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_h2_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_1_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-            ]
-        )
-    voice_1_drawbar.start()
-
-    voice_2_drawbar = Drawbar(3, 0, 
-            [
-                {
-                    "name":"voice_2_db_harmonic", 
-                    "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_2_db_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_h1_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_2_db_h1_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_h1_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_h2_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_2_db_h2_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_h2_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_2_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-            ]
-        )
-    voice_2_drawbar.start()
-
-    voice_3_drawbar = Drawbar(3, 0, 
-            [
-                {
-                    "name":"voice_3_db_harmonic", 
-                    "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_3_db_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_h1_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_3_db_h1_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_h1_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_h2_harmonic", 
-                    "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                },
-                {
-                    "name":"voice_3_db_h2_fine", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_h2_vol", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-                {
-                    "name":"voice_3_db_filter_a", 
-                    "min":100, 
-                    "max":800
-                },
-            ]
-        )
-    voice_3_drawbar.start()
 
 
 ############################################

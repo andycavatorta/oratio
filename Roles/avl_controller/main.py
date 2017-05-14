@@ -464,6 +464,6 @@ def init(HOSTNAME):
     dispatcher = Dispatcher(network)
     dispatcher.start()
 
-    key_3 = Key("voice_key_3_position",0,0)
+    key_3 = Key("voice_key_1_position",0,0)
     key_3.start()
     time.sleep(5)
