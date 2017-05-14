@@ -78,7 +78,7 @@ class Dispatcher(threading.Thread):
             "db_h1_harmonic":2, # integer starting at 0
             "db_h1_fine":0.5, # cents -50 t0 50
             "db_h1_vol":0.25, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
-            "db_h2_harmonic":6, # integer starting at 0
+            "db_h2_harmonic":3, # integer starting at 0
             "db_h2_fine":0.5, # cents -50 t0 50
             "db_h2_vol":0.20, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
             "db_filter_a":0, # float 0.0 to 1.0
