@@ -108,8 +108,8 @@ class Drawbar():
         return msg
 
     def read_channel(self, cs, ch):
-        spiRW(cs, chr(ch << 4) + chr(0x00))
-        val = spiRW(cs, chr(0x00) + chr(0x00))
+        self.spi_read_write(cs, chr(ch << 4) + chr(0x00))
+        val = self.spi_read_write(cs, chr(0x00) + chr(0x00))
         return (ord(val[1][0]) << 2) | (ord(val[1][1]) >> 6)
 
     def read_avg(self, cs, ch, n=20):
