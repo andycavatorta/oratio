@@ -127,9 +127,6 @@ class Dispatcher(threading.Thread):
             final_freq = harmonic_freq * pow(2, (float(voice["db_h2_fine"])/1200))
             return final_freq
             
-    def calculate_harmonic_volume(self, base_volume, harm_voluime):
-        return 50
-
 
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
@@ -142,7 +139,7 @@ class Dispatcher(threading.Thread):
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume, voice["db_filter_a"], voice["db_filter_b"]]
 
     def updateValue(self, name, val):
-        #print "updateValue", name, val
+        print "updateValue", name, val
         if name == "pitch_key_event":
             self.pitch_key_event = int(val)
             self.queue.put("all_pitch_key")
