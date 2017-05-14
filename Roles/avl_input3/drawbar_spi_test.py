@@ -7,6 +7,8 @@ def init (speed=500000, cs1=27, cs2=28, mode=0):
   wpi.pinMode(cs1, wpi.OUTPUT)
   wpi.pinMode(cs2, wpi.OUTPUT)
 
+
+
 # hacky way of using more than two spi lines
 def spiRW (pin, msg):
   wpi.digitalWrite(pin, 0); wpi.delayMicroseconds(1)
@@ -40,8 +42,6 @@ read_avg(27,6)
 read_avg(27,7)
 read_avg(27,8)
 read_avg(27,9)
-read_avg(27,10)
-read_avg(27,11)
 
 read_avg(28,0)
 read_avg(28,1)
@@ -53,5 +53,3 @@ read_avg(28,6)
 read_avg(28,7)
 read_avg(28,8)
 read_avg(28,9)
-read_avg(28,10)
-read_avg(28,11)
