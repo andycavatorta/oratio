@@ -45,3 +45,33 @@ class DS1803(object):
 
     def set_both_pots_resistance(self, resistance):
         self.send_command(DS1803.CMD_WRITE_BOTH_POTS, self.resistance_to_value(resistance))
+
+
+
+import time
+ds1 = DS1803(i2c_address = 0x29)
+ds2 = DS1803(i2c_address = 0x2f)
+
+def sweep_all_levels():
+    max = 256
+    ds1.set_pot0_resistance(0)
+    ds1.set_pot1_resistance(0)
+    ds2.set_pot0_resistance(0)
+    ds2.set_pot1_resistance(0)
+    for level in range(max,0,-1):
+        ds1.set_pot0_resistance(level)
+        ds1.set_pot1_resistance(level)
+        ds2.set_pot0_resistance(level)
+        ds2.set_pot1_resistance(level)
+        print level
+        time.sleep(0.01)
+    for level in range(max):
+        ds1.set_pot0_resistance(level)
+        ds1.set_pot1_resistance(level)
+        ds2.set_pot0_resistance(level)
+        ds2.set_pot1_resistance(level)
+        print level
+        time.sleep(0.01)
+
+
+

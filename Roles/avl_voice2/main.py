@@ -47,6 +47,10 @@ THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
+global last_f1
+global last_f2
+global last_f3
+
 """
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -137,7 +141,7 @@ def network_message_handler(msg):
     if topic == "__heartbeat__":
         print "heartbeat received", msg
     
-    if topic == "voice_3":
+    if topic == "voice_2":
         # tones.send(eval(msg[1]))
 
         # quick hack -- will make this better later!
@@ -145,14 +149,21 @@ def network_message_handler(msg):
         offset = 167500
         print offset-int(payload[0])
 
-        print "sending!!!!!!!!!!!!"
-        c.send_freq(0, offset-int(payload[0]))
-        c.send_freq(1, offset-int(payload[2]))
-        c.send_freq(2, offset-int(payload[4]))
+        if (payload[1] > 0):
+            c.send_freq(0, offset-int(payload[0]))
+            c.send_freq(1, offset-int(payload[2]))
+            c.send_freq(2, offset-int(payload[4]))
+        else:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
 
-        c.set_levels(0, int(255 - payload[1] * 75))
-        c.set_levels(1, int(payload[1]))
-        c.set_levels(2, int(payload[2]))
+        c.set_levels(0, 255 if payload[1] < 0.05 else 254)
+        c.set_levels(1, 255 if payload[3] < 0.05 else 254)
+        c.set_levels(2, 255 if payload[5] < 0.05 else 254)
+        #c.set_levels(0, int(254 - (payload[1] * 10)))
+        #c.set_levels(1, int(254 - (payload[3] * 10)))
+        #c.set_levels(2, int(254 - (payload[5] * 10)))
 
 network = None # makin' it global
 
@@ -161,9 +172,9 @@ def init(HOSTNAME):
 
     c.send_freq(0, 0)
     c.send_freq(1, 0)
-    c.send_freq(1, 0)
+    c.send_freq(2, 0)
 
-    c.set_levels(0, 180)
+    c.set_levels(0, 0)
     c.set_levels(1, 0)
     c.set_levels(2, 0)
 
@@ -180,7 +191,7 @@ def init(HOSTNAME):
     )
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_3")
+    network.subscribe_to_topic("voice_2")
     #main = Main(HOSTNAME)
     #main.start()
 
