@@ -109,8 +109,9 @@ class Key(threading.Thread):
             time.sleep(0.01)
 
     def map_key(self, name, value):
-        value = self.encoder_max if value > self.encoder_max else value
-        value = self.encoder_min if value < self.encoder_min else value
+        value = value if value <= 1000 else 0
+        value = value if value <= self.encoder_max else self.encoder_max
+        value = value if value >= self.encoder_min else self.encoder_min 
         mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
         return mapped_value
 
