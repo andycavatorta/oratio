@@ -158,9 +158,9 @@ def network_message_handler(msg):
             c.send_freq(1, 0)
             c.send_freq(2, 0)
 
-        c.set_levels(0, int(180 - (payload[1] * 18)))
-        c.set_levels(1, int(180 - (payload[3] * 18)))
-        c.set_levels(2, int(180 - (payload[5] * 18)))
+        c.set_levels(0, int(180 - (payload[1] * 1.8)))
+        c.set_levels(1, int(180 - (payload[3] * 1.8)))
+        c.set_levels(2, int(180 - (payload[5] * 1.8)))
 
 network = None # makin' it global
 
