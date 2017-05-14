@@ -70,6 +70,22 @@ class Dispatcher(threading.Thread):
                 "db_filter_b":0 # float 0.0 to 1.0
             }
         ] *3
+        # start temporary values
+        self.voices[2] = {
+            "voice_key_position":0, # integet fom 0 to 47
+            "db_harmonic":0, # integer starting at 0
+            "db_fine":0,  # cents -50 t0 50
+            "db_h1_harmonic":2, # integer starting at 0
+            "db_h1_fine":0.5, # cents -50 t0 50
+            "db_h1_vol":0.25, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_h2_harmonic":6, # integer starting at 0
+            "db_h2_fine":0.5, # cents -50 t0 50
+            "db_h2_vol":0.20, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_filter_a":0, # float 0.0 to 1.0
+            "db_filter_b":0 # float 0.0 to 1.0
+        }
+        # end temporary values
+
         self.layer_speed = 0
         self.layer_1_volume = 0
         self.layer_2_volume = 0
@@ -145,7 +161,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_fine":
-            self.voices[0]["db_fine"] = int(val)
+            self.voices[0]["db_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_harmonic":
@@ -153,7 +169,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_fine":
-            self.voices[0]["db_h1_fine"] = int(val)
+            self.voices[0]["db_h1_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h1_vol":
@@ -165,7 +181,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_fine":
-            self.voices[0]["db_h2_fine"] = int(val)
+            self.voices[0]["db_h2_fine"] = float(val)
             self.queue.put("1")
             return
         if name == "voice_1_db_h2_vol":
@@ -190,7 +206,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_fine":
-            self.voices[1]["db_fine"] = int(val)
+            self.voices[1]["db_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_harmonic":
@@ -198,7 +214,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_fine":
-            self.voices[1]["db_h1_fine"] = int(val)
+            self.voices[1]["db_h1_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h1_vol":
@@ -210,7 +226,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_fine":
-            self.voices[1]["db_h2_fine"] = int(val)
+            self.voices[1]["db_h2_fine"] = float(val)
             self.queue.put("2")
             return
         if name == "voice_2_db_h2_vol":
@@ -235,7 +251,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_fine":
-            self.voices[2]["db_fine"] = int(val)
+            self.voices[2]["db_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_harmonic":
@@ -243,7 +259,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_fine":
-            self.voices[2]["db_h1_fine"] = int(val)
+            self.voices[2]["db_h1_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_vol":
@@ -255,7 +271,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_fine":
-            self.voices[2]["db_h2_fine"] = int(val)
+            self.voices[2]["db_h2_fine"] = float(val)
             self.queue.put("3")
             return
         if name == "voice_3_db_h2_vol":
@@ -334,9 +350,13 @@ class Key(threading.Thread):
             time.sleep(0.01)
 
     def map_key(self, name, value):
-        value = self.encoder_max if value > self.encoder_max else value
-        value = self.encoder_min if value < self.encoder_min else value
+        value = value if value <= 1000 else 0
+        value = value if value <= self.encoder_max else self.encoder_max
+        value = value if value >= self.encoder_min else self.encoder_min 
         mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
+        print 
+        print value, mapped_value
+        print 
         return mapped_value
 
 
@@ -345,7 +365,7 @@ def network_status_handler(msg):
 
 
 def network_message_handler(msg):
-    try:
+    #try:
         print "network_message_handler", msg
         topic = msg[0]
         if topic == "__heartbeat__":
@@ -397,8 +417,8 @@ def network_message_handler(msg):
             global dispatcher
             dispatcher.updateValue(topic, msg[1])
         #print "topic", topic 
-    except Exception as e:
-        print "exception in network_message_handler", e
+    #except Exception as e:
+    #    print "exception in network_message_handler", e
 
 
 def init(HOSTNAME):
@@ -464,6 +484,6 @@ def init(HOSTNAME):
     dispatcher = Dispatcher(network)
     dispatcher.start()
 
-    key_3 = Key("voice_key_1_position",0,0)
+    key_3 = Key("voice_key_3_position",0,0)
     key_3.start()
     time.sleep(5)
