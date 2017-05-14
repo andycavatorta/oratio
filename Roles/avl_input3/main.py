@@ -118,9 +118,8 @@ class Drawbar():
     def scan(self):
         print "running scan"
         for channel_num, channel in enumerate(self.channels):
-            val = self.read_avg(self.spi_chip_select, channel_num)
-            print self.spi_chip_select, channel_num, val
-            adc_value = self.adc.read(channel_num)
+            adc_value = self.read_avg(self.spi_chip_select, channel_num)
+            print self.spi_chip_select, channel_num, adc_value
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
                 if detent != channel["last_value"]:
