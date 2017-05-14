@@ -48,12 +48,14 @@ class DS1803(object):
 
 
 
+
+"""
 import time
 ds1 = DS1803(i2c_address = 0x29)
 ds2 = DS1803(i2c_address = 0x2f)
 
 def sweep_all_levels():
-    max = 256
+    max = 255
     ds1.set_pot0_resistance(0)
     ds1.set_pot1_resistance(0)
     ds2.set_pot0_resistance(0)
@@ -73,5 +75,49 @@ def sweep_all_levels():
         print level
         time.sleep(0.01)
 
+sweep_all_levels()
 
 
+def sweep_all_levels():
+    max = 100
+    ds1.set_pot0_resistance(0)
+    ds1.set_pot1_resistance(0)
+    ds2.set_pot0_resistance(0)
+    ds2.set_pot1_resistance(0)
+    for level in range(max,0,-1):
+        ds1.set_pot0_resistance(level/100)
+        ds1.set_pot1_resistance(level/100)
+        ds2.set_pot0_resistance(level/100)
+        ds2.set_pot1_resistance(level/100)
+        print level
+        time.sleep(0.01)
+    for level in range(0,max,1):
+        ds1.set_pot0_resistance(level/100)
+        ds1.set_pot1_resistance(level/100)
+        ds2.set_pot0_resistance(level/100)
+        ds2.set_pot1_resistance(level/100)
+        print level
+        time.sleep(0.01)
+
+sweep_all_levels()
+
+
+a = DS1803(i2c=0, i2c_address =0x29 , variant=10000)
+print "a is a Dallas Semiconductor DS1803 digital Potentionmeter"
+print "a.r_tot:", a.r_tot
+
+for i in range(0, 255, 25):
+    a.set_wiper(0, i)
+    a.set_wiper(0, 255 - i)
+    print "Wiper 0 is set to", a.get_wiper(0), "^=", a.get_r(0), "Ohm"
+    print "Wiper 1 is set to", a.get_wiper(1), "^=", a.get_r(1), "Ohm"
+    time.sleep(0.01)
+
+for i in range(0, a.r_tot, 500):
+    a.set_r(0, i)
+    a.set_r(1, a.r_tot - i)
+    print "Wiper 0 is set to", a.get_wiper(0), "^=", a.get_r(0), "Ohm"
+    print "Wiper 1 is set to", a.get_wiper(1), "^=", a.get_r(1), "Ohm"
+    time.sleep(0.01)
+
+"""
