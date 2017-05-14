@@ -120,21 +120,19 @@ class Drawbar():
         for channel_num, channel in enumerate(self.channels):
             val = self.read_avg(self.spi_chip_select, channel_num)
             print self.spi_chip_select, channel_num, val
-            """
             adc_value = self.adc.read(channel_num)
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
                 if detent != channel["last_value"]:
                     channel["last_value"] = detent
                     print channel["name"], detent
-                    network.send(channel["name"], detent)
+                    #network.send(channel["name"], detent)
             else:
                 value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
                 if value_normalised != channel["last_value"]:
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
-                    network.send(channel["name"], value_normalised)
-            """
+                    #network.send(channel["name"], value_normalised)
 
 class Drawbars(threading.Thread):
     def __init__(self):
@@ -155,8 +153,8 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":30, 
+                        "max":998
                     },
                     {
                         "name":"voice_1_db_h1_harmonic", 
@@ -164,13 +162,13 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_h1_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":50, 
+                        "max":1009
                     },
                     {
                         "name":"voice_1_db_h1_vol", 
-                        "min":100, 
-                        "max":800
+                        "min":50, 
+                        "max":987
                     },
                     {
                         "name":"voice_1_db_h2_harmonic", 
@@ -178,23 +176,23 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_h2_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":54, 
+                        "max":1010
                     },
                     {
                         "name":"voice_1_db_h2_vol", 
-                        "min":100, 
-                        "max":800
+                        "min":39, 
+                        "max":1008
                     },
                     {
                         "name":"voice_1_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "min":55, 
+                        "max":1008
                     },
                     {
                         "name":"voice_1_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "min":76, 
+                        "max":1009
                     },
                 ]
             )
@@ -208,8 +206,8 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_2_db_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":28, 
+                        "max":994
                     },
                     {
                         "name":"voice_2_db_h1_harmonic", 
@@ -217,13 +215,13 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_2_db_h1_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":23, 
+                        "max":985
                     },
                     {
                         "name":"voice_2_db_h1_vol", 
-                        "min":100, 
-                        "max":800
+                        "min":35, 
+                        "max":1007
                     },
                     {
                         "name":"voice_2_db_h2_harmonic", 
@@ -231,23 +229,23 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_2_db_h2_fine", 
-                        "min":100, 
-                        "max":800
+                        "min":15, 
+                        "max":969
                     },
                     {
                         "name":"voice_2_db_h2_vol", 
-                        "min":100, 
-                        "max":800
+                        "min":68, 
+                        "max":1002
                     },
                     {
                         "name":"voice_2_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "min":52, 
+                        "max":1002
                     },
                     {
                         "name":"voice_2_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "min":47, 
+                        "max":1004
                     },
                 ]
             )
