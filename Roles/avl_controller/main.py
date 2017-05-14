@@ -70,6 +70,22 @@ class Dispatcher(threading.Thread):
                 "db_filter_b":0 # float 0.0 to 1.0
             }
         ] *3
+        # start temporary values
+        self.voices[2] = {
+            "voice_key_position":0, # integet fom 0 to 47
+            "db_harmonic":0, # integer starting at 0
+            "db_fine":0,  # cents -50 t0 50
+            "db_h1_harmonic":2, # integer starting at 0
+            "db_h1_fine":0.5, # cents -50 t0 50
+            "db_h1_vol":.0.25, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_h2_harmonic":6, # integer starting at 0
+            "db_h2_fine":0.5, # cents -50 t0 50
+            "db_h2_vol":0.20, # float 0.0 to 2.0, so harmonic can be 200% volume of fundamental
+            "db_filter_a":0, # float 0.0 to 1.0
+            "db_filter_b":0 # float 0.0 to 1.0
+        }
+        # end temporary values
+
         self.layer_speed = 0
         self.layer_1_volume = 0
         self.layer_2_volume = 0
@@ -464,6 +480,6 @@ def init(HOSTNAME):
     dispatcher = Dispatcher(network)
     dispatcher.start()
 
-    key_3 = Key("voice_key_1_position",0,0)
+    key_3 = Key("voice_key_3_position",0,0)
     key_3.start()
     time.sleep(5)
