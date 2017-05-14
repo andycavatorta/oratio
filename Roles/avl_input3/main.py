@@ -317,7 +317,7 @@ class Drawbars(threading.Thread):
     def run(self):
         while True:
             for ordinal, pin in enumerate(self.chip_select_pins):
-                self.set_chip_select(pin)
+                #self.set_chip_select(pin)
                 self.drawbars[ordinal].scan()
                 time.sleep(0.5)
 
