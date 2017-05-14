@@ -146,7 +146,7 @@ def network_message_handler(msg):
 
         # quick hack -- will make this better later!
         payload = eval(msg[1])
-        offset = 167500
+        offset = 167511.3
         print offset-int(payload[0])
 
         if (payload[1] > 0):
