@@ -47,6 +47,10 @@ THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
+global last_f1
+global last_f2
+global last_f3
+
 """
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -145,12 +149,16 @@ def network_message_handler(msg):
         offset = 167500
         print offset-int(payload[0])
 
-        print "sending!!!!!!!!!!!!"
-        c.send_freq(0, offset-int(payload[0]))
-        c.send_freq(1, offset-int(payload[2]))
-        c.send_freq(2, offset-int(payload[4]))
+        if (payload[1] > 0):
+            c.send_freq(0, offset-int(payload[0]))
+            c.send_freq(1, offset-int(payload[2]))
+            c.send_freq(2, offset-int(payload[4]))
+        else:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
 
-        c.set_levels(0, int(255 - payload[1] * 75))
+        c.set_levels(0, int(180 - payload[1] * 180))
         c.set_levels(1, int(payload[1]))
         c.set_levels(2, int(payload[2]))
 
@@ -163,7 +171,7 @@ def init(HOSTNAME):
     c.send_freq(1, 0)
     c.send_freq(1, 0)
 
-    c.set_levels(0, 180)
+    c.set_levels(0, 0)
     c.set_levels(1, 0)
     c.set_levels(2, 0)
 
