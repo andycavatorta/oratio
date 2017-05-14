@@ -27,3 +27,31 @@ def read_channel (cs, ch):
 # quick way to get rid of outliers, make better later
 def read_avg (cs, ch, n=20):
   return sum([read_channel(cs, ch) for i in xrange(n)]) / n
+
+init()
+
+read_avg(27,0)
+read_avg(27,1)
+read_avg(27,2)
+read_avg(27,3)
+read_avg(27,4)
+read_avg(27,5)
+read_avg(27,6)
+read_avg(27,7)
+read_avg(27,8)
+read_avg(27,9)
+read_avg(27,10)
+read_avg(27,11)
+
+read_avg(28,0)
+read_avg(28,1)
+read_avg(28,2)
+read_avg(28,3)
+read_avg(28,4)
+read_avg(28,5)
+read_avg(28,6)
+read_avg(28,7)
+read_avg(28,8)
+read_avg(28,9)
+read_avg(28,10)
+read_avg(28,11)
