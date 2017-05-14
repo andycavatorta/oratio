@@ -345,7 +345,7 @@ def network_status_handler(msg):
 
 
 def network_message_handler(msg):
-    try:
+    #try:
         print "network_message_handler", msg
         topic = msg[0]
         if topic == "__heartbeat__":
@@ -397,8 +397,8 @@ def network_message_handler(msg):
             global dispatcher
             dispatcher.updateValue(topic, msg[1])
         #print "topic", topic 
-    except Exception as e:
-        print "exception in network_message_handler", e
+    #except Exception as e:
+    #    print "exception in network_message_handler", e
 
 
 def init(HOSTNAME):
