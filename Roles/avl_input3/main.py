@@ -76,10 +76,7 @@ class TLC1543():
         self.spi_chip_select = spi_chip_select
 
     def read(self, channel):
-        return 512
-
-
-
+        return random.randrange(0,1000)
 
 class Drawbar():
     def __init__(self, spi_chip_select, spi_master_slave,channels):
@@ -301,7 +298,7 @@ class Drawbars(threading.Thread):
             for ordinal, pin in enumerate(self.chip_select_pins):
                 self.set_chip_select(pin)
                 self.drawbars[ordinal].scan()
-                time.sleep(0.1)
+                time.sleep(0.5)
 
 """
 class Main(threading.Thread):
