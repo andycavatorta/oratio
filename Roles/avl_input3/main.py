@@ -121,9 +121,10 @@ class Drawbar():
         #print "running scan"
         for channel_num, channel in enumerate(self.channels):
             adc_value = self.read_avg(self.spi_chip_select, channel_num)
-            #print self.spi_chip_select, channel_num, adc_value
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
+                print self.spi_chip_select, channel_num, adc_value, detent
+            """
                 if detent != channel["last_value"]:
                     channel["last_value"] = detent
                     print channel["name"], detent
@@ -134,6 +135,7 @@ class Drawbar():
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
                     #network.send(channel["name"], value_normalised)
+            """
 
 class Drawbars(threading.Thread):
     def __init__(self):
