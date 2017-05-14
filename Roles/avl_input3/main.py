@@ -152,7 +152,7 @@ class Drawbars(threading.Thread):
                 [
                     {
                         "name":"voice_1_db_harmonic", 
-                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                        "detent_adc_values": [1022, 1008, 950, 888, 833, 807]
                     },
                     {
                         "name":"voice_1_db_fine", 
@@ -160,13 +160,13 @@ class Drawbars(threading.Thread):
                         "max":998
                     },
                     {
-                        "name":"voice_1_db_h1_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                    },
-                    {
                         "name":"voice_1_db_h1_fine", 
                         "min":50, 
                         "max":1009
+                    },
+                    {
+                        "name":"voice_1_db_h1_harmonic", 
+                        "detent_adc_values":[1009, 988, 943, 866, 842, 782]
                     },
                     {
                         "name":"voice_1_db_h1_vol", 
@@ -174,13 +174,13 @@ class Drawbars(threading.Thread):
                         "max":987
                     },
                     {
-                        "name":"voice_1_db_h2_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                    },
-                    {
                         "name":"voice_1_db_h2_fine", 
                         "min":54, 
                         "max":1010
+                    },
+                    {
+                        "name":"voice_1_db_h2_harmonic", 
+                        "detent_adc_values":[1023, 1011, 984, 916, 863, 795]
                     },
                     {
                         "name":"voice_1_db_h2_vol", 
@@ -205,7 +205,7 @@ class Drawbars(threading.Thread):
                 [
                     {
                         "name":"voice_2_db_harmonic", 
-                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                        "detent_adc_values": [997, 978, 915, 858, 803, 742]
                     },
                     {
                         "name":"voice_2_db_fine", 
@@ -213,13 +213,13 @@ class Drawbars(threading.Thread):
                         "max":994
                     },
                     {
-                        "name":"voice_2_db_h1_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                    },
-                    {
                         "name":"voice_2_db_h1_fine", 
                         "min":23, 
                         "max":985
+                    },
+                    {
+                        "name":"voice_2_db_h1_harmonic", 
+                        "detent_adc_values":[987, 967, 915, 843, 793, 746]
                     },
                     {
                         "name":"voice_2_db_h1_vol", 
@@ -227,13 +227,13 @@ class Drawbars(threading.Thread):
                         "max":1007
                     },
                     {
-                        "name":"voice_2_db_h2_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
-                    },
-                    {
                         "name":"voice_2_db_h2_fine", 
                         "min":15, 
                         "max":969
+                    },
+                    {
+                        "name":"voice_2_db_h2_harmonic", 
+                        "detent_adc_values":[977, 955, 915, 833, 791, ]
                     },
                     {
                         "name":"voice_2_db_h2_vol", 
