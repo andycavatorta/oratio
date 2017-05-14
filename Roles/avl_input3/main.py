@@ -46,16 +46,18 @@ output topics:
     layer_5_volume
 
 """
-import RPi.GPIO as GPIO
+
 import importlib
 import json
 import os
 import Queue
 import random
+import RPi.GPIO as GPIO
 import settings 
 import sys
 import threading
 import time
+import wiringpi as wpi
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
@@ -115,15 +117,15 @@ class Drawbar():
                     print channel["name"], value_normalised
                     network.send(channel["name"], value_normalised)
 
-
 class Drawbars(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.chip_select_pins = [12, 13]
+        self.chip_select_pins = [27, 28]
         self.drawbars = []
-        GPIO.setmode(GPIO.BCM)
+        wpi.wiringPiSetup()
+        wpi.wiringPiSPISetupMode(0, 500000, 0)
         for pin in self.chip_select_pins:
-            GPIO.setup(pin, GPIO.OUT)
+            wpi.pinMode(pin, wpi.OUTPUT)
 
         self.drawbars.append(
             Drawbar(self.chip_select_pins[0], 0, 
