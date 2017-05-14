@@ -113,7 +113,7 @@ class Drawbar():
         return (ord(val[1][0]) << 2) | (ord(val[1][1]) >> 6)
 
     def read_avg(self, cs, ch, n=20):
-        return sum([read_channel(cs, ch) for i in xrange(n)]) / n
+        return sum([self.read_channel(cs, ch) for i in xrange(n)]) / n
 
     def scan(self):
         print "running scan"
