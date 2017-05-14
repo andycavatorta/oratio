@@ -134,7 +134,7 @@ def init () :
 
 def send_freq (ch, freq, prnt=False) :
 
-  word = freq_word(freq, prnt)
+  freq_word = freq_word(freq, prnt)
 
   if (prnt):
     print spiRW(ch, chr(0b00100000) + chr(0b0))
@@ -195,7 +195,7 @@ def sweep_levels(ch):
 
 
 def sweep_all_levels():
-  max = 220
+  max = 256
   set_levels(0, max)
   set_levels(1, max)
   set_levels(2, max)
