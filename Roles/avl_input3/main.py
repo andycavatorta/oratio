@@ -159,7 +159,7 @@ class Drawbars(threading.Thread):
                     {
                         "name":"voice_1_db_h1_fine", 
                         "min":50, 
-                        "max":1009
+                        "max":950
                     },
                     {
                         "name":"voice_1_db_h1_harmonic", 
@@ -212,7 +212,7 @@ class Drawbars(threading.Thread):
                     {
                         "name":"voice_2_db_h1_fine", 
                         "min":23, 
-                        "max":950
+                        "max":985
                     },
                     {
                         "name":"voice_2_db_h1_harmonic", 
