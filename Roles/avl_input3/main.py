@@ -89,7 +89,7 @@ class Drawbar():
         self.spi_chip_select = spi_chip_select
         self.spi_master_slave = spi_master_slave
         self.channels = channels
-        self.adc = TLC1543(self.spi_chip_select, self.spi_master_slave)
+        #self.adc = TLC1543(self.spi_chip_select, self.spi_master_slave)
 
     def detent_from_adc_value(self, channel_num, val):
         return min(self.channels[channel_num]["detent_adc_values"], key=lambda x:abs(x-val))
@@ -100,9 +100,27 @@ class Drawbar():
         value_normalized = float(val_with_min_offset) / float(channel_range)
         return value_normalized
 
+    def spi_read_write(self,pin, msg):
+        wpi.digitalWrite(pin, 0); wpi.delayMicroseconds(1)
+        msg = wpi.wiringPiSPIDataRW(0, msg)
+        wpi.delayMicroseconds(1)
+        wpi.digitalWrite(pin, 1); wpi.delayMicroseconds(1)
+        return msg
+
+    def read_channel(self, cs, ch):
+        spiRW(cs, chr(ch << 4) + chr(0x00))
+        val = spiRW(cs, chr(0x00) + chr(0x00))
+        return (ord(val[1][0]) << 2) | (ord(val[1][1]) >> 6)
+
+    def read_avg(self, cs, ch, n=20):
+        return sum([read_channel(cs, ch) for i in xrange(n)]) / n
+
     def scan(self):
         print "running scan"
         for channel_num, channel in enumerate(self.channels):
+            val = self.read_avg(self.spi_chip_select, channel_num)
+            print self.spi_chip_select, channel_num, val
+            """
             adc_value = self.adc.read(channel_num)
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
@@ -116,6 +134,7 @@ class Drawbar():
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
                     network.send(channel["name"], value_normalised)
+            """
 
 class Drawbars(threading.Thread):
     def __init__(self):
