@@ -92,7 +92,7 @@ class Drawbar():
         #self.adc = TLC1543(self.spi_chip_select, self.spi_master_slave)
 
     def detent_from_adc_value(self, channel_num, val):
-        return min(self.channels[channel_num]["detent_adc_values"], key=lambda x:abs(x-val))
+        return self.channels[channel_num]["detent_adc_values"].index(min(self.channels[channel_num]["detent_adc_values"], key=lambda x:abs(x-val)))
 
     def normalize_adc_value_to_min_max(self, channel_num, val):
         channel_range = self.channels[channel_num]["max"] - self.channels[channel_num]["min"]
@@ -153,7 +153,7 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_fine", 
-                        "min":30, 
+                        "min":60, 
                         "max":998
                     },
                     {
