@@ -183,6 +183,36 @@ def set_levels (ch, level):
 
   return wpi.wiringPiI2CWriteReg8(digipot2, 0b10101001, level & 255)
 
+def sweep_levels(ch):
+  for level in range(220):
+    set_levels(ch, level)
+    print level
+    time.sleep(0.01)
+  for level in range(220,0,-1):
+    set_levels(ch, level)
+    print level
+    time.sleep(0.01)
+
+
+def sweep_all_levels():
+  max = 220
+  set_levels(0, max)
+  set_levels(1, max)
+  set_levels(2, max)
+  for level in range(max,0,-1):
+    set_levels(0, level)
+    #set_levels(1, level)
+    #set_levels(2, level)
+    print level
+    time.sleep(0.1)
+  for level in range(max):
+    set_levels(0, level)
+    #set_levels(1, level)
+    #set_levels(2, level)
+    print level
+    time.sleep(0.1)
+
+
 def quick_start():
   init()
 
