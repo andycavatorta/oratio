@@ -137,7 +137,7 @@ def network_message_handler(msg):
     if topic == "__heartbeat__":
         print "heartbeat received", msg
     
-    if topic == "voice_3":
+    if topic == "voice_2":
         # tones.send(eval(msg[1]))
 
         # quick hack -- will make this better later!
@@ -180,7 +180,7 @@ def init(HOSTNAME):
     )
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_3")
+    network.subscribe_to_topic("voice_2")
     #main = Main(HOSTNAME)
     #main.start()
 
