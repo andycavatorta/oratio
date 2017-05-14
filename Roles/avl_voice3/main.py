@@ -158,9 +158,12 @@ def network_message_handler(msg):
             c.send_freq(1, 0)
             c.send_freq(2, 0)
 
-        c.set_levels(0, int(180 - payload[1] * 180))
-        c.set_levels(1, int(payload[1]))
-        c.set_levels(2, int(payload[2]))
+        c.set_levels(0, 255 if payload[1] < 0.05 else 180)
+        c.set_levels(1, 255 if payload[3] < 0.05 else 180)
+        c.set_levels(2, 255 if payload[5] < 0.05 else 180)
+        #c.set_levels(0, int(254 - (payload[1] * 10)))
+        #c.set_levels(1, int(254 - (payload[3] * 10)))
+        #c.set_levels(2, int(254 - (payload[5] * 10)))
 
 network = None # makin' it global
 
@@ -169,7 +172,7 @@ def init(HOSTNAME):
 
     c.send_freq(0, 0)
     c.send_freq(1, 0)
-    c.send_freq(1, 0)
+    c.send_freq(2, 0)
 
     c.set_levels(0, 0)
     c.set_levels(1, 0)
