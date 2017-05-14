@@ -212,7 +212,7 @@ class Drawbars(threading.Thread):
                     {
                         "name":"voice_2_db_h1_fine", 
                         "min":23, 
-                        "max":985
+                        "max":950
                     },
                     {
                         "name":"voice_2_db_h1_harmonic", 
