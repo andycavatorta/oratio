@@ -153,9 +153,9 @@ def network_message_handler(msg):
             c.send_freq(0, offset-int(payload[0]))
             c.send_freq(1, offset-int(payload[2]))
             c.send_freq(2, offset-int(payload[4]))
-            c.set_levels(0, 255 if payload[1] < 0.5 else (180 * payload[1]))
-            c.set_levels(1, 255 if payload[3] < 0.5 else (180 * payload[1]))
-            c.set_levels(2, 255 if payload[5] < 0.5 else (180 * payload[1]))
+            c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
+            c.set_levels(1, 255 if payload[3] < 0.5 else int(180.0 * payload[1]))
+            c.set_levels(2, 255 if payload[5] < 0.5 else int(180.0 * payload[1]))
         else:
             c.send_freq(0, 0)
             c.send_freq(1, 0)
