@@ -123,7 +123,6 @@ class Drawbar():
             adc_value = self.read_avg(self.spi_chip_select, channel_num)
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
-                print self.spi_chip_select, channel_num, adc_value, detent
                 if detent != channel["last_value"]:
                     channel["last_value"] = detent
                     print channel["name"], detent
