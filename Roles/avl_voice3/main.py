@@ -149,7 +149,7 @@ def network_message_handler(msg):
         offset = 167511.3
         print offset-int(payload[0])
 
-        if (payload[1] > 0):
+        if (payload[1] > 0.2):
             c.send_freq(0, offset-int(payload[0]))
             c.send_freq(1, offset-int(payload[2]))
             c.send_freq(2, offset-int(payload[4]))
@@ -162,9 +162,9 @@ def network_message_handler(msg):
         print ">>>>>>>>>>> payload 3", payload[1], 255 if payload[3] < 0.9 else 254
         print ">>>>>>>>>>> payload 5", payload[1], 255 if payload[5] < 0.9 else 254
         
-        c.set_levels(0, 255 if payload[1] < 0.9 else 180)
-        c.set_levels(1, 255 if payload[3] < 0.9 else 180)
-        c.set_levels(2, 255 if payload[5] < 0.9 else 180)
+        #c.set_levels(0, 255 if payload[1] < 0.9 else 180)
+        #c.set_levels(1, 255 if payload[3] < 0.9 else 180)
+        #c.set_levels(2, 255 if payload[5] < 0.9 else 180)
         #c.set_levels(0, int(254 - (payload[1] * 10)))
         #c.set_levels(1, int(254 - (payload[3] * 10)))
         #c.set_levels(2, int(254 - (payload[5] * 10)))
