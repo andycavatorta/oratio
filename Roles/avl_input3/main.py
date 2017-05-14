@@ -124,18 +124,16 @@ class Drawbar():
             if "detent_adc_values" in channel:
                 detent = self.detent_from_adc_value(channel_num, adc_value)
                 print self.spi_chip_select, channel_num, adc_value, detent
-            """
                 if detent != channel["last_value"]:
                     channel["last_value"] = detent
                     print channel["name"], detent
-                    #network.send(channel["name"], detent)
+                    network.send(channel["name"], detent)
             else:
                 value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
                 if value_normalised != channel["last_value"]:
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
-                    #network.send(channel["name"], value_normalised)
-            """
+                    network.send(channel["name"], value_normalised)
 
 class Drawbars(threading.Thread):
     def __init__(self):
@@ -152,7 +150,7 @@ class Drawbars(threading.Thread):
                 [
                     {
                         "name":"voice_1_db_harmonic", 
-                        "detent_adc_values": [1022, 1008, 950, 888, 833, 807]
+                        "detent_adc_values": [1022, 1008, 950, 888, 833, 760, 705, 640, 579]
                     },
                     {
                         "name":"voice_1_db_fine", 
@@ -166,7 +164,7 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_h1_harmonic", 
-                        "detent_adc_values":[1009, 988, 943, 866, 842, 782]
+                        "detent_adc_values":[1022, 1012, 972, 956, 844, 793, 733, 674, 582]
                     },
                     {
                         "name":"voice_1_db_h1_vol", 
@@ -180,7 +178,7 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_1_db_h2_harmonic", 
-                        "detent_adc_values":[1023, 1011, 984, 916, 863, 795]
+                        "detent_adc_values":[1021, 1011, 980, 932, 843, 806, 708,669, 594]
                     },
                     {
                         "name":"voice_1_db_h2_vol", 
@@ -205,7 +203,7 @@ class Drawbars(threading.Thread):
                 [
                     {
                         "name":"voice_2_db_harmonic", 
-                        "detent_adc_values": [997, 978, 915, 858, 803, 742]
+                        "detent_adc_values": [997, 978, 915, 858, 803, 742,666, 624,545]
                     },
                     {
                         "name":"voice_2_db_fine", 
@@ -219,7 +217,7 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_2_db_h1_harmonic", 
-                        "detent_adc_values":[987, 967, 915, 843, 793, 746]
+                        "detent_adc_values":[997, 968, 939, 894, 806, 731, 682,627, 550]
                     },
                     {
                         "name":"voice_2_db_h1_vol", 
@@ -233,7 +231,7 @@ class Drawbars(threading.Thread):
                     },
                     {
                         "name":"voice_2_db_h2_harmonic", 
-                        "detent_adc_values":[977, 955, 915, 833, 791, ]
+                        "detent_adc_values":[979, 950, 922 ,907, 824, 719, 690,628, 548]
                     },
                     {
                         "name":"voice_2_db_h2_vol", 
@@ -338,8 +336,6 @@ class Main(threading.Thread):
             network.send(topic_msg[0], topic_msg[1])
 
 """
-            
-
 
 def network_status_handler(msg):
     print "network_status_handler", msg
