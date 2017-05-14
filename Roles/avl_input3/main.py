@@ -190,7 +190,7 @@ class Drawbars(threading.Thread):
                         "max":1008
                     },
                     {
-                        "name":"voice_1_db_filter_a", 
+                        "name":"voice_1_db_filter_b", 
                         "min":76, 
                         "max":1009
                     },
@@ -243,7 +243,7 @@ class Drawbars(threading.Thread):
                         "max":1002
                     },
                     {
-                        "name":"voice_2_db_filter_a", 
+                        "name":"voice_2_db_filter_b", 
                         "min":47, 
                         "max":1004
                     },
