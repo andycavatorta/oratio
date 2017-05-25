@@ -148,9 +148,9 @@ def network_message_handler(msg):
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, lp, hp = payload
 
-        print 'f1:\t' + round(freq_1,2) + '\tv1:\t' + round(gain,2) + \
-            '\tf2:\t' + round(freq_2,2) + '\tv1:\t' + round(vol_2,2) + \
-            '\tf3:\t' + round(freq_3,2) + '\tv1:\t' + round(vol_3,2)
+        print 'f1:\t'+str(round(freq_1,2)) + '\tv1:\t' + str(round(gain,2)) + \
+            '\tf2:\t'+str(round(freq_2,2)) + '\tv1:\t' + str(round(vol_2,2))+ \
+            '\tf3:\t'+str(round(freq_3,2)) + '\tv1:\t' + str(round(vol_3,2))
 
         offset = 119090.7
         #print offset-int(payload[0])
