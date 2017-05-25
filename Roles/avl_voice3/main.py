@@ -151,7 +151,9 @@ def network_message_handler(msg):
         offset = 167511.3
         print offset-int(payload[0])
 
-        f1 = freq_1*4+50
+        f1 = int(freq_1)*8+110
+
+        print f1
 
         if (payload[1] > 0.2):
             c.send_freq(0, offset-int(f1))
