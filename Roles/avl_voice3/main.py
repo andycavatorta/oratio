@@ -135,7 +135,7 @@ def network_status_handler(msg):
     print "network_status_handler", msg
 
 def network_message_handler(msg):
-    print "network_message_handler", msg
+    #print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
@@ -156,20 +156,13 @@ def network_message_handler(msg):
             c.send_freq(1, offset-int(freq_2))
             c.send_freq(2, offset-int(freq_3))
             #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
-            c.set_levels(1, 0 if vol_2 < 0.5 else int(255.0 * vol_2))
-            c.set_levels(2, 0 if vol_3 < 0.5 else int(255.0 * vol_3))
+            c.set_levels(0, 0 if payload[1] < 0.1 else int(180.0 * payload[1]))
+            c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
+            c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
         else:
             c.send_freq(0, 0)
             c.send_freq(1, 0)
             c.send_freq(2, 0)
-
-        #print ">>>>>>>>>>> payload 1", payload[1], 255 if payload[1] < 0.9 else 254
-        #print ">>>>>>>>>>> payload 3", payload[1], 255 if payload[3] < 0.9 else 254
-        #print ">>>>>>>>>>> payload 5", payload[1], 255 if payload[5] < 0.9 else 254
-        
-        #c.set_levels(0, int(254 - (payload[1] * 10)))
-        #c.set_levels(1, int(254 - (payload[3] * 10)))
-        #c.set_levels(2, int(254 - (payload[5] * 10)))
 
 network = None # makin' it global
 

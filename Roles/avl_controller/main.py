@@ -260,6 +260,7 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_vol":
+            print "----> voice_3_db_h1_vol= ", float(val)
             self.voices[2]["db_h1_vol"] = float(val)
             self.queue.put("3")
             return
