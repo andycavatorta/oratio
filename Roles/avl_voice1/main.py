@@ -151,10 +151,6 @@ def network_message_handler(msg):
 
         offset = 119104.6
         #print offset-int(payload[0])
-
-        c.send_freq(0, offset-int(freq_1))
-        c.send_freq(1, offset-int(freq_2))
-        c.send_freq(2, offset-int(freq_3))
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
         level_1 = 0 if payload[1] < 0.1 else int(240.0 * payload[1])
         level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1)
@@ -163,7 +159,14 @@ def network_message_handler(msg):
         c.set_levels(0, level_1)
         c.set_levels(1, level_2)
         c.set_levels(2, level_3)
-
+        if level_1 <0.1:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
+        else:
+            c.send_freq(0, offset-int(freq_1))
+            c.send_freq(1, offset-int(freq_2))
+            c.send_freq(2, offset-int(freq_3))
         #get period corresponding to cutoff frequency * 100 (in microseconds)
 
         cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
