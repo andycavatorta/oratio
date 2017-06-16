@@ -158,7 +158,7 @@ def send_freq (ch, freq, prnt=False) :
   #return word
 
 
-def freq_sweep (ch, start, end, step, t_delay=100, prnt=True, sine=True):
+def freq_sweep (ch, start, end, step, t_delay=100, prnt=True, `ne=True):
 
   freq = start
 
@@ -238,3 +238,6 @@ def pport_write (en, word):
   wpi.digitalWrite(pport_en, 1)
   delay_us(4)
   wpi.digitalWrite(pport_en, 0)
+
+def pband_size(band):
+  wpi.wiringPiI2CWriteReg8(digipot3, 0b10101001, band & 255)
