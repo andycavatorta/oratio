@@ -319,6 +319,14 @@ class Dispatcher(threading.Thread):
     def run(self):
         while True:
             scope_of_update = self.queue.get(True)
+            if scope_of_update == "all_pitch_key":
+                print "--> all_pitch_key voice 0", self.calculate_voice_data(0, "pitch_key")
+                print "--> all_pitch_key voice 1", self.calculate_voice_data(1, "pitch_key")
+                print "--> all_pitch_key voice 2", self.calculate_voice_data(2, "pitch_key")
+            if scope_of_update == "all_transport":
+                print "--> all_transport voice 0", self.calculate_voice_data(0, "transport")
+                print "--> all_transport voice 1", self.calculate_voice_data(1, "transport")
+                print "--> all_transport voice 2", self.calculate_voice_data(2, "transport")
 
             """
             if scope_of_update == "all_pitch_key":
