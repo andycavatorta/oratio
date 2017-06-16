@@ -327,6 +327,12 @@ class Dispatcher(threading.Thread):
                 print "--> all_transport voice 0", self.calculate_voice_data(0, "transport")
                 print "--> all_transport voice 1", self.calculate_voice_data(1, "transport")
                 print "--> all_transport voice 2", self.calculate_voice_data(2, "transport")
+            if scope_of_update == "1":
+                print "--> 1 voice 0", self.calculate_voice_data(0, "transport")
+            if scope_of_update == "2":
+                print "--> 2 voice 1", self.calculate_voice_data(1, "transport")
+            if scope_of_update == "3":
+                print "--> 3 voice 2", self.calculate_voice_data(2, "transport")
 
             """
             if scope_of_update == "all_pitch_key":
