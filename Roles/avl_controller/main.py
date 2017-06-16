@@ -131,7 +131,7 @@ class Dispatcher(threading.Thread):
 
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
-        print "voice_num".voice_num
+        print "voice_num",voice_num
         print "voice",voice
         base_pitch = self.calculate_base_pitch(voice_num, priority)
         print "base_pitch",base_pitch
