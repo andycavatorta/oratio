@@ -39,6 +39,8 @@ import crystal_helpers as c
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
 
+from __future__ import division
+
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
@@ -146,18 +148,24 @@ def network_message_handler(msg):
 
         # quick hack -- will make this better later!
         payload = eval(msg[1])
-        freq_1, gain, freq_2, vol_2, freq_3, vol_3, lp, hp = payload
+        freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff, pband = payload
 
-        offset = 119090.7
+        offset = 1190.7
         #print offset-int(payload[0])
 
         c.send_freq(0, offset-int(freq_1))
         c.send_freq(1, offset-int(freq_2))
         c.send_freq(2, offset-int(freq_3))
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
-        c.set_levels(0, 0 if payload[1] < 0.1 else int(180.0 * payload[1]))
+        c.set_levels(0, 0 if payload[1] < 0.1 else int(240.0 * payload[1]))
         c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
         c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
+
+        # get period corresponding to cutoff frequency * 100 (in microseconds)
+        adj_period = 1e6 / (cutoff * 100)
+        c.pport_write(1, cutoff)
+        c.pband_size(pband/255)
+
         """
         if (payload[1] > 0.2):
             c.send_freq(0, offset-int(freq_1))
