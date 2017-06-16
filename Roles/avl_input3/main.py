@@ -139,7 +139,7 @@ class Drawbar():
 class Drawbars(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.chip_select_pins = [27, 28]
+        self.chip_select_pins = [27, 28, 29]
         self.drawbars = []
         wpi.wiringPiSetup()
         wpi.wiringPiSPISetupMode(0, 500000, 0)
