@@ -181,10 +181,13 @@ def init(HOSTNAME):
     network.subscribe_to_topic("system")  # subscribe to all system messages
     #network.subscribe_to_topic("sensor_data")  
     main = Main(HOSTNAME)
+    main.daemon = True
     main.start()
     mpr121array = MPR121Array([0x5a, 0x5b, 0x5c, 0x5d])
+    mpr121array.daemon = True
     mpr121array.start()
     transport = Transport(0,0)
+    transport.daemon = True
     transport.start()
     # key_0 = Key("voice_key_1_position",0,0)
     # key_1 = Key("voice_key_2_position",0,1)

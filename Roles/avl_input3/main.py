@@ -366,5 +366,6 @@ def init(HOSTNAME):
     network.subscribe_to_topic("system")  # subscribe to all system messages
     #network.subscribe_to_topic("sensor_data")  
     drawbars = Drawbars()
+    drawbars.daemon = True
     drawbars.start()
 
