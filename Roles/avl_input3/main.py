@@ -129,7 +129,8 @@ class Drawbar():
                     network.send(channel["name"], detent)
             else:
                 value_normalised = self.normalize_adc_value_to_min_max(channel_num, adc_value)
-                if value_normalised != channel["last_value"]:
+                if abs(value_normalised - channel["last_value"])>0.03:
+                #if value_normalised != channel["last_value"]:
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
                     network.send(channel["name"], value_normalised)
