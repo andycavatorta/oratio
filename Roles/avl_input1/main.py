@@ -95,7 +95,7 @@ class Key(threading.Thread):
         print "after zero ", self.bus, self.deviceId 
         print "class Key instantiated with values", name, bus, deviceId
         self.encoder_min = 0.0
-        self.encoder_max = 140.0
+        self.encoder_max = 120.0
         self.last_pos = 0.0
 
     def run(self):
@@ -112,7 +112,7 @@ class Key(threading.Thread):
         value = value if value <= 1000 else 0
         value = value if value <= self.encoder_max else self.encoder_max
         value = value if value >= self.encoder_min else self.encoder_min 
-        mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
+        mapped_value = 0.8*(((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
         return mapped_value
 
 def network_status_handler(msg):
