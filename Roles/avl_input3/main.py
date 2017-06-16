@@ -134,6 +134,7 @@ class Drawbar():
                     channel["last_value"] = value_normalised
                     print channel["name"], value_normalised
                     network.send(channel["name"], value_normalised)
+            time.sleep(0.01)
 
 class Drawbars(threading.Thread):
     def __init__(self):
@@ -318,7 +319,7 @@ class Drawbars(threading.Thread):
             for ordinal, pin in enumerate(self.chip_select_pins):
                 #self.set_chip_select(pin)
                 self.drawbars[ordinal].scan()
-                time.sleep(0.05)
+                time.sleep(0.1)
 
 """
 class Main(threading.Thread):
