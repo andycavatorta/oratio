@@ -226,7 +226,7 @@ def sweep (target=2000, dt=100, df=100):
 
 
 def pport_write (en, word):
-  word = bin(word & 255)[2:].zfill(8)
+  word = bin(int(word) & 255)[2:].zfill(8)
   print word
 
   pport_en = pport_en1 if en == 1 else pport_en2
