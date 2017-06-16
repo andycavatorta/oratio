@@ -1,3 +1,5 @@
+
+import Adafruit_MCP3008
 import importlib
 import json
 import os
@@ -8,7 +10,7 @@ import settings
 import sys
 import threading
 import time
-import wiringpi as wpi
+#import wiringpi as wpi
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
