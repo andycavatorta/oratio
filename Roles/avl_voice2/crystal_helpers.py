@@ -158,7 +158,7 @@ def send_freq (ch, freq, prnt=False) :
   #return word
 
 
-def freq_sweep (ch, start, end, step, t_delay=100, prnt=True, `ne=True):
+def freq_sweep (ch, start, end, step, t_delay=100, prnt=True, sine=True):
 
   freq = start
 
