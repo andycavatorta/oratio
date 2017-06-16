@@ -181,7 +181,7 @@ def set_levels (ch, level):
     #print bin(command)
     return wpi.wiringPiI2CWriteReg8 (digipot1, command, level & 255)
 
-  return wpi.wiringPiI2CWriteReg8(digipot2, 0b10101001, level & 255)
+  return wpi.wiringPiI2CWriteReg8(digipot2, 0b10101010, level & 255)
 
 def sweep_levels(ch):
   for level in range(220):
