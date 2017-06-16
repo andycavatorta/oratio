@@ -58,7 +58,10 @@ class Drawbar():
         raw_value = self.adc.read_adc(self.adc_channel)
         # if close to last values, return -1
         if abs(self.previous_value - raw_value) >= self.change_threshold:
+            self.previous_value = raw_value
             return self.name, -1
+
+        self.previous_value = raw_value
         # if detent values, get detents
         if len(self.detent_adc_values) > 0:
             return self.detent_from_adc_value(raw_value)
