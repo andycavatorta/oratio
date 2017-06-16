@@ -252,7 +252,6 @@ class Drawbars(threading.Thread):
                 ]
             )
         )
-        """
         self.drawbars.append(
             Drawbar(self.chip_select_pins[2], 0, 
                 [
@@ -306,8 +305,6 @@ class Drawbars(threading.Thread):
                 ]
             )
         )
-        """
-
 
     def set_chip_select(self, selected_pin):
         for pin in self.chip_select_pins:
