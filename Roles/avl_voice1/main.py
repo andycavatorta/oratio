@@ -166,10 +166,10 @@ def network_message_handler(msg):
 
         #get period corresponding to cutoff frequency * 100 (in microseconds)
 
-        cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
-        adj_period = 1e6 / (cutoff_freq * 100)
-        c.pport_write(1, adj_period)
-        c.pband_size(pband/255)
+        #cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
+        #adj_period = 1e6 / (cutoff_freq * 100)
+        #c.pport_write(1, adj_period)
+        #c.pband_size(pband/255)
 
         """
         if (payload[1] > 0.2):
