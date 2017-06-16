@@ -161,9 +161,12 @@ def network_message_handler(msg):
         c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
 
         # get period corresponding to cutoff frequency * 100 (in microseconds)
-        adj_period = 1e6 / (cutoff * 100)
-        c.pport_write(1, int(cutoff))
-        c.pband_size(pband/255)
+
+        # freq
+        # adj_period = 1e6 / (cutoff * freq1 * 100)
+        
+        # c.pport_write(1, adj_period)
+        # c.pband_size(pband/255)
 
         """
         if (payload[1] > 0.2):
