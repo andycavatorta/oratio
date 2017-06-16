@@ -146,7 +146,7 @@ def network_message_handler(msg):
 
         # quick hack -- will make this better later!
         payload = eval(msg[1])
-        freq_1, gain, freq_2, vol_2, freq_3, vol_3, lp, hp = payload
+        freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
         offset = 167489
         print payload
