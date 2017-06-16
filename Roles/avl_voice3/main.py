@@ -149,17 +149,13 @@ def network_message_handler(msg):
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, lp, hp = payload
 
         offset = 167489
-        print offset-int(payload[0])
-
-        f1 = int(freq_1)*8+110
-
-        print f1
+        print payload
 
         c.send_freq(0, offset-int(freq_1))
         c.send_freq(1, offset-int(freq_2))
         c.send_freq(2, offset-int(freq_3))
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
-        c.set_levels(0, 0 if payload[1] < 0.1 else int(240.0 * payload[1]))
+        c.set_levels(0, 0 if gain < 0.1 else int(240.0 * payload[1]))
         c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
         c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
 
