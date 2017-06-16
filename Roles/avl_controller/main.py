@@ -261,7 +261,6 @@ class Dispatcher(threading.Thread):
             self.queue.put("3")
             return
         if name == "voice_3_db_h1_vol":
-            print "----> voice_3_db_h1_vol= ", float(val)
             self.voices[2]["db_h1_vol"] = float(val)
             self.queue.put("3")
             return
@@ -307,6 +306,15 @@ class Dispatcher(threading.Thread):
                 network.send("voice_1", self.calculate_voice_data(0, "pitch_key"))
                 network.send("voice_2", self.calculate_voice_data(1, "pitch_key"))
                 network.send("voice_3", self.calculate_voice_data(2, "pitch_key"))
+            else:
+                network.send("voice_1", self.calculate_voice_data(0, "transport"))
+                network.send("voice_2", self.calculate_voice_data(1, "transport"))
+                network.send("voice_3", self.calculate_voice_data(2, "transport"))
+            """
+            if scope_of_update == "all_pitch_key":
+                network.send("voice_1", self.calculate_voice_data(0, "pitch_key"))
+                network.send("voice_2", self.calculate_voice_data(1, "pitch_key"))
+                network.send("voice_3", self.calculate_voice_data(2, "pitch_key"))
             if scope_of_update == "all_transport":
                 network.send("voice_1", self.calculate_voice_data(0, "transport"))
                 network.send("voice_2", self.calculate_voice_data(1, "transport"))
@@ -317,7 +325,7 @@ class Dispatcher(threading.Thread):
                 network.send("voice_2", self.calculate_voice_data(1, "transport"))
             if scope_of_update == "3":
                 network.send("voice_3", self.calculate_voice_data(2, "transport"))
-
+            """
 
 class Key(threading.Thread):
     def __init__(self, name, bus, deviceId):
@@ -363,10 +371,11 @@ def network_status_handler(msg):
 
 def network_message_handler(msg):
     #try:
-        print "network_message_handler", msg
+        #print "network_message_handler", msg
         topic = msg[0]
         if topic == "__heartbeat__":
-            print "heartbeat received", msg
+            pass
+            #print "heartbeat received", msg
         if topic in [
             "system",
             "voice_key_1_position",
