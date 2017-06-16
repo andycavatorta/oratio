@@ -25,6 +25,7 @@ pport_en2 = 1
 # file descriptor for digital potentiometer (i2c)
 digipot1 = 0
 digipot2 = 0
+digipot3 = 0  # pass band
 
 # store current frequencies
 freq_a = 0
@@ -115,6 +116,10 @@ def init () :
   global digipot2
   digipot2 = wpi.wiringPiI2CSetup(0x2f)    # master gain
   print digipot2
+
+  global digipot3
+  digipot3 = wpi.wiringPiI2CSetup(0x28)   #moreskldf
+  print digipot3
 
 
   # setup parallel port
@@ -268,3 +273,6 @@ def pport_write (en, word):
   wpi.digitalWrite(pport_en, 1)
   delay_us(4)
   wpi.digitalWrite(pport_en, 0)
+
+def pband_size(band):
+  wpi.wiringPiI2CWriteReg8(digipot3, 0b10101001, band & 255)
