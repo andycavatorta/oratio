@@ -24,7 +24,7 @@ Dashboard:
 """
 
 
-
+from __future__ import division
 
 import importlib
 import json
@@ -39,7 +39,6 @@ import crystal_helpers as c
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
 
-from __future__ import division
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
