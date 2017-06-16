@@ -14,9 +14,10 @@ import Adafruit_MCP3008
 CLK  = 18
 MISO = 23
 MOSI = 24
-CS   = 25
-mcp1 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+CS0   = 25
+CS1   = 8
+mcp1 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS0, miso=MISO, mosi=MOSI)
+mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS1, miso=MISO, mosi=MOSI)
 
 # Hardware SPI configuration:
 # SPI_PORT   = 0
