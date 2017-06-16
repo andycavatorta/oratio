@@ -336,6 +336,8 @@ class Dispatcher(threading.Thread):
     def run(self):
         while True:
             scope_of_update = self.queue.get(True)
+
+            """
             if scope_of_update == "all_pitch_key":
                 network.send("voice_1", self.calculate_voice_data(0, "pitch_key"))
                 network.send("voice_2", self.calculate_voice_data(1, "pitch_key"))
@@ -344,7 +346,7 @@ class Dispatcher(threading.Thread):
                 network.send("voice_1", self.calculate_voice_data(0, "transport"))
                 network.send("voice_2", self.calculate_voice_data(1, "transport"))
                 network.send("voice_3", self.calculate_voice_data(2, "transport"))
-            """
+                
             if scope_of_update == "all_pitch_key":
                 network.send("voice_1", self.calculate_voice_data(0, "pitch_key"))
                 network.send("voice_2", self.calculate_voice_data(1, "pitch_key"))
