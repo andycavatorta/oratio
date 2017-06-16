@@ -277,4 +277,4 @@ def pport_write (en, word):
   wpi.digitalWrite(pport_en, 0)
 
 def pband_size(band):
-  wpi.wiringPiI2CWriteReg8(digipot3, 0b10101001, band & 255)
+  wpi.wiringPiI2CWriteReg8(digipot3, 0b10101001, int(band) & 255)
