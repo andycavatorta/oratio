@@ -162,7 +162,7 @@ def network_message_handler(msg):
 
         # get period corresponding to cutoff frequency * 100 (in microseconds)
         adj_period = 1e6 / (cutoff * 100)
-        c.pport_write(1, cutoff)
+        c.pport_write(1, int(cutoff))
         c.pband_size(pband/255)
 
         """
