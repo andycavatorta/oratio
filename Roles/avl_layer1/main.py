@@ -59,7 +59,7 @@ class Drawbar():
         # if close to last values, return -1
         if abs(self.previous_value - raw_value) >= self.change_threshold:
             self.previous_value = raw_value
-            return self.name, -1
+            return -1
 
         self.previous_value = raw_value
         # if detent values, get detents
