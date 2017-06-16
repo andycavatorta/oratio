@@ -137,7 +137,7 @@ def network_status_handler(msg):
     print "network_status_handler", msg
 
 def network_message_handler(msg):
-    #print "network_message_handler", msg
+    print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
