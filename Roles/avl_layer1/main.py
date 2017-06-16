@@ -152,9 +152,9 @@ class Drawbars(threading.Thread):
         while True:
             for drawbar in self.drawbars:
                 val = drawbar.read()
-                print ">>>",drawbar.name, val
-                #if val > -1:
-                    #network.send(drawbar.name, val)
+                #print ">>>",drawbar.name, val
+                if val > -1:
+                    network.send(drawbar.name, val)
                 time.sleep(0.1)
 
 def network_status_handler(msg):
