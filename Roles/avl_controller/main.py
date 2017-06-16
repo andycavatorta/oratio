@@ -451,7 +451,7 @@ def network_message_handler(msg):
             "voice_2_db_h2_vol",
             "voice_2_db_filter_a",
             "voice_2_db_filter_b",
-            "voice_2_db_harmonic",
+            "voice_3_db_harmonic",
             "voice_3_db_fine",
             "voice_3_db_h1_harmonic",
             "voice_3_db_h1_fine",
