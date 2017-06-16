@@ -256,51 +256,51 @@ class Drawbars(threading.Thread):
             Drawbar(self.chip_select_pins[2], 0, 
                 [
                     {
-                        "name":"voice_2_db_harmonic", 
-                        "detent_adc_values": [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                        "name":"voice_3_db_harmonic", 
+                        "detent_adc_values": [997, 978, 915, 858, 803, 742,666, 624,545]
                     },
                     {
-                        "name":"voice_2_db_fine", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_fine", 
+                        "min":28, 
+                        "max":994
                     },
                     {
-                        "name":"voice_2_db_h1_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                        "name":"voice_3_db_h1_fine", 
+                        "min":23, 
+                        "max":985
                     },
                     {
-                        "name":"voice_2_db_h1_fine", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_h1_harmonic", 
+                        "detent_adc_values":[997, 968, 939, 894, 806, 731, 682,627, 550]
                     },
                     {
-                        "name":"voice_2_db_h1_vol", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_h1_vol", 
+                        "min":35, 
+                        "max":1007
                     },
                     {
-                        "name":"voice_2_db_h2_harmonic", 
-                        "detent_adc_values":[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800]
+                        "name":"voice_3_db_h2_fine", 
+                        "min":15, 
+                        "max":969
                     },
                     {
-                        "name":"voice_2_db_h2_fine", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_h2_harmonic", 
+                        "detent_adc_values":[979, 950, 922 ,907, 824, 719, 690,628, 548]
                     },
                     {
-                        "name":"voice_2_db_h2_vol", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_h2_vol", 
+                        "min":68, 
+                        "max":1002
                     },
                     {
-                        "name":"voice_2_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_filter_a", 
+                        "min":52, 
+                        "max":1002
                     },
                     {
-                        "name":"voice_2_db_filter_a", 
-                        "min":100, 
-                        "max":800
+                        "name":"voice_3_db_filter_b", 
+                        "min":47, 
+                        "max":1004
                     },
                 ]
             )
