@@ -157,24 +157,24 @@ class Dispatcher(threading.Thread):
 
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
-        print "voice_num",voice_num
-        print "voice",voice
+        #print "voice_num",voice_num
+        #print "voice",voice
         base_pitch = self.calculate_base_pitch(voice_num, priority)
-        print "base_pitch",base_pitch
+        #print "base_pitch",base_pitch
         harmonic_1_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 0)
-        print "harmonic_1_pitch",harmonic_1_pitch
+        #print "harmonic_1_pitch",harmonic_1_pitch
         harmonic_2_pitch = self.calculate_harmonic_pitch(voice_num, base_pitch, 1)
-        print "harmonic_2_pitch",harmonic_2_pitch
+        #print "harmonic_2_pitch",harmonic_2_pitch
         base_volume = voice["voice_key_position"]
-        print "base_volume",base_volume
+        #print "base_volume",base_volume
         harmonic_1_volume = base_volume *  voice["db_h1_vol"]
-        print "harmonic_1_volume",harmonic_1_volume
+        #print "harmonic_1_volume",harmonic_1_volume
         harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
-        print "harmonic_2_volume",harmonic_2_volume
+        #print "harmonic_2_volume",harmonic_2_volume
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume, voice["db_filter_a"], voice["db_filter_b"]]
 
     def updateValue(self, name, val):
-        print "updateValue", name, val
+        #print "updateValue", name, val
         if name == "pitch_key_event":
             self.pitch_key_event = int(val)
             self.queue.put("all_pitch_key")
@@ -405,7 +405,7 @@ def network_status_handler(msg):
 
 def network_message_handler(msg):
     #try:
-        #print "network_message_handler", msg
+        print "network_message_handler", msg
         topic = msg[0]
         if topic == "__heartbeat__":
             pass
