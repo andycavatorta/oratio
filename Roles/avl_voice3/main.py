@@ -161,12 +161,13 @@ def network_message_handler(msg):
             c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
             c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
         else:
-            c.send_freq(0, 0)
-            c.send_freq(1, 0)
-            c.send_freq(2, 0)
-            c.set_levels(0, 0)
-            c.set_levels(1, 0)
-            c.set_levels(2, 0)
+            pass
+            # c.send_freq(0, 0)
+            # c.send_freq(1, 0)
+            # c.send_freq(2, 0)
+            # c.set_levels(0, 0)
+            # c.set_levels(1, 0)
+            # c.set_levels(2, 0)
 
 
         cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
