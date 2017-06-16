@@ -149,7 +149,7 @@ def network_message_handler(msg):
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff, pband = payload
 
-        offset = 1190.7
+        offset = 119104.6
         #print offset-int(payload[0])
 
         c.send_freq(0, offset-int(freq_1))
