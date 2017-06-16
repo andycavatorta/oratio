@@ -45,7 +45,7 @@ class Drawbar():
     def detent_from_adc_value(self, raw_value):
         return self.detent_adc_values.index(min(self.detent_adc_values, key=lambda x:abs(x-raw_value)))
 
-    def normalize_adc_value_to_min_max(self, channel_num, val):
+    def normalize_adc_value_to_min_max(self, val):
         value_range = self.max - self.min
         val_with_min_offset = val - self.min
         value_normalized = float(val_with_min_offset) / float(value_range)
@@ -61,7 +61,7 @@ class Drawbar():
             return self.name, -1
         # if detent values, get detents
         if len(self.detent_adc_values) > 0:
-            return self.detent_from_adc_value()
+            return self.detent_from_adc_value(raw_value)
         else:
             return self.normalize_adc_value_to_min_max(raw_value)
 
