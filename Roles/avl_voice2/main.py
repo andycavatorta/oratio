@@ -51,6 +51,9 @@ global last_f1
 global last_f2
 global last_f3
 
+
+offset = 95945.1
+
 """
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -143,12 +146,12 @@ def network_message_handler(msg):
     
     if topic == "voice_2":
         # tones.send(eval(msg[1]))
-
+        global offset
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
-        offset = 95925.1
+        #offset = 95925.1
         print offset-int(payload[0])
 
 
