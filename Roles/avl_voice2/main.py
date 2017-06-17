@@ -146,12 +146,16 @@ def network_message_handler(msg):
     
     if topic == "voice_2":
         # tones.send(eval(msg[1]))
-
+        global offset
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
+<<<<<<< HEAD
         
+=======
+        #offset = 95925.1
+>>>>>>> 97cb9faae530c3c14114225773a8c72cda157e67
         print offset-int(payload[0])
 
 
