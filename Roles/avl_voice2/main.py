@@ -138,7 +138,7 @@ def network_status_handler(msg):
 
 def network_message_handler(msg):
     global offset 
-    #print "network_message_handler", msg
+    print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
@@ -150,13 +150,8 @@ def network_message_handler(msg):
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
-
-<<<<<<< HEAD
-        
-=======
         #offset = 95925.1
->>>>>>> 97cb9faae530c3c14114225773a8c72cda157e67
-        print offset-int(payload[0])
+        #print offset-int(payload[0])
 
 
         c.send_freq(0, offset-int(freq_1))

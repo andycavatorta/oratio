@@ -182,7 +182,7 @@ def set_levels (ch, level):
 
   if (ch > 0):
     command = 0b10101001 if ch == 1 else 0b10101010
-    print bin(command)
+    #print bin(command)
     return wpi.wiringPiI2CWriteReg8 (digipot1, command, level & 255)
 
   return wpi.wiringPiI2CWriteReg8(digipot2, 0b10101010, level & 255)
@@ -231,7 +231,7 @@ def sweep (target=2000, dt=100, df=100):
 
 def pport_write (en, word):
   word = bin(int(word) & 255)[2:].zfill(8)
-  print word
+  #print word
 
   pport_en = pport_en1 if en == 1 else pport_en2
 
