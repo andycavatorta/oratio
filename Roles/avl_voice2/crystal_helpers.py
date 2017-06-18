@@ -138,7 +138,7 @@ def init () :
   wpi.digitalWrite(pport_en2, 0)
 
 def send_freq (ch, freq, prnt=False) :
-  freq = 27110760 + (241.2224 - 27110760)/(1 + math.pow((float(freq)/21337770),1.027663))
+  #freq = 27110760 + (241.2224 - 27110760)/(1 + math.pow((float(freq)/21337770),1.027663))
 
   word = freq_word(freq, prnt)
 
