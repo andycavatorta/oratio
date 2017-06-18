@@ -73,7 +73,8 @@ class MPR121Array(threading.Thread):
                 current_touched = self.capsensors[sensor_id].touched()
                 for i in range(12):
                     pin_bit = 1 << i
-                    if current_touched & pin_bit and not self.last_touched[sensor_id] & pin_bit:
+                    if current_touched & pin_bit :
+                    #if current_touched & pin_bit and not self.last_touched[sensor_id] & pin_bit:
                         print('{0} touched!'.format(i))
                         global_position = 155 - (i + (12 * (12-sensor_id))) 
                     if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
