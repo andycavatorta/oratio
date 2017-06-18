@@ -52,6 +52,9 @@ global last_f1
 global last_f2
 global last_f3
 
+offset = 119098
+#offset = 119104.6
+
 """
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -136,6 +139,7 @@ def network_status_handler(msg):
     print "network_status_handler", msg
 
 def network_message_handler(msg):
+    global offset
     print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
@@ -149,7 +153,7 @@ def network_message_handler(msg):
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
-        offset = 119104.6
+        #offset = 119104.6
         #print offset-int(payload[0])
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
         level_1 = 0 if payload[1] < 0.1 else int(240.0 * payload[1])
