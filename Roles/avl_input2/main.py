@@ -69,22 +69,25 @@ class MPR121Array(threading.Thread):
             self.last_touched[sensor_id] = self.capsensors[sensor_id].touched()
             global_position = 1
         while True:
-            for sensor_id in range(4):
-                current_touched = self.capsensors[sensor_id].touched()
-                for i in range(12):
-                    pin_bit = 1 << i
-                    if current_touched & pin_bit :
-                    #if current_touched & pin_bit and not self.last_touched[sensor_id] & pin_bit:
-                        print('{0} touched!'.format(i))
-                        global_position = 155 - (i + (12 * (12-sensor_id))) 
-                    if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
-                        print('{0} released!'.format(i))
-                self.last_touched[sensor_id] = current_touched
-            if global_position > -1 and self.last_global_position != global_position:
-                print "pitch_key_event", global_position
-                main.add_to_queue("pitch_key_event", global_position)
-                self.last_global_position = global_position
-                time.sleep(0.01)
+            try:
+                for sensor_id in range(4):
+                    current_touched = self.capsensors[sensor_id].touched()
+                    for i in range(12):
+                        pin_bit = 1 << i
+                        if current_touched & pin_bit and not self.last_touched[sensor_id] & pin_bit:
+                            print('{0} touched!'.format(i))
+                            global_position = 155 - (i + (12 * (12-sensor_id))) 
+                        if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
+                            print('{0} released!'.format(i))
+                            self.last_touched[sensor_id]  = -1
+                    self.last_touched[sensor_id] = current_touched
+                if global_position > -1 and self.last_global_position != global_position:
+                    print "pitch_key_event", global_position
+                    main.add_to_queue("pitch_key_event", global_position)
+                    self.last_global_position = global_position
+                    time.sleep(0.01)
+                except Exception as e:
+                    print "Exception in MPR121Array.run", e
 
 class Key(threading.Thread):
     def __init__(self, name, bus, deviceId):
