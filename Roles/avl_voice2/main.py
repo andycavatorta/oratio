@@ -51,7 +51,8 @@ global last_f1
 global last_f2
 global last_f3
 
-offset = 95945.1
+offset = 95800
+#offset = 95945.1
 
 """
 class Main(threading.Thread):
