@@ -80,67 +80,67 @@ class Drawbars(threading.Thread):
         self.adc2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS1, miso=MISO, mosi=MOSI)
         self.drawbars = [
             Drawbar(
-                name="voice_2_db_harmonic" , 
+                name="voice_3_db_harmonic" , 
                 detent_adc_values = [1000,900,800,700,600,500,400,300,200,100],
                 adc=self.adc1,
                 adc_channel=0
             ),
             Drawbar(
-                name="voice_2_db_fine" , 
+                name="voice_3_db_fine" , 
                 min=100, 
                 max=998,
                 adc=self.adc1,
                 adc_channel=1
             ),
             Drawbar(
-                name="voice_2_db_h1_fine" , 
+                name="voice_3_db_h1_fine" , 
                 min=100, 
                 max=950,
                 adc=self.adc1,
                 adc_channel=2
             ),
             Drawbar(
-                name="voice_2_db_h1_harmonic" , 
+                name="voice_3_db_h1_harmonic" , 
                 detent_adc_values = [1000,900,800,700,600,500,400,300,200,100],
                 adc=self.adc1,
                 adc_channel=3
             ),
             Drawbar(
-                name="voice_2_db_h1_vol" , 
+                name="voice_3_db_h1_vol" , 
                 min=100, 
                 max=987,
                 adc=self.adc1,
                 adc_channel=4
             ),
             Drawbar(
-                name="voice_2_db_h2_fine" , 
+                name="voice_3_db_h2_fine" , 
                 min=100, 
                 max=1010,
                 adc=self.adc2,
                 adc_channel=0
             ),
             Drawbar(
-                name="voice_2_db_h2_harmonic" , 
+                name="voice_3_db_h2_harmonic" , 
                 detent_adc_values = [1000,900,800,700,600,500,400,300,200,100],
                 adc=self.adc2,
                 adc_channel=1
             ),
             Drawbar(
-                name="voice_2_db_h2_vol" , 
+                name="voice_3_db_h2_vol" , 
                 min=100, 
                 max=1008,
                 adc=self.adc2,
                 adc_channel=2
             ),
             Drawbar(
-                name="voice_2_db_filter_a" , 
+                name="voice_3_db_filter_a" , 
                 min=100, 
                 max=1008,
                 adc=self.adc2,
                 adc_channel=3
             ),
             Drawbar(
-                name="voice_2_db_filter_b" , 
+                name="voice_3_db_filter_b" , 
                 min=100, 
                 max=1009,
                 adc=self.adc2,
