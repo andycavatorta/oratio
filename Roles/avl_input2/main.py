@@ -75,7 +75,7 @@ class MPR121Array(threading.Thread):
                     pin_bit = 1 << i
                     if current_touched & pin_bit and not self.last_touched[sensor_id] & pin_bit:
                         print('{0} touched!'.format(i))
-                        global_position = 153 - (i + (12 * (12-sensor_id))) 
+                        global_position = 155 - (i + (12 * (12-sensor_id))) 
                     if not current_touched & pin_bit and self.last_touched[sensor_id] & pin_bit:
                         print('{0} released!'.format(i))
                 self.last_touched[sensor_id] = current_touched
