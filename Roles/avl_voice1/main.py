@@ -52,7 +52,7 @@ global last_f1
 global last_f2
 global last_f3
 
-offset = 119098
+offset = 119088
 #offset = 119104.6
 
 """
