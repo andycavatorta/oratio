@@ -86,8 +86,8 @@ class MPR121Array(threading.Thread):
                     main.add_to_queue("pitch_key_event", global_position)
                     self.last_global_position = global_position
                     time.sleep(0.01)
-                except Exception as e:
-                    print "Exception in MPR121Array.run", e
+            except Exception as e:
+                print "Exception in MPR121Array.run", e
 
 class Key(threading.Thread):
     def __init__(self, name, bus, deviceId):
