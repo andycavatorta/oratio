@@ -40,7 +40,7 @@ class Drawbar():
         self.max = max
         self.min = min
         self.previous_value = -1
-        self.change_threshold = 50
+        self.change_threshold = 10
 
     def detent_from_adc_value(self, raw_value):
         return self.detent_adc_values.index(min(self.detent_adc_values, key=lambda x:abs(x-raw_value)))
