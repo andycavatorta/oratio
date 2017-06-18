@@ -156,9 +156,12 @@ def network_message_handler(msg):
         #offset = 119104.6
         #print offset-int(payload[0])
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
-        level_1 = 0 if payload[1] < 0.1 else int(240.0 * payload[1])
-        level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1)
-        level_3 = 0 if vol_3 < 0.1 else int(255.0 * vol_3 * level_1)
+        level_1 = 0 if payload[1] < 0.1 else int(120.0 * payload[1])
+        level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1 * 2)
+        level_3 = 0 if vol_3 < 0.1 else int(255.0 * vol_3 * level_1 * 2)
+        #level_1 = 0 if payload[1] < 0.1 else int(240.0 * payload[1])
+        #level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1)
+        #level_3 = 0 if vol_3 < 0.1 else int(255.0 * vol_3 * level_1)
         print "levels:", level_1, level_2, level_3
         c.set_levels(0, level_1)
         c.set_levels(1, level_2)
