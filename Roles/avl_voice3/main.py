@@ -153,7 +153,7 @@ def network_message_handler(msg):
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
-        if (gain > 0.2):
+        if (gain > 0.1):
             c.send_freq(0, offset-int(freq_1))
             c.send_freq(1, offset-int(freq_2))
             c.send_freq(2, offset-int(freq_3))
