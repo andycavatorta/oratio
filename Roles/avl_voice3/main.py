@@ -51,7 +51,7 @@ global last_f1
 global last_f2
 global last_f3
 
-offset = 167465
+offset = 167485
 
 #offset = 167489
 
@@ -152,10 +152,6 @@ def network_message_handler(msg):
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
-
-        #offset = 167489
-        #print payload
-        #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
 
         if (gain > 0.2):
             c.send_freq(0, offset-int(freq_1))

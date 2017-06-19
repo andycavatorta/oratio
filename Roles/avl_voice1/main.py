@@ -153,6 +153,21 @@ def network_message_handler(msg):
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
 
+        if (gain > 0.2):
+            c.send_freq(0, offset-int(freq_1))
+            c.send_freq(1, offset-int(freq_2))
+            c.send_freq(2, offset-int(freq_3))
+            c.set_levels(0, 0 if gain < 0.1 else int(240.0 * payload[1]))
+            c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
+            c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
+        else:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
+            c.set_levels(0, 0)
+            c.set_levels(1, 0)
+            c.set_levels(2, 0)
+        """
         #offset = 119104.6
         #print offset-int(payload[0])
         #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
@@ -175,7 +190,7 @@ def network_message_handler(msg):
             c.send_freq(1, offset-int(freq_2))
             c.send_freq(2, offset-int(freq_3))
         #get period corresponding to cutoff frequency * 100 (in microseconds)
-
+        """
         cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
         adj_period = 1e6 / (cutoff_freq * 100)
         c.pport_write(1, adj_period)
