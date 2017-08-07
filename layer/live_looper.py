@@ -92,11 +92,11 @@ class LiveLooper():
 			self.tableB
 		)
 
-		# # Finally, add a master output, which the long pedal mutes
-		# self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
-		# self.masterLoopOutput.addInput(0, self.readOutput[0])
-		# self.masterLoopOutput.setAmp(0, 0, 0)
-		# self.masterLoopOutput.out()
+		# Finally, add a master output, which the long pedal mutes
+		self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
+		self.masterLoopOutput.addInput(0, self.readOutput[0])
+		self.masterLoopOutput.setAmp(0, 0, 0)
+		self.masterLoopOutput.out()
 
 	def isPlaying(self):
 		return self.playing
