@@ -1,8 +1,9 @@
 import os
 import sys
-import threading
-import settings
 import Queue
+import settings
+import threading
+import traceback
 
 from thirtybirds_2_0.Network.manager import init as network_init
 

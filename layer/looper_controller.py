@@ -126,5 +126,8 @@ class LooperController():
 			self.shortPedalTapCount = 0
 			self.looper.setRecording(False)
 
+	def clear(self):
+		self.looper.clear()
+
 	def setLoopLength(self, length):
 		self.looper.setLoopLength(length)
