@@ -23,7 +23,7 @@ class LiveLooper():
 		self.delayedTableResetter = None
 
 		# Retrieves the mono input, write the dry signal directly to the output
-		self.input = Input([0]).out()
+		self.input = Input().out()
 
 		# Store the loop length, as well as a signal version of the same
 		self.loopLen = 2
