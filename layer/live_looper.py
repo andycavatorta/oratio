@@ -11,6 +11,9 @@ class LiveLooper():
 	def __init__(self):
 		self.audioServer = Server(nchnls=1, sr=44100, duplex=1).boot()
 
+		# Retrieves the mono input, write the dry signal directly to the output
+		self.input = Input().out()
+
 		# Create tables A and B, so that we can clear the table without causing a click
 		self.tableA = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 		self.tableB = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
@@ -21,9 +24,6 @@ class LiveLooper():
 
 		# This CallAfter resets a table after a delay
 		self.delayedTableResetter = None
-
-		# Retrieves the mono input, write the dry signal directly to the output
-		self.input = Input([0]).out()
 
 		# Store the loop length, as well as a signal version of the same
 		self.loopLen = 2
