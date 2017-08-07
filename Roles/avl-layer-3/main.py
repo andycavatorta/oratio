@@ -92,6 +92,7 @@ looperController = None
 def init(hostname):
     global looper, looperController
     looper = LiveLooper()
+    looper.start()
     looperController = LooperController(looper)
     layer = Layer(hostname, looper, looperController)
     layer.daemon = True
