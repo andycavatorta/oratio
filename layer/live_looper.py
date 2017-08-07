@@ -80,17 +80,17 @@ class LiveLooper():
 		self.tmixr.setAmp(0, 0, 1)
 		self.tmixr.setAmp(0, 1, 0)
 
-		# # Use the output of that mixer to fill the tables with their own contents
-		# self.fillA = TableWrite(
-		# 	self.tmixr[0],
-		# 	self.readA['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
-		# 	self.tableA
-		# )
-		# self.fillB = TableWrite(
-		# 	self.tmixr[1],
-		# 	self.readB['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
-		# 	self.tableB
-		# )
+		# Use the output of that mixer to fill the tables with their own contents
+		self.fillA = TableWrite(
+			self.tmixr[0],
+			self.readA['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
+			self.tableA
+		)
+		self.fillB = TableWrite(
+			self.tmixr[1],
+			self.readB['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
+			self.tableB
+		)
 
 		# # Finally, add a master output, which the long pedal mutes
 		# self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
