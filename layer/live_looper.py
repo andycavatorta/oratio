@@ -61,24 +61,24 @@ class LiveLooper():
 		self.readOutput.addInput(0, self.readmixr[0])
 		self.readOutput.setAmp(0, 0, 0)
 
-		# # Wrap the loop length signal in a sample and hold
-		# self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
+		# Wrap the loop length signal in a sample and hold
+		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
 
-		# # Mix the input with the output from the looper. In the first,
-		# # the loop is recording, in which case we write directly from the
-		# # input into the table. In the second, the table is playing back,
-		# # in which case we write from the table back into the table.
-		# self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
-		# self.inmixr.addInput(0, self.input) # On the left you've got your mic input
-		# self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
-		# self.inmixr.setAmp(0, 0, 0)
-		# self.inmixr.setAmp(1, 0, 0)
+		# Mix the input with the output from the looper. In the first,
+		# the loop is recording, in which case we write directly from the
+		# input into the table. In the second, the table is playing back,
+		# in which case we write from the table back into the table.
+		self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
+		self.inmixr.addInput(0, self.input) # On the left you've got your mic input
+		self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
+		self.inmixr.setAmp(0, 0, 0)
+		self.inmixr.setAmp(1, 0, 0)
 
-		# # Make a mixer to feed input to the two tables, and set it to write to tableA
-		# self.tmixr = Mixer(outs=2, time=0.04, chnls=1)
-		# self.tmixr.addInput(0, self.inmixr[0])
-		# self.tmixr.setAmp(0, 0, 1)
-		# self.tmixr.setAmp(0, 1, 0)
+		# Make a mixer to feed input to the two tables, and set it to write to tableA
+		self.tmixr = Mixer(outs=2, time=0.04, chnls=1)
+		self.tmixr.addInput(0, self.inmixr[0])
+		self.tmixr.setAmp(0, 0, 1)
+		self.tmixr.setAmp(0, 1, 0)
 
 		# # Use the output of that mixer to fill the tables with their own contents
 		# self.fillA = TableWrite(
