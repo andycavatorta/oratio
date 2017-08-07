@@ -49,17 +49,17 @@ class LiveLooper():
 			xfade=0
 		).play()
 
-		# # Create a mixer to mix between the output from the two loopers
-		# self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
-		# self.readmixr.addInput(0, self.readA)
-		# self.readmixr.addInput(1, self.readB)
-		# self.readmixr.setAmp(0, 0, 1)
-		# self.readmixr.setAmp(1, 0, 1)
+		# Create a mixer to mix between the output from the two loopers
+		self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
+		self.readmixr.addInput(0, self.readA)
+		self.readmixr.addInput(1, self.readB)
+		self.readmixr.setAmp(0, 0, 1)
+		self.readmixr.setAmp(1, 0, 1)
 
-		# # Create another mixer, for silencing the output from the mixer
-		# self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
-		# self.readOutput.addInput(0, self.readmixr[0])
-		# self.readOutput.setAmp(0, 0, 0)
+		# Create another mixer, for silencing the output from the mixer
+		self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
+		self.readOutput.addInput(0, self.readmixr[0])
+		self.readOutput.setAmp(0, 0, 0)
 
 		# # Wrap the loop length signal in a sample and hold
 		# self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
