@@ -11,92 +11,92 @@ class LiveLooper():
 	def __init__(self):
 		self.audioServer = Server(nchnls=1, sr=44100, duplex=1).boot()
 
-		# Create tables A and B, so that we can clear the table without causing a click
-		self.tableA = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
-		self.tableB = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
-
-		self.recording = False
-		self.playing = False
-		self.isTableAActive = False
-
-		# This CallAfter resets a table after a delay
-		self.delayedTableResetter = None
-
 		# Retrieves the mono input, write the dry signal directly to the output
 		self.input = Input().out()
 
-		# Store the loop length, as well as a signal version of the same
-		self.loopLen = 2
-		self.sigLoopLen = Sig(self.loopLen)
+		# Create tables A and B, so that we can clear the table without causing a click
+		# self.tableA = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
+		# self.tableB = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 
-		# Create loopers for each table
-		self.readA = Looper(
-			table=self.tableA,
-			pitch=1.0,
-			start=0,
-			dur=self.sigLoopLen,
-			startfromloop=True,
-			mul=1.0,
-			xfade=0
-		).play()
-		self.readB = Looper(
-			table=self.tableB,
-			pitch=1.0,
-			start=0,
-			dur=self.sigLoopLen,
-			startfromloop=True,
-			mul=1.0,
-			xfade=0
-		).play()
+		# self.recording = False
+		# self.playing = False
+		# self.isTableAActive = False
 
-		# Create a mixer to mix between the output from the two loopers
-		self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
-		self.readmixr.addInput(0, self.readA)
-		self.readmixr.addInput(1, self.readB)
-		self.readmixr.setAmp(0, 0, 1)
-		self.readmixr.setAmp(1, 0, 1)
+		# # This CallAfter resets a table after a delay
+		# self.delayedTableResetter = None
 
-		# Create another mixer, for silencing the output from the mixer
-		self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
-		self.readOutput.addInput(0, self.readmixr[0])
-		self.readOutput.setAmp(0, 0, 0)
+		# # Store the loop length, as well as a signal version of the same
+		# self.loopLen = 2
+		# self.sigLoopLen = Sig(self.loopLen)
 
-		# Wrap the loop length signal in a sample and hold
-		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
+		# # Create loopers for each table
+		# self.readA = Looper(
+		# 	table=self.tableA,
+		# 	pitch=1.0,
+		# 	start=0,
+		# 	dur=self.sigLoopLen,
+		# 	startfromloop=True,
+		# 	mul=1.0,
+		# 	xfade=0
+		# ).play()
+		# self.readB = Looper(
+		# 	table=self.tableB,
+		# 	pitch=1.0,
+		# 	start=0,
+		# 	dur=self.sigLoopLen,
+		# 	startfromloop=True,
+		# 	mul=1.0,
+		# 	xfade=0
+		# ).play()
 
-		# Mix the input with the output from the looper. In the first,
-		# the loop is recording, in which case we write directly from the
-		# input into the table. In the second, the table is playing back,
-		# in which case we write from the table back into the table.
-		self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
-		self.inmixr.addInput(0, self.input) # On the left you've got your mic input
-		self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
-		self.inmixr.setAmp(0, 0, 0)
-		self.inmixr.setAmp(1, 0, 0)
+		# # Create a mixer to mix between the output from the two loopers
+		# self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
+		# self.readmixr.addInput(0, self.readA)
+		# self.readmixr.addInput(1, self.readB)
+		# self.readmixr.setAmp(0, 0, 1)
+		# self.readmixr.setAmp(1, 0, 1)
 
-		# Make a mixer to feed input to the two tables, and set it to write to tableA
-		self.tmixr = Mixer(outs=2, time=0.04, chnls=1)
-		self.tmixr.addInput(0, self.inmixr[0])
-		self.tmixr.setAmp(0, 0, 1)
-		self.tmixr.setAmp(0, 1, 0)
+		# # Create another mixer, for silencing the output from the mixer
+		# self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
+		# self.readOutput.addInput(0, self.readmixr[0])
+		# self.readOutput.setAmp(0, 0, 0)
 
-		# Use the output of that mixer to fill the tables with their own contents
-		self.fillA = TableWrite(
-			self.tmixr[0],
-			self.readA['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
-			self.tableA
-		)
-		self.fillB = TableWrite(
-			self.tmixr[1],
-			self.readB['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
-			self.tableB
-		)
+		# # Wrap the loop length signal in a sample and hold
+		# self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
 
-		# Finally, add a master output, which the long pedal mutes
-		self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
-		self.masterLoopOutput.addInput(0, self.readOutput[0])
-		self.masterLoopOutput.setAmp(0, 0, 0)
-		self.masterLoopOutput.out()
+		# # Mix the input with the output from the looper. In the first,
+		# # the loop is recording, in which case we write directly from the
+		# # input into the table. In the second, the table is playing back,
+		# # in which case we write from the table back into the table.
+		# self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
+		# self.inmixr.addInput(0, self.input) # On the left you've got your mic input
+		# self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
+		# self.inmixr.setAmp(0, 0, 0)
+		# self.inmixr.setAmp(1, 0, 0)
+
+		# # Make a mixer to feed input to the two tables, and set it to write to tableA
+		# self.tmixr = Mixer(outs=2, time=0.04, chnls=1)
+		# self.tmixr.addInput(0, self.inmixr[0])
+		# self.tmixr.setAmp(0, 0, 1)
+		# self.tmixr.setAmp(0, 1, 0)
+
+		# # Use the output of that mixer to fill the tables with their own contents
+		# self.fillA = TableWrite(
+		# 	self.tmixr[0],
+		# 	self.readA['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
+		# 	self.tableA
+		# )
+		# self.fillB = TableWrite(
+		# 	self.tmixr[1],
+		# 	self.readB['time'] * (self.sigLoopLenSynced / MAX_LOOP_LENGTH),
+		# 	self.tableB
+		# )
+
+		# # Finally, add a master output, which the long pedal mutes
+		# self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
+		# self.masterLoopOutput.addInput(0, self.readOutput[0])
+		# self.masterLoopOutput.setAmp(0, 0, 0)
+		# self.masterLoopOutput.out()
 
 	def isPlaying(self):
 		return self.playing
