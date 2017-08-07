@@ -136,7 +136,7 @@ class Dispatcher(threading.Thread):
             harmonic_freq = (int(voice["db_h2_harmonic"]) + 1) * base_pitch
             final_freq = harmonic_freq * pow(2, (  (float(voice["db_h2_fine"] * 60)-30)   /1200.0))
             #final_freq = harmonic_freq * pow(2, (float(voice["db_h2_fine"])/1200.0))
-            return final_freq            
+            return final_freq
 
     def calculate_voice_data(self,voice_num, priority):
         voice = self.voices[voice_num]
@@ -152,7 +152,7 @@ class Dispatcher(threading.Thread):
         #print "base_volume",base_volume
         harmonic_1_volume = base_volume *  voice["db_h1_vol"]
         #print "harmonic_1_volume",harmonic_1_volume
-        harmonic_2_volume = base_volume *  voice["db_h2_vol"] 
+        harmonic_2_volume = base_volume *  voice["db_h2_vol"]
         #print "harmonic_2_volume",harmonic_2_volume
         return [base_pitch, base_volume, harmonic_1_pitch, harmonic_1_volume, harmonic_2_pitch,harmonic_2_volume, voice["db_filter_a"], voice["db_filter_b"]]
 
@@ -301,7 +301,7 @@ class Dispatcher(threading.Thread):
             self.voices[2]["db_filter_b"] = float(val)
             self.queue.put("3")
             return
-        
+
         if name == "layer_speed":
             self.layer_speed = float(val)
         if name == "layer_1_volume":
@@ -379,7 +379,7 @@ class Key(threading.Thread):
         self.encoder = AMT203.AMT203(bus, deviceId)
         print "setting zero ", self.bus, self.deviceId
         self.encoder.set_zero()
-        print "after zero ", self.bus, self.deviceId 
+        print "after zero ", self.bus, self.deviceId
         print "class Key instantiated with values", name, bus, deviceId
         self.encoder_min = 0.0
         self.encoder_max = 140.0
@@ -401,7 +401,7 @@ class Key(threading.Thread):
     def map_key(self, name, value):
         value = value if value <= 1000 else 0
         value = value if value <= self.encoder_max else self.encoder_max
-        value = value if value >= self.encoder_min else self.encoder_min 
+        value = value if value >= self.encoder_min else self.encoder_min
         mapped_value = (((value - self.encoder_min))/(self.encoder_max - self.encoder_min))
         #print value, mapped_value
         return mapped_value
@@ -464,7 +464,7 @@ def network_message_handler(msg):
         ]:
             global dispatcher
             dispatcher.updateValue(topic, msg[1])
-        #print "topic", topic 
+        #print "topic", topic
     #except Exception as e:
     #    print "exception in network_message_handler", e
 
@@ -483,7 +483,7 @@ def init(HOSTNAME):
         status_callback=network_status_handler
     )
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_key_1_position")  
+    network.subscribe_to_topic("voice_key_1_position")
     network.subscribe_to_topic("voice_key_2_position")
     network.subscribe_to_topic("voice_key_3_position")
     network.subscribe_to_topic("pitch_key_event")
