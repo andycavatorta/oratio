@@ -29,25 +29,25 @@ class LiveLooper():
 		self.loopLen = 2
 		self.sigLoopLen = Sig(self.loopLen)
 
-		# # Create loopers for each table
-		# self.readA = Looper(
-		# 	table=self.tableA,
-		# 	pitch=1.0,
-		# 	start=0,
-		# 	dur=self.sigLoopLen,
-		# 	startfromloop=True,
-		# 	mul=1.0,
-		# 	xfade=0
-		# ).play()
-		# self.readB = Looper(
-		# 	table=self.tableB,
-		# 	pitch=1.0,
-		# 	start=0,
-		# 	dur=self.sigLoopLen,
-		# 	startfromloop=True,
-		# 	mul=1.0,
-		# 	xfade=0
-		# ).play()
+		# Create loopers for each table
+		self.readA = Looper(
+			table=self.tableA,
+			pitch=1.0,
+			start=0,
+			dur=self.sigLoopLen,
+			startfromloop=True,
+			mul=1.0,
+			xfade=0
+		).play()
+		self.readB = Looper(
+			table=self.tableB,
+			pitch=1.0,
+			start=0,
+			dur=self.sigLoopLen,
+			startfromloop=True,
+			mul=1.0,
+			xfade=0
+		).play()
 
 		# # Create a mixer to mix between the output from the two loopers
 		# self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
