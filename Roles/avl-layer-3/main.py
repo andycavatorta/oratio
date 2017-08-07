@@ -1,12 +1,15 @@
 import os
 import sys
+import threading
+import settings
+import Queue
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.normpath(os.path.join(BASE_PATH, '..'))
-DEVICES_PATH = os.path.normpath(os.path.join(BASE_PATH), 'Hosts')
-THIRTYBIRDS_PATH = os.path.normpath(os.path.join(UPPER_PATH), 'thirtybirds_2_0')
+DEVICES_PATH = os.path.normpath(os.path.join(BASE_PATH, 'Hosts'))
+THIRTYBIRDS_PATH = os.path.normpath(os.path.join(UPPER_PATH, 'thirtybirds_2_0'))
 
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
