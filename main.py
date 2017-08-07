@@ -5,7 +5,7 @@
 import importlib
 import json
 import os
-import settings     
+import settings
 import sys
 #import threading
 #import time
@@ -27,7 +27,7 @@ def get_hostname():
         pos = args.index("-n") # pull hostname from command line argument, if there is one
         hostname = args[pos+1]
     except Exception as E:
-        hostname = network_info.getHostName() 
+        hostname = network_info.getHostName()
     return hostname
 
 HOSTNAME = get_hostname()
@@ -69,7 +69,7 @@ except Exception as e:
 #########################
 ### LOAD DEVICE-SPECIFIC CODE ###
 #########################
-    
+
 host = importlib.import_module("Roles.%s.main" % (HOSTNAME))
 host.init(HOSTNAME)
 
