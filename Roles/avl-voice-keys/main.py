@@ -81,9 +81,9 @@ class Button(object):
 
 class Buttons(object):
     def __init__(self):
-        defs = (
+        defs = [
             ("hold", 26)
-        )
+        ]
         self.buttons = [ Button(defs[i][0], defs[i][1]) for i in range(len(defs)) ]
     def get_states(self):
         for button in self.buttons:
