@@ -104,8 +104,8 @@ class Main(threading.Thread):
                 #topic, msg = self.queue.get(True)
                 #print "main Main.run topic/queue", topic, msg
                 transport_position = self.transport.get_position()
-                print transport_position
-                time.sleep(0.02)
+                self.network.thirtybirds.send("transport_position", transport_position)
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))

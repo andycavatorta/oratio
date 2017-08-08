@@ -51,7 +51,7 @@ class Dispatcher(threading.Thread):
 
         ### from inputs ###
         self.pitch_key_event = 0
-        self.transport_pos_raw = 0 # extrapolation of raw encoder values
+        self.transport_position = 0 # extrapolation of raw encoder values
         self.voice_key_1_position = 0 # float from 0.0 to 1.0
         self.voice_key_2_position = 0 # float from 0.0 to 1.0
         self.voice_key_3_position = 0 # float from 0.0 to 1.0
@@ -112,12 +112,12 @@ class Dispatcher(threading.Thread):
     def calculate_base_pitch(self, voice_num, priority):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
-            self.transport_pos_at_last_pitch_key_event  = self.transport_pos_raw
+            self.transport_pos_at_last_pitch_key_event  = self.transport_position
             self.last_pitch_key_value = self.pitch_key_event
             pitch_key_freq = pow( 2, (  self.pitch_key_event / 12.0 ) ) * 27.5
 
         if priority == "transport":
-            pitch_diff_from_transport = (self.transport_pos_raw - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
+            pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
             pitch_diff_from_transport_and_last_key = self.last_pitch_key_value + pitch_diff_from_transport 
             pitch_key_freq = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
 
@@ -162,8 +162,8 @@ class Dispatcher(threading.Thread):
             self.pitch_key_event = int(val)
             self.queue.put("all_pitch_key")
             return
-        if name == "transport_pos_raw":
-            self.transport_pos_raw = int(val)
+        if name == "transport_position":
+            self.transport_position = int(val)
             self.queue.put("all_transport")
             return
 
@@ -424,7 +424,7 @@ def network_message_handler(msg):
             "voice_key_2_position",
             "voice_key_3_position",
             "pitch_key_event",
-            "transport_pos_raw",
+            "transport_position",
             "layer_speed",
             "layer_1_volume",
             "layer_2_volume",
@@ -488,7 +488,7 @@ def init(HOSTNAME):
     network.subscribe_to_topic("voice_key_3_position")
     network.subscribe_to_topic("pitch_key_event")
 
-    network.subscribe_to_topic("transport_pos_raw")
+    network.subscribe_to_topic("transport_position")
     network.subscribe_to_topic("layer_speed")
     network.subscribe_to_topic("layer_1_volume")
     network.subscribe_to_topic("layer_2_volume")
