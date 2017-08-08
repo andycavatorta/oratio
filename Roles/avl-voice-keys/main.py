@@ -49,6 +49,7 @@ class Voice_Keys():
         max_encoder_positions = [100, 100, 100]
         self.voice_keys = [ Voice_Key(spi_chip_select_pins[key_number], min_encoder_positions[key_number], max_encoder_positions[key_number]) for key_number in range(3) ]
     def get_positions(self):
+        print "Voice_Keys.get_positions"
         voice_key_new_positions = []
         for key_number, voice_key in enumerate(self.voice_keys):
             voice_key_new_position = voice_key.get_value()
