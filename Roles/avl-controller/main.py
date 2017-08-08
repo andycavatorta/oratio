@@ -36,7 +36,7 @@ import yaml
 
 from thirtybirds_2_0.Logs.main import Exception_Collector
 from thirtybirds_2_0.Network.manager import init as network_init
-from thirtybirds_2_0.Adaptors.Sensors import AMT203
+#from thirtybirds_2_0.Adaptors.Sensors import AMT203
 
 network = None # for global
 dispatcher = None # for global
@@ -114,7 +114,7 @@ class Dispatcher(threading.Thread):
         if priority == "pitch_key":
             self.transport_pos_at_last_pitch_key_touched  = self.transport_position
             self.last_pitch_key_value = self.pitch_key_touched
-            pitch_key_freq = pow( 2, (  self.pitch_key_touched / 12.0 ) ) * 27.5
+            pitch_key_freq = pow( 2, (  self.transport_pos_at_last_pitch_key_touched / 12.0 ) ) * 27.5
 
         if priority == "transport":
             pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
@@ -532,7 +532,7 @@ def init(HOSTNAME):
     dispatcher = Dispatcher(network)
     dispatcher.start()
 
-    key_3 = Key("voice_key_3_position",0,0)
-    key_3.daemon = True
-    key_3.start()
+    #key_3 = Key("voice_key_3_position",0,0)
+    #key_3.daemon = True
+    #key_3.start()
     time.sleep(5)
