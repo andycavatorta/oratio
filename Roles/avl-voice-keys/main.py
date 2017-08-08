@@ -30,6 +30,7 @@ class Voice_Key(object):
         print "Voice_Key.__init__ 0"
         self.encoder = AMT203_expanded_spi.AMT203(0, 0, spi_chip_select_pin)
         print "Voice_Key.__init__ 1", self.encoder
+        time.sleep(1)
         self.encoder.set_zero()
         print "Voice_Key.__init__ 2"
         self.last_encoder_postion = self.encoder.get_position()
