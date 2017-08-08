@@ -27,8 +27,11 @@ class Voice_Key(object):
     def __init__(self, spi_chip_select_pin, min_encoder_position, max_encoder_position):
         self.min_encoder_position = min_encoder_position
         self.max_encoder_position = max_encoder_position
+        print "Voice_Key.__init__ 0"
         self.encoder = AMT203_expanded_spi.AMT203(0, 0, spi_chip_select_pin)
+        print "Voice_Key.__init__ 1", self.encoder
         self.encoder.set_zero()
+        print "Voice_Key.__init__ 2"
         self.last_encoder_postion = self.encoder.get_position()
         print "Voice_Key initialized with spi_chip_select_pin", spi_chip_select_pin
     def get_value(self):
