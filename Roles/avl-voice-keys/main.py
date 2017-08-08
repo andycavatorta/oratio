@@ -45,15 +45,15 @@ class Voice_Key(object):
         if encoder_value < 2000:
             encoder_value = self.resolution
         inverse_value = self.resolution - encoder_value
-        print "normalize 0", encoder_value, inverse_value
+        #print "normalize 0", encoder_value, inverse_value
         if inverse_value <= self.min_encoder_position:
             inverse_value = self.min_encoder_position
-            print "normalize 1", inverse_value
+            #print "normalize 1", inverse_value
         if inverse_value > self.max_encoder_position:
             inverse_value = self.max_encoder_position
-            print "normalize 2", inverse_value
+            #print "normalize 2", inverse_value
         ranged_value = inverse_value / (self.max_encoder_position - self.min_encoder_position)
-        print "normalize 3", ranged_value
+        #print "normalize 3", ranged_value
         return ranged_value
     def get_value(self):
         current_encoder_position = self.encoder.get_position()
@@ -163,7 +163,7 @@ class Main(threading.Thread):
                         if key_number == 2 and self.staccato_3:
                             voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
                         print key_number, voice_key_new_position
-                        #self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
+                        self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
 
                 time.sleep(0.01)
             except Exception as e:
