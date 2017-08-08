@@ -44,7 +44,6 @@ class Transport(threading.Thread):
         self.queue = Queue.Queue(maxsize=1  )
 
     def track_transport_position(self):
-        print "track_transport_position"
         current_encoder_value = self.encoder.get_position()
         # direction is True if moving to the right, else False
         direction = True if (self.last_encoder_value < current_encoder_value and current_encoder_value - self.last_encoder_value < self.gap) or (self.last_encoder_value - current_encoder_value > self.gap) else False
@@ -106,7 +105,7 @@ class Main(threading.Thread):
                 #print "main Main.run topic/queue", topic, msg
                 transport_position = self.transport.get_position()
                 print transport_position
-                time.sleep(0.1)
+                time.sleep(0.02)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
