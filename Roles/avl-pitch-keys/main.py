@@ -1,14 +1,19 @@
 import os
+import Queue
+import settings
+import time
+import threading
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
 THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
 
-sys.path.append(BASE_PATH)
-sys.path.append(UPPER_PATH)
+#sys.path.append(BASE_PATH)
+#sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Adaptors.Sensors import MPR121
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -24,13 +29,41 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+class Capacitive_Sensors(threading.Thread):
+    def __init__(self, network_send_callback):
+        threading.Thread.__init__(self)
+        self.network_send_callback = network_send_callback
+        self.keybanks = [MPR121.MPR121() for i in xrange(4)]
+        for i, addr in enumerate([0x5A, 0x5B, 0x5C, 0x5D]):
+            print self.keybanks[i].begin(addr)
+
+    def run(self):
+        last_state_of_all_keys = [keybank.touched() for keybank in self.keybanks]
+        while True:
+            current_state_of_all_keys = [keybank.touched() for keybank in self.keybanks]
+            for j in xrange(4):
+                for i in xrange(12):
+                    pin_bit = 1 << i
+                    if current_state_of_all_keys[j] & pin_bit and not last_state_of_all_keys[j] & pin_bit:
+                        global_key_number = 33 + (j * 12) + (11-i)
+                        print global_key_number
+                        #print 'touched: keybank ' + str(j) + ', key ' + str(i)
+                        self.network_send_callback("pitch_key_touched", global_key_number)
+                    #if not current_state_of_all_keys[j] & pin_bit and last_state_of_all_keys[j] & pin_bit:
+                    #    print 'released: keybank ' + str(j) + ', key ' + str(i)
+            last_state_of_all_keys = current_state_of_all_keys
+            time.sleep(0.01)
+
+
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.capcitive_sensors = Capacitive_Sensors(self.network.thirtybirds.send)
+        self.capcitive_sensors.daemon = True
+        self.capcitive_sensors.start()
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -64,5 +97,8 @@ def init(hostname):
     main.daemon = True
     main.start()
     return main
+
+
+
 
 
