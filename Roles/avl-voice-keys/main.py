@@ -36,9 +36,9 @@ class Voice_Key(object):
         self.last_encoder_postion = self.encoder.get_position()
         print "Voice_Key initialized with spi_chip_select_pin", spi_chip_select_pin
     def get_value(self):
-        print "Voice_Key.get_value started"
+        #print "Voice_Key.get_value started"
         current_encoder_position = self.encoder.get_position()
-        print "Voice_Key.get_value value"
+        #print "Voice_Key.get_value value"
         if current_encoder_position != self.last_encoder_postion:
             self.last_encoder_postion = current_encoder_position
             # next, calculate adjusted position
@@ -53,7 +53,7 @@ class Voice_Keys():
         max_encoder_positions = [100, 100, 100]
         self.voice_keys = [ Voice_Key(spi_chip_select_pins[key_number], min_encoder_positions[key_number], max_encoder_positions[key_number]) for key_number in range(3) ]
     def get_positions(self):
-        print "Voice_Keys.get_positions"
+        #print "Voice_Keys.get_positions"
         voice_key_new_positions = []
         for key_number, voice_key in enumerate(self.voice_keys):
             voice_key_new_position = voice_key.get_value()
