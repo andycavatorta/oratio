@@ -88,7 +88,8 @@ class Buttons(object):
     def get_states(self):
         for button in self.buttons:
             name, state = button.get_state()
-            print name, state
+            if state is not None:
+                print name, state
 
 
 # Main handles network send/recv and can see all other classes directly
