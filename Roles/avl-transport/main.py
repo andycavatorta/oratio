@@ -43,7 +43,7 @@ class Transport(threading.Thread):
         self.queue = Queue.Queue(maxsize=1  )
 
     def track_transport_position(self):
-        current_encoder_value = encoder.get_position()
+        current_encoder_value = self.encoder.get_position()
         # direction is True if moving to the right, else False
         direction = True if (self.last_encoder_value < current_encoder_value and current_encoder_value-self.last_encoder_value < self.gap) or (last_pos-pos > self.gap) else False
         # if the encoder has made a complete revolution, increment lap
