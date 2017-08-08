@@ -1,5 +1,6 @@
 import os
 import Queue
+import settings
 import threading
 
 
@@ -12,7 +13,6 @@ import threading
 #sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
-
 from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 
 
