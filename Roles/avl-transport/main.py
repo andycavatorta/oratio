@@ -35,7 +35,7 @@ class Transport(threading.Thread):
         threading.Thread.__init__(self)
         self.encoder = AMT203_expanded_spi.AMT203(0, 0, 16) # initialize encoder
         self.encoder.set_zero()                # set zero position -- move transport to left!
-        resolution = self.encoder.get_resolution() # should be 4096
+        self.resolution = self.encoder.get_resolution() # should be 4096
         self.gap = 2000              # this is the largest jump we want to detect (I think?)
         self.lap = 0
         self.last_encoder_value = 0
@@ -53,7 +53,7 @@ class Transport(threading.Thread):
         elif self.last_encoder_value - current_encoder_value < 0 and not direction:
             self.lap -= 1
         self.last_encoder_value = current_encoder_value                      # store raw position
-        current_accumulated_transport_postion = (self.lap * resolution) + current_encoder_value  # calculate relative position
+        current_accumulated_transport_postion = (self.lap * self.resolution) + current_encoder_value  # calculate relative position
         # only send update if encoder has changed position sincfe last reading
         if current_accumulated_transport_postion != self.last_accumulated_transport_postion:
             # update encoder position
