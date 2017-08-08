@@ -165,7 +165,7 @@ class Main(threading.Thread):
                         print key_number, voice_key_new_position
                         #self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
 
-                time.sleep(0.1)
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
