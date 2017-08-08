@@ -51,7 +51,8 @@ class Layer(threading.Thread):
 
     def network_status_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
-        print "Layer.network_status_handler", topic_msg
+        self.add_to_queue("__print__", topic_msg)
+        # print "Layer.network_status_handler", topic_msg
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
@@ -79,6 +80,8 @@ class Layer(threading.Thread):
                     self.looperController.clear()
                 elif topic == "__heartbeat__":
                     print "heartbeat received", msg
+                elif topic == "__print__":
+                    print "Layer.network_status_handler", msg
                 else:
                     print ("Unhandled message type %s" % topic)
 
