@@ -83,7 +83,7 @@ class Buttons(object):
         defs = (
             ("hold", 26)
         )
-        self.buttons = [ Button(name, pin) for name, pin in defs ]
+        self.buttons = [ Button(name_pin[0], name_pin[1]) for name_pin in defs ]
     def get_states(self):
         for button in self.buttons:
             name, state = button.get_state()
