@@ -135,7 +135,7 @@ class Main(threading.Thread):
         while True:
             try:
                 button_states = self.buttons.get_states()
-                for button_state in button_states():
+                for button_state in button_states:
                     name, state = button_state
                     if name == "hold":
                         self.hold = True if state == 0 else False
