@@ -50,7 +50,7 @@ class Dispatcher(threading.Thread):
         self.transport_encoder_pulses_per_pitch = 1444
 
         ### from inputs ###
-        self.pitch_key_event = 0
+        self.pitch_key_touched = 0
         self.transport_position = 0 # extrapolation of raw encoder values
         self.voice_key_1_position = 0 # float from 0.0 to 1.0
         self.voice_key_2_position = 0 # float from 0.0 to 1.0
@@ -106,18 +106,18 @@ class Dispatcher(threading.Thread):
         ### calculated locally  ###
         self.transport_pos_offset = 0 # extrapolation of raw encoder values
         self.transport_pos_adjusted = 0 # extrapolation of raw encoder values
-        self.transport_pos_at_last_pitch_key_event = 0
+        self.transport_pos_at_last_pitch_key_touched = 0
         self.last_pitch_key_value = 0
 
     def calculate_base_pitch(self, voice_num, priority):
         voice = self.voices[voice_num]
         if priority == "pitch_key":
-            self.transport_pos_at_last_pitch_key_event  = self.transport_position
-            self.last_pitch_key_value = self.pitch_key_event
-            pitch_key_freq = pow( 2, (  self.pitch_key_event / 12.0 ) ) * 27.5
+            self.transport_pos_at_last_pitch_key_touched  = self.transport_position
+            self.last_pitch_key_value = self.pitch_key_touched
+            pitch_key_freq = pow( 2, (  self.pitch_key_touched / 12.0 ) ) * 27.5
 
         if priority == "transport":
-            pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_event ) / float(self.transport_encoder_pulses_per_pitch)
+            pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
             pitch_diff_from_transport_and_last_key = self.last_pitch_key_value + pitch_diff_from_transport 
             pitch_key_freq = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
 
@@ -158,8 +158,8 @@ class Dispatcher(threading.Thread):
 
     def updateValue(self, name, val):
         #print "updateValue", name, val
-        if name == "pitch_key_event":
-            self.pitch_key_event = int(val)
+        if name == "pitch_key_touched":
+            self.pitch_key_touched = int(val)
             self.queue.put("all_pitch_key")
             return
         if name == "transport_position":
@@ -423,7 +423,7 @@ def network_message_handler(msg):
             "voice_key_1_position",
             "voice_key_2_position",
             "voice_key_3_position",
-            "pitch_key_event",
+            "pitch_key_touched",
             "transport_position",
             "layer_speed",
             "layer_1_volume",
@@ -486,7 +486,7 @@ def init(HOSTNAME):
     network.subscribe_to_topic("voice_key_1_position")
     network.subscribe_to_topic("voice_key_2_position")
     network.subscribe_to_topic("voice_key_3_position")
-    network.subscribe_to_topic("pitch_key_event")
+    network.subscribe_to_topic("pitch_key_touched")
 
     network.subscribe_to_topic("transport_position")
     network.subscribe_to_topic("layer_speed")
