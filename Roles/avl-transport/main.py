@@ -44,6 +44,7 @@ class Transport(threading.Thread):
         self.queue = Queue.Queue(maxsize=1  )
 
     def track_transport_position(self):
+        print "track_transport_position"
         current_encoder_value = self.encoder.get_position()
         # direction is True if moving to the right, else False
         direction = True if (self.last_encoder_value < current_encoder_value and current_encoder_value - self.last_encoder_value < self.gap) or (self.last_encoder_value - current_encoder_value > self.gap) else False
@@ -65,6 +66,7 @@ class Transport(threading.Thread):
             # trigger next encoder reading in 10 msg
 
     def get_position(self):
+        print "get_position"
         return self.queue.get(True)
 
     def run(self):
