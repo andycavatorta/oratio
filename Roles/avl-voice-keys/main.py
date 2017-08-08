@@ -44,7 +44,7 @@ class Voice_Key(object):
     def normalize(self, encoder_value):
         inverse_value = self.resolution - encoder_value
         print "normalize 0", encoder_value, inverse_value
-        if inverse_value <= self.min_encoder_position:
+        if inverse_value <= 500:
             inverse_value = self.min_encoder_position
             print "normalize 1", inverse_value
         if inverse_value > self.max_encoder_position:
