@@ -3,6 +3,9 @@ import Queue
 import settings
 import time
 import threading
+import traceback
+import sys
+
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
