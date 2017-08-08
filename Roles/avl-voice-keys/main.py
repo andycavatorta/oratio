@@ -1,14 +1,12 @@
 import os
+import Queue
+import settings
+import time
+import threading
 
-BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
-DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
-THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
-
-sys.path.append(BASE_PATH)
-sys.path.append(UPPER_PATH)
-
+from __future__ import division
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -24,13 +22,44 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+class Voice_Key(object):
+    def __init__(self, spi_chip_select_pin, min_encoder_position, max_encoder_position):
+        self.min_encoder_position = min_encoder_position
+        self.max_encoder_position = max_encoder_position
+        self.encoder = AMT203_expanded_spi.AMT203(0, 0, spi_chip_select_pin)
+        self.encoder.set_zero()
+        self.last_encoder_postion = self.encoder.get_position()
+    def get_value(self):
+        current_encoder_position = self.encoder.get_position()
+        if current_encoder_position != self.last_encoder_postion:
+            self.last_encoder_postion = current_encoder_position
+            # next, calculate adjusted position
+            return current_encoder_position
+        else:
+            return None
+
+class Voice_Keys():
+    def __init__(self):
+        spi_chip_select_pins = [20,21,16]
+        min_encoder_positions = [0, 0, 0]
+        max_encoder_positions = [100, 100, 100]
+        self.voice_keys = [ Voice_Key(spi_chip_select_pins[key_number], min_encoder_positions[key_number], max_encoder_positions[key_number]) for key_number in range(3) ]
+    def get_positions(self):
+        voice_key_new_positions = []
+        for key_number, voice_key in enumerate(self.voice_keys):
+            voice_key_new_position = voice_key.get_value()
+            if voice_key_new_position is not None:
+                voice_key_new_positions.append((key_number, voice_key_new_position))
+        return voice_key_new_positions
+
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.voice_keys = Voice_Keys()
+        #self.network.thirtybirds.subscribe_to_topic("door_closed")
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -47,13 +76,15 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        topic_names = ["voice_key_1_position", "voice_key_2_position", "voice_key_3_position"]
         while True:
             try:
-                topic, msg = self.queue.get(True)
-                if topic == "door_closed":
-                    door.add_to_queue(msg)
-                    self.network.thirtybirds.send("door_status", True)
-                    
+                voice_key_positions = self.voice_keys.get_positions()
+                for voice_key_position in voice_key_positions:
+                    key_number, voice_key_new_position = voice_key_position
+                    print key_number, voice_key_new_position
+                    self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
@@ -64,5 +95,4 @@ def init(hostname):
     main.daemon = True
     main.start()
     return main
-
 
