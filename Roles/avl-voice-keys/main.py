@@ -66,7 +66,6 @@ class Voice_Keys():
 
 class Button(object):
     def __init__(self, name, pin):
-        print "----------->",name, pin
         self.name = name
         self.pin = pin
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
@@ -80,17 +79,13 @@ class Button(object):
             return (self.name, GPIO.input(self.pin))
 
 class Buttons(object):
-    def __init__(self):
-        defs = [
-            ("hold", 26)
-        ]
+    def __init__(self, defs):
         self.buttons = [ Button(defs[i][0], defs[i][1]) for i in range(len(defs)) ]
     def get_states(self):
         for button in self.buttons:
             name, state = button.get_state()
             if state is not None:
                 print name, state
-
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
@@ -99,7 +94,13 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.voice_keys = Voice_Keys()
-        self.buttons = Buttons()
+        defs = [
+            ("hold", 26),
+            ("staccato_3", 19),
+            ("staccato_2", 13),
+            ("staccato_1", 06),
+        ]
+        self.buttons = Buttons(defs)
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
 
     def network_message_handler(self, topic_msg):
