@@ -9,8 +9,8 @@ UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
 THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
 
-sys.path.append(BASE_PATH)
-sys.path.append(UPPER_PATH)
+#sys.path.append(BASE_PATH)
+#sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Adaptors.Sensors import MPR121
