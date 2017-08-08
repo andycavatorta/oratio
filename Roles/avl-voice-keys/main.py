@@ -1,10 +1,11 @@
+from __future__ import division
+
 import os
 import Queue
 import settings
 import time
 import threading
 
-from __future__ import division
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 
