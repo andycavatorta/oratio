@@ -9,6 +9,9 @@ import threading
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 
+import RPi.GPIO as GPIO  
+GPIO.setmode(GPIO.BCM)  
+
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
@@ -61,6 +64,32 @@ class Voice_Keys():
                 voice_key_new_positions.append((key_number, voice_key_new_position))
         return voice_key_new_positions
 
+class Button(object):
+    def __init__(self, name, pin):
+        self.name = name
+        self.pin = pin
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
+        self.last_state = None # so this always returns something on first query
+    def get_state(self):
+        current_state = GPIO.input(self.pin)
+        if current_state == self.last_state:
+            return (self.name, None)
+        else:
+            self.last_state = current_state
+            return (self.name, GPIO.input(self.pin))
+
+class Buttons(object):
+    def __init__(self):
+        defs = (
+            ("hold", 26)
+        )
+        self.buttons = [ Button(name, pin) for name, pin in defs ]
+    def get_states(self):
+        for button in self.buttons:
+            name, state = button.get_state()
+            print name, state
+
+
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -68,6 +97,7 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.voice_keys = Voice_Keys()
+        self.buttons = Buttons()
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
 
     def network_message_handler(self, topic_msg):
@@ -92,8 +122,10 @@ class Main(threading.Thread):
                 for voice_key_position in voice_key_positions:
                     key_number, voice_key_new_position = voice_key_position
                     print key_number, voice_key_new_position
-                    self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
-                time.sleep(0.01)
+                    #self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
+                self.buttons.get_states()
+
+                time.sleep(0.1)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
