@@ -9,7 +9,11 @@ def resetTable(table):
 
 class LiveLooper():
 	def __init__(self):
-		self.audioServer = Server(nchnls=1, sr=44100, duplex=1).boot()
+		self.audioServer = Server(nchnls=1, sr=44100, duplex=1)
+
+		# Set the input offset to 1, since all these boards want right channel
+		self.audioServer.setInputOffset(1)
+		self.audioServer.boot()
 
 		# Retrieves the mono input, write the dry signal directly to the output
 		self.input = Input().out()
