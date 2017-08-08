@@ -30,8 +30,11 @@ class Voice_Key(object):
         self.encoder = AMT203_expanded_spi.AMT203(0, 0, spi_chip_select_pin)
         self.encoder.set_zero()
         self.last_encoder_postion = self.encoder.get_position()
+        print "Voice_Key initialized with spi_chip_select_pin", spi_chip_select_pin
     def get_value(self):
+        print "Voice_Key.get_value started"
         current_encoder_position = self.encoder.get_position()
+        print "Voice_Key.get_value value"
         if current_encoder_position != self.last_encoder_postion:
             self.last_encoder_postion = current_encoder_position
             # next, calculate adjusted position
@@ -85,7 +88,7 @@ class Main(threading.Thread):
                     key_number, voice_key_new_position = voice_key_position
                     print key_number, voice_key_new_position
                     self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
-                time.sleep(0.01)
+                time.sleep(0.1)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
