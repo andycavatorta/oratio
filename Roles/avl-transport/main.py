@@ -48,12 +48,12 @@ class Transport(threading.Thread):
         direction = True if (self.last_encoder_value < current_encoder_value and current_encoder_value - self.last_encoder_value < self.gap) or (self.last_encoder_value - current_encoder_value > self.gap) else False
         # if the encoder has made a complete revolution, increment lap
         if current_encoder_value < self.last_encoder_value and direction:
-            lap += 1  
+            self.lap += 1  
         # decrement lap if moving in the opposite direction
         elif self.last_encoder_value - current_encoder_value < 0 and not direction:
-            lap -= 1
+            self.lap -= 1
         self.last_encoder_value = current_encoder_value                      # store raw position
-        current_accumulated_transport_postion = (lap * resolution) + current_encoder_value  # calculate relative position
+        current_accumulated_transport_postion = (self.lap * resolution) + current_encoder_value  # calculate relative position
         # only send update if encoder has changed position sincfe last reading
         if current_accumulated_transport_postion != self.last_accumulated_transport_postion:
             # update encoder position
