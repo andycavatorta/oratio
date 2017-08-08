@@ -43,7 +43,7 @@ class Voice_Key(object):
         print "Voice_Key initialized with spi_chip_select_pin", spi_chip_select_pin
     def normalize(self, encoder_value):
         inverse_value = self.resolution - encoder_value
-        if inverse_value < self.min_encoder_position:
+        if inverse_value <= self.min_encoder_position:
             inverse_value = self.min_encoder_position
         if inverse_value > self.max_encoder_position:
             inverse_value = self.max_encoder_position
