@@ -66,6 +66,7 @@ class Voice_Keys():
 
 class Button(object):
     def __init__(self, name, pin):
+        print "----------->",name, pin
         self.name = name
         self.pin = pin
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
@@ -129,7 +130,6 @@ class Main(threading.Thread):
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
-
 
 def init(hostname):
     main = Main(hostname)
