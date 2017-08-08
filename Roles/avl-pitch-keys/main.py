@@ -45,10 +45,12 @@ class Capacitive_Sensors(threading.Thread):
                 for i in xrange(12):
                     pin_bit = 1 << i
                     if current_state_of_all_keys[j] & pin_bit and not last_state_of_all_keys[j] & pin_bit:
-                        print 'touched: keybank ' + str(j) + ', key ' + str(i)
+                        global_key_number = (j * 12) + (11-i)
+                        print global_key_number
+                        #print 'touched: keybank ' + str(j) + ', key ' + str(i)
                         #self.network_send_callback
-                    if not current_state_of_all_keys[j] & pin_bit and last_state_of_all_keys[j] & pin_bit:
-                        print 'released: keybank ' + str(j) + ', key ' + str(i)
+                    #if not current_state_of_all_keys[j] & pin_bit and last_state_of_all_keys[j] & pin_bit:
+                    #    print 'released: keybank ' + str(j) + ', key ' + str(i)
             last_state_of_all_keys = current_state_of_all_keys
             time.sleep(0.01)
 
