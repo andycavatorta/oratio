@@ -163,7 +163,7 @@ class Main(threading.Thread):
                         if key_number == 2 and self.staccato_3:
                             voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
                         print key_number, voice_key_new_position
-                        self.network.thirtybirds.send(topic_names[key_number], voice_key_position)
+                        self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
                 time.sleep(0.01)
             except Exception as e:
