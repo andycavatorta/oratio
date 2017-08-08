@@ -66,7 +66,6 @@ class Transport(threading.Thread):
             # trigger next encoder reading in 10 msg
 
     def get_position(self):
-        print "get_position"
         return self.queue.get(True)
 
     def run(self):
@@ -106,6 +105,7 @@ class Main(threading.Thread):
                 #topic, msg = self.queue.get(True)
                 #print "main Main.run topic/queue", topic, msg
                 transport_position = self.transport.get_position()
+                print transport_position
                 time.sleep(0.1)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
