@@ -58,7 +58,7 @@ class Layer(threading.Thread):
 
     def run(self):
         self.looper = LiveLooper()
-        self.looperController = LooperController(looper)
+        self.looperController = LooperController(self.looper)
         self.looper.start()
         while True:
             try:
