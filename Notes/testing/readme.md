@@ -1,0 +1,1 @@
+This directory cointains code for testing individual sensors, so we can debug hardware separately.
