@@ -270,7 +270,8 @@ def pport_write (en, word):
 
   wpi.digitalWrite(pport_en, 0)
   for i in xrange(8):
-    print i, wpi.digitalWrite(pport_8bit[i], int(word[7-i]))
+    #print i, wpi.digitalWrite(pport_8bit[i], int(word[7-i]))
+    wpi.digitalWrite(pport_8bit[i], int(word[7-i]))
   
   wpi.digitalWrite(pport_en, 1)
   delay_us(4)

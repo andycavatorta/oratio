@@ -24,7 +24,7 @@ Dashboard:
 """
 
 
-
+from __future__ import division
 
 import importlib
 import json
@@ -39,6 +39,7 @@ import crystal_helpers as c
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Network.email_simple import init as email_init
 
+
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
@@ -50,6 +51,9 @@ sys.path.append(UPPER_PATH)
 global last_f1
 global last_f2
 global last_f3
+
+offset = 119110
+#offset = 119104.6
 
 """
 class Main(threading.Thread):
@@ -135,22 +139,19 @@ def network_status_handler(msg):
     print "network_status_handler", msg
 
 def network_message_handler(msg):
-    #print "network_message_handler", msg
+    global offset
+    print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
     if topic == "__heartbeat__":
         print "heartbeat received", msg
     
-    if topic == "voice_3":
+    if topic == "voice_1":
         # tones.send(eval(msg[1]))
 
         # quick hack -- will make this better later!
         payload = eval(msg[1])
         freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
-
-        offset = 167489
-        #print payload
-        #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
 
         if (gain > 0.2):
             c.send_freq(0, offset-int(freq_1))
@@ -166,13 +167,49 @@ def network_message_handler(msg):
             c.set_levels(0, 0)
             c.set_levels(1, 0)
             c.set_levels(2, 0)
-
-
+        """
+        #offset = 119104.6
+        #print offset-int(payload[0])
+        #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
+        #level_1 = 0 if payload[1] < 0.1 else int(120.0 * payload[1])
+        #level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1 * 2)
+        #level_3 = 0 if vol_3 < 0.1 else int(255.0 * vol_3 * level_1 * 2)
+        level_1 = 0 if payload[1] < 0.1 else int(240.0 * payload[1])
+        level_2 = 0 if vol_2 < 0.1 else int(255.0 * vol_2 * level_1)
+        level_3 = 0 if vol_3 < 0.1 else int(255.0 * vol_3 * level_1)
+        print "levels:", level_1, level_2, level_3
+        c.set_levels(0, level_1)
+        c.set_levels(1, level_2)
+        c.set_levels(2, level_3)
+        if level_1 <0.1:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
+        else:
+            c.send_freq(0, offset-int(freq_1))
+            c.send_freq(1, offset-int(freq_2))
+            c.send_freq(2, offset-int(freq_3))
+        #get period corresponding to cutoff frequency * 100 (in microseconds)
+        """
         cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
         adj_period = 1e6 / (cutoff_freq * 100)
         c.pport_write(1, adj_period)
-        c.pband_size(pband/255)
+        c.pband_size(int(pband/255))
 
+        """
+        if (payload[1] > 0.2):
+            c.send_freq(0, offset-int(freq_1))
+            c.send_freq(1, offset-int(freq_2))
+            c.send_freq(2, offset-int(freq_3))
+            #c.set_levels(0, 255 if payload[1] < 0.5 else int(180.0 * payload[1]))
+            c.set_levels(0, 0 if payload[1] < 0.1 else int(180.0 * payload[1]))
+            c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
+            c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
+        else:
+            c.send_freq(0, 0)
+            c.send_freq(1, 0)
+            c.send_freq(2, 0)
+        """
 network = None # makin' it global
 
 def init(HOSTNAME):
@@ -199,7 +236,7 @@ def init(HOSTNAME):
     )
 
     network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_3")
+    network.subscribe_to_topic("voice_1")
     #main = Main(HOSTNAME)
     #main.start()
 
