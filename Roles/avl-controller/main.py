@@ -50,7 +50,7 @@ class Voice(object):
         self.formant_front_back = 0.0
         self.pitch_key = 0.0
         self.transport_position = 0.0
-        self.last_transport_position = 0.0
+        self.transport_pos_at_last_pitch_key_touched = 0.0
         #outputs
         self._root_frequency = 0.0
         self._root_volume = 0.0
@@ -59,6 +59,8 @@ class Voice(object):
         self._overtone_2_frequency = 0.0
         self._overtone_2_volume = 0.0
         self._formant_pattern = {}
+
+        self.transport_encoder_pulses_per_pitch = 1444
 
     def update(self, name, value):
         if name == "root_volume":
@@ -102,7 +104,7 @@ class Voice(object):
             self.calculate_formant_pattern()
         if name == "pitch_key":
             self.pitch_key = value
-            self.last_transport_position = self.transport_position
+            self.transport_pos_at_last_pitch_key_touched = self.transport_position
             self.calculate_frequencies()
         if name == "transport_position":
             self.transport_position = value
@@ -121,8 +123,12 @@ class Voice(object):
     def calculate_frequencies(self):
         #### root pitch ####
         # calculate base pitch
-        root_pitch = pow( 2, (  self.pitch_key / 12.0 ) ) * 27.5
+        #root_pitch = pow( 2, (  self.pitch_key / 12.0 ) ) * 27.5
         # add transport
+
+        pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
+        pitch_diff_from_transport_and_last_key = self.pitch_key + pitch_diff_from_transport 
+        root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
 
         # add harmonic
         root_harmonic_freq = (int(self.root_harmonic) + 1) * root_pitch
