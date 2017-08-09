@@ -37,9 +37,10 @@ class Layer(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.network.thirtybirds.subscribe_to_topic("short_pedal")
-        self.network.thirtybirds.subscribe_to_topic("long_pedal")
-        self.network.thirtybirds.subscribe_to_topic("loop_length")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_record")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_play")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
+        self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
 
     def network_message_handler(self, topic_msg):
@@ -64,17 +65,19 @@ class Layer(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "short_pedal":
+                if topic == "layer_1_record":
                     if msg:
                         self.looperController.handleShortPedalDown()
                     else:
                         self.looperController.handleShortPedalUp()
-                elif topic == "long_pedal":
+                elif topic == "layer_1_play":
                     if msg:
                         self.looperController.handleLongPedalDown()
                     else:
                         self.looperController.handleLongPedalUp()
-                elif topic == "loop_length":
+                elif topic == "layer_1_volume":
+                    self.looperController.setVolume(msg)
+                elif topic == "layer_speed":
                     self.looperController.setLoopLength(msg)
                 elif topic == "clear_loop":
                     self.looperController.clear()

@@ -131,3 +131,6 @@ class LooperController():
 
 	def setLoopLength(self, length):
 		self.looper.setLoopLength(length)
+
+	def setVolume(self, vol):
+		self.looper.setVolume(vol)

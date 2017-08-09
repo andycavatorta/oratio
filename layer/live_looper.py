@@ -96,11 +96,15 @@ class LiveLooper():
 			self.tableB
 		)
 
-		# Finally, add a master output, which the long pedal mutes
+		# Add a master output, which the long pedal mutes
 		self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
 		self.masterLoopOutput.addInput(0, self.readOutput[0])
 		self.masterLoopOutput.setAmp(0, 0, 0)
-		self.masterLoopOutput.out()
+		self.masterLoopOutput
+
+		# And finally, multiply that output by an overall output
+		self.sigVolume = SigTo(1, time=0.025, init=1)
+		(self.sigVolume * self.masterLoopOutput[0]).out()
 
 	def isPlaying(self):
 		return self.playing
@@ -152,5 +156,8 @@ class LiveLooper():
 			self.inmixr.setAmp(1, 0, 1)
 			self.readOutput.setAmp(0, 0, 1)
 
-	def setLoopLength(self, len):
-		self.sigLoopLen.setValue(len)
+	def setLoopLength(self, l):
+		self.sigLoopLen.setValue(l)
+
+	def setVolume(self, vol):
+		self.sigVolume.setValue(vol)
