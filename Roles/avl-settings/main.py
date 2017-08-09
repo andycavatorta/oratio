@@ -22,7 +22,7 @@ class Network(object):
         self.thirtybirds = network_init(
             hostname=hostname,
             role="client",
-            discovery_multicastGroup=settings.discovery_multicastGroup,
+            discovery_multicastGroup=settings.discovery_multicastrGoup,
             discovery_multicastPort=settings.discovery_multicastPort,
             discovery_responsePort=settings.discovery_responsePort,
             pubsub_pubPort=settings.pubsub_pubPort,
