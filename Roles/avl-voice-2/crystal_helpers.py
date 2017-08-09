@@ -117,7 +117,7 @@ def set_volume (ch, level):
 
 def set_volume_master(level):
   # get binary representation of level
-  level_bin = bin(level)[2:].zfill(8);
+  level_bin = bin(int(level))[2:].zfill(8);
   print level_bin
   print bb_mosi, bb_sck
 
