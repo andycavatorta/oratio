@@ -197,6 +197,8 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.pedals = Pedals(self.add_to_queue)
+        self.pedals.daemon = True
+        self.pedals.start()
 
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
 
