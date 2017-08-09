@@ -1,4 +1,9 @@
 import os
+import sys
+import settings
+import traceback
+import threading
+import Queue
 import crystal_helpers as crystal
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -25,8 +30,6 @@ class Network(object):
             status_callback=network_status_handler
         )
 
-        # default intermediate frequency
-        self.xtal_freq = 119050.0
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
@@ -34,6 +37,9 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
+
+        # default intermediate frequency
+        self.xtal_freq = 119050.0
 
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_2")
@@ -82,11 +88,11 @@ class Main(threading.Thread):
 
                     # subvoice 2 frequency and volume
                     crystal.set_freq(1, self.xtal_freq - freq_sub1)
-                    crystal.set_volume(1, map_master_volume(vol_sub1))
+                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
 
                     # subvoice 3 frequency and volume
                     crystal.set_freq(2, self.xtal_freq - freq_sub2)
-                    crystal.set_volume(2, map_master_volume(vol_sub2))
+                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
 
                     
             except Exception as e:
@@ -101,5 +107,14 @@ def init(hostname):
     main.daemon = True
     main.start()
     return main
+
+def map_subvoice_volume(level):
+  map_volume(level, 154, 100)
+
+def map_master_volume(level,):
+    map_volume(level, 100, 100)
+
+def map_volume(level, min, scale):
+  return 0 if level == 0 else min + level * scale
 
 
