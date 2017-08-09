@@ -3,12 +3,12 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+pins =  [26,  19, 13, 21, 20, 16]
+
+for pin in pins:
+    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+
 
 # Forget pins 20 and 21. They seem to be a bit funny with the AudioInjector hat on
 # Also forget pin 19. This too is a pin of Great Evil

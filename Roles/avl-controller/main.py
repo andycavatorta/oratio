@@ -1,5 +1,7 @@
+
 import os
 import Queue
+import RPi.GPIO as GPIO
 import settings
 import time
 import threading
@@ -30,6 +32,40 @@ class Network(object):
             message_callback=network_message_handler,
             status_callback=network_status_handler
         )
+
+class Pedal(object):
+    def __init__(self, pin_number):
+            self.pin_number = pin_number
+            GPIO.setup(pin_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+            self.last_value = 0
+    def detect_change(self):
+            current_value = GPIO.input(self.pin_number)
+            if current_value == self.last_value:
+                return None
+            else:
+                return current_value
+                self.last_value = current_value
+
+class Pedals(threading.Thread):
+    def __init__(self, outgoing_msg_queue):
+        threading.Thread.__init__(self)
+
+        self.outgoing_msg_queue = outgoing_msg_queue
+        self.pedals = []
+        pins =  [26,  19, 13, 21, 20, 16]
+        GPIO.setmode(GPIO.BCM)
+        for pin in pins:
+            self.pedals.append(Pedal(pin))
+
+    def run(self):
+        while True:
+            for i, pedal in enumerate(self.pedals):
+                pedal_change = pedal.detect_change()
+                if pedal_change is not None:
+                    pedal_name = 'pedal_{}'.format(str(i+1)) 
+                    print pedal_name, pedal_change
+                    self.outgoing_msg_queue(pedal_name, pedal_change)
+            time.sleep(0.01)
 
 class Voice(object):
     def __init__(self, voice_number):
@@ -160,6 +196,7 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
+        self.pedals = Pedals(self.add_to_queue)
 
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
 
