@@ -95,7 +95,7 @@ def init():
       break
 
   if port != None:
-    ser = serial.Serial('/dev/', 57600)
+    ser = serial.Serial(port, 57600)
   else:
     ser = None
     print "problem finding serial port"
