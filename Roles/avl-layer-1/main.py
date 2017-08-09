@@ -33,7 +33,7 @@ class Network(object):
         )
 
 class Layer(threading.Thread):
-    def __init__(self, hostname, looper, looperController):
+    def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
@@ -41,9 +41,6 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("long_pedal")
         self.network.thirtybirds.subscribe_to_topic("loop_length")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
-        self.looper = looper
-        self.looperController = looperController
-        self.looper.start()
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
@@ -54,12 +51,16 @@ class Layer(threading.Thread):
 
     def network_status_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
-        print "Layer.network_status_handler", topic_msg
+        self.add_to_queue("__print__", topic_msg)
+        # print "Layer.network_status_handler", topic_msg
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
 
     def run(self):
+        self.looper = LiveLooper()
+        self.looperController = LooperController(self.looper)
+        self.looper.start()
         while True:
             try:
                 topic, msg = self.queue.get(True)
@@ -79,6 +80,8 @@ class Layer(threading.Thread):
                     self.looperController.clear()
                 elif topic == "__heartbeat__":
                     print "heartbeat received", msg
+                elif topic == "__print__":
+                    print "Layer.network_status_handler", msg
                 else:
                     print ("Unhandled message type %s" % topic)
 
@@ -86,14 +89,8 @@ class Layer(threading.Thread):
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
-looper = None
-looperController = None
-
 def init(hostname):
-    global looper, looperController
-    looper = LiveLooper()
-    looperController = LooperController(looper)
-    layer = Layer(hostname, looper, looperController)
+    layer = Layer(hostname)
     layer.daemon = True
     layer.start()
     return layer
