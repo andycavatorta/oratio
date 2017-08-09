@@ -16,6 +16,19 @@ sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
+
+class MCP3008(object): 
+    def __init__(self, chip_select_pin):
+        pin_values = [0] * 8
+        self.chip_select_pin = chip_select_pin
+
+    def read_pin(self, pin_number):
+
+
+
+
+
+
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
