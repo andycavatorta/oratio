@@ -233,9 +233,60 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
+
+                if topic == "pitch_key_touched":
+                    self.network.thirtybirds.send("voice_1", self.voices[0].update("pitch_key", msg))
+                    self.network.thirtybirds.send("voice_2", self.voices[1].update("pitch_key", msg))
+                    self.network.thirtybirds.send("voice_3", self.voices[2].update("pitch_key", msg))
+                    continue
+                if topic == "transport_position":
+                    self.network.thirtybirds.send("voice_1", self.voices[0].update("transport_position", msg))
+                    self.network.thirtybirds.send("voice_2", self.voices[1].update("transport_position", msg))
+                    self.network.thirtybirds.send("voice_3", self.voices[2].update("transport_position", msg))
+                    continue
                 if topic == "voice_key_1_position":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_volume", msg))
                     continue
+                if topic == "voice_key_2_position":
+                    self.network.thirtybirds.send("voice_2", self.voices[1].update("root_volume", msg))
+                    continue
+                if topic == "voice_key_3_position":
+                    self.network.thirtybirds.send("voice_3", self.voices[2].update("root_volume", msg))
+                    continue
+
+
+                if topic == "layer_speed":
+                    self.network.thirtybirds.send("layer_speed", msg)
+                    continue
+                if topic == "layer_1_volume":
+                    self.network.thirtybirds.send("layer_1_volume", msg)
+                    continue
+                if topic == "layer_2_volume":
+                    self.network.thirtybirds.send("layer_2_volume", msg)
+                    continue
+                if topic == "layer_3_volume":
+                    self.network.thirtybirds.send("layer_3_volume", msg)
+                    continue
+                if topic == "pedal_1":
+                    self.network.thirtybirds.send("layer_1_play", msg)
+                    continue
+                if topic == "pedals_2":
+                    self.network.thirtybirds.send("layer_1_record", msg)
+                    continue
+                if topic == "pedal_3":
+                    self.network.thirtybirds.send("layer_2_play", msg)
+                    continue
+                if topic == "pedals_4":
+                    self.network.thirtybirds.send("layer_2_record", msg)
+                    continue
+                if topic == "pedal_5":
+                    self.network.thirtybirds.send("layer_3_play", msg)
+                    continue
+                if topic == "pedals_6":
+                    self.network.thirtybirds.send("layer_3_record", msg)
+                    continue
+
+
                 if topic == "voice_1_root_harmonic":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_harmonic", msg))
                     continue
@@ -273,9 +324,6 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("formant_front_back", msg))
                     continue
 
-                if topic == "voice_key_2_position":
-                    self.network.thirtybirds.send("voice_2", self.voices[1].update("root_volume", msg))
-                    continue
                 if topic == "voice_2_root_harmonic":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_harmonic", msg))
                     continue
@@ -313,9 +361,6 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_front_back", msg))
                     continue
 
-                if topic == "voice_key_3_position":
-                    self.network.thirtybirds.send("voice_3", self.voices[2].update("root_volume", msg))
-                    continue
                 if topic == "voice_3_root_harmonic":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_harmonic", msg))
                     continue
@@ -352,27 +397,6 @@ class Main(threading.Thread):
                 if topic == "voice_3_formant_front_back":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_front_back", msg))
                     continue
-
-                if topic == "pitch_key_touched":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("pitch_key", msg))
-                    self.network.thirtybirds.send("voice_2", self.voices[1].update("pitch_key", msg))
-                    self.network.thirtybirds.send("voice_3", self.voices[2].update("pitch_key", msg))
-                    continue
-
-                if topic == "transport_position":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("transport_position", msg))
-                    self.network.thirtybirds.send("voice_2", self.voices[1].update("transport_position", msg))
-                    self.network.thirtybirds.send("voice_3", self.voices[2].update("transport_position", msg))
-                    continue
-
-                #if topic == "layer_speed":
-                #if topic == "layer_1_volume":
-                #if topic == "layer_2_volume":
-                #if topic == "layer_3_volume":
-
-
-
-
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
