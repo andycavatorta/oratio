@@ -1,5 +1,6 @@
-import wiringpi as wpi
 import serial
+import serial.tools.list_ports
+import wiringpi as wpi
 
 spi_channel_lookup = {
   # spi channel   |   pi pin
@@ -86,7 +87,18 @@ def init():
 
   # serial interface for talking to frequency counter
   print 'Open Serial Port'
-  ser = serial.Serial('/dev/ttyACM0', 57600)
+  port = None
+  for i in serial.tools.list_ports.comports():
+    if len(i[2]) > 2 and i[2][0:3] == 'USB':
+      port = i[0]
+      print 'found', port
+      break
+
+  if port != None:
+    ser = serial.Serial('/dev/', 57600)
+  else:
+    ser = None
+    print "problem finding serial port"
 
   # bit-bang spi
   print 'Configure bit-bang SPI pins'
