@@ -43,13 +43,12 @@ class Pedal(object):
             if current_value == self.last_value:
                 return None
             else:
-                return current_value
                 self.last_value = current_value
+                return current_value
 
 class Pedals(threading.Thread):
     def __init__(self, outgoing_msg_queue):
         threading.Thread.__init__(self)
-
         self.outgoing_msg_queue = outgoing_msg_queue
         self.pedals = []
         pins =  [26,  19, 13, 21, 20, 16]
