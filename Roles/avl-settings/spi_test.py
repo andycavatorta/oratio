@@ -9,16 +9,17 @@ for pin in chip_select_pins:
 
 def spi_read_write(pin, msg):
     wpi.digitalWrite(pin, 0)
-    wpi.delayMicroseconds(1)
+    wpi.delayMicroseconds(100)
     msg = wpi.wiringPiSPIDataRW(0, msg)
-    wpi.delayMicroseconds(1)
+    wpi.delayMicroseconds(100)
     wpi.digitalWrite(pin, 1)
-    wpi.delayMicroseconds(1)
+    wpi.delayMicroseconds(100)
     return msg
 
 def read_channel(cs, ch):
     spi_read_write(cs, chr(ch << 4) + chr(0x00))
     val = spi_read_write(cs, chr(0x00) + chr(0x00))
+    print "--->", val
     return (ord(val[1][0]) << 2) | (ord(val[1][1]) >> 6)
 
 for chip_select_pin in chip_select_pins:
