@@ -21,7 +21,7 @@ class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
         self.thirtybirds = network_init(
-            hostname=HOSTNAME,
+            hostname=self.hostname,
             role="server",
             discovery_multicastGroup=settings.discovery_multicastGroup,
             discovery_multicastPort=settings.discovery_multicastPort,
