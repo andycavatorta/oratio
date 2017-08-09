@@ -1,3 +1,10 @@
+"""
+encountered an error that required manually loading the module
+
+sudo modprobe i2c_bcm2708
+
+"""
+
 import os
 import Queue
 import settings
