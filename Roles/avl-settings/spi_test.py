@@ -1,6 +1,6 @@
 import wiringpi as wpi
 
-chip_select_pins = [27, 28, 29]
+chip_select_pins = [21,22,23,24,25,26]
 wpi.wiringPiSetup()
 wpi.wiringPiSPISetupMode(0, 500000, 0)
 
