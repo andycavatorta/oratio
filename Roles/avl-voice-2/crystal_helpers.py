@@ -1,43 +1,25 @@
 import wiringpi as wpi
-import math
+import serial
 
 spi_channel_lookup = {
   # spi channel   |   pi pin
-  0:                  27,
-  1:                  28,
-  2:                  29
+  0:                  21,
+  1:                  22,
+  2:                  23
   }
 
-# 8-bit parallel port, use for quick testing
-pport_8bit = {
-  # bit		  |  [fd
-  7:                  0,
-  6:                  2,
-  5:                  3,
-  4:                  21,
-  3:                  22,
-  2:                  23,
-  1:                  24,
-  0:                  25
-}
-pport_en1 = 26
-pport_en2 = 1
+digipot = 0  # file descriptor for digital potentiometer (i2c)
+ser = None   # interface to USB serial
 
-# file descriptor for digital potentiometer (i2c)
-digipot1 = 0
-digipot2 = 0
-digipot3 = 0  # pass band
-
-# store current frequencies
-freq_a = 0
-freq_b = 0
-freq_c = 0
+# bit-bang SPI
+bb_mosi = 4
+bb_sck = 5
 
 # for convenience, save characters
 delay_us = wpi.delayMicroseconds
 
 # convert (base-10) frequency to a pair of 16-bit SPI commands for AD9833
-def freq_word (freq, prnt=False) :
+def freq_word(freq, prnt=False):
 
   # 28-bit frequency to write is given by f_target / f_clock * 2^28 
   freq_adj = int(freq / 25e6 * 2**28)
@@ -59,7 +41,7 @@ def freq_word (freq, prnt=False) :
 
 
 # wrapper for wiringpi SPI R/W, but with support for more than two lines
-def spiRW (channel, message) :
+def spiRW(channel, message):
   wpi.digitalWrite(spi_channel_lookup[channel], 0); delay_us(1)  # pull low
 
   msg = wpi.wiringPiSPIDataRW(0, message)
@@ -70,180 +52,86 @@ def spiRW (channel, message) :
   return msg
 
 
-def init () :
+def init():
+  global digipot, ser
+
   print 'Initialize WiringPi'
-  print wpi.wiringPiSetup()
+  wpi.wiringPiSetup()
 
   # in SPI mode 2, clock idle HIGH, data clocked on falling edge
-  print 'Initialize SPI Devices'
-  print wpi.wiringPiSPISetupMode(0, 500000, 2)
-  #print wpi.wiringPiSPISetupMode(1, 500000, 2)
-  #print wpi.wiringPiSPISetupMode(2, 500000, 2)
+  print 'Initialize SPI devices'
+  wpi.wiringPiSPISetupMode(0, 500000, 2)
 
   # setup pins for additional spi channels
   for v in spi_channel_lookup.itervalues():
-    print v
-    print wpi.pinMode(v, 1)         # configure pin as output
-    print wpi.digitalWrite(v, 1)    # default HIGH
+    wpi.pinMode(v, 1)         # configure pin as output
+    wpi.digitalWrite(v, 1)    # default HIGH
 
-  # reset AD9833, and set up to use consecutive writes for full 28-bt rees
-  print 'Reset AD9833 on channel 0'
-  print spiRW(0, chr(0x21) + chr(0x00)) # enter reset mode
-  wpi.delay(500)
-  print spiRW(0, chr(0x00) + chr(0x00))
-  print spiRW(0, chr(0x00) + chr(0x00))
-  print spiRW(0, chr(0x20) + chr(0x00)) # exit reset mode
+  print "Reset AD9833 for all channels"
+  for i in xrange(3):
 
-  print 'Reset AD9833 on channel 1'
-  print spiRW(1, chr(0x21) + chr(0x00)) # enter reset mode
-  wpi.delay(500)
-  print spiRW(1, chr(0x00) + chr(0x00))
-  print spiRW(1, chr(0x00) + chr(0x00))
-  print spiRW(1, chr(0x20) + chr(0x00)) # exit reset mode
+    # reset AD9833, and set up to use consecutive writes for full 28-bt res
+    spiRW(i, chr(0x21) + chr(0x00)) # enter reset mode
+    wpi.delay(500)
+    spiRW(i, chr(0x00) + chr(0x00))
+    spiRW(i, chr(0x00) + chr(0x00))
+    spiRW(i, chr(0x20) + chr(0x00)) # exit reset mode
 
-  print 'Reset AD9833 on channel 2'
-  print spiRW(2, chr(0x21) + chr(0x00)) # enter reset mode
-  wpi.delay(500)
-  print spiRW(2, chr(0x00) + chr(0x00))
-  print spiRW(2, chr(0x00) + chr(0x00))
-  print spiRW(2, chr(0x20) + chr(0x00)) # exit reset mode
+    set_freq(i, 0)      # freq set to zero
+    set_volume(i, 0)    # volume set to zero
 
   # setup i2c interfrace
-  print 'Initialize I2C Devices'
-  global digipot1
-  digipot1 = wpi.wiringPiI2CSetup(0x29)    # DS18030-50+ digital potentiometer
-  print digipot1
+  print 'Initialize I2C devices'
+  digipot = wpi.wiringPiI2CSetup(0x29)    # DS18030-50+ digital potentiometer
 
-  global digipot2
-  digipot2 = wpi.wiringPiI2CSetup(0x2f)    # master gain
-  print digipot2
+  # serial interface for talking to frequency counter
+  print 'Open Serial Port'
+  ser = serial.Serial('/dev/ttyACM0', 57600)
 
-  global digipot3
-  digipot3 = wpi.wiringPiI2CSetup(0x28)   #moreskldf
-  print digipot3
+  # bit-bang spi
+  print 'Configure bit-bang SPI pins'
+  for pin in [bb_mosi, bb_sck]:
+    wpi.pinMode(pin, 1)        # configure pin as output
+    wpi.digitalWrite(pin, 0)   # default HIGH
 
-  # setup parallel port
-  print 'Initialize parallel port'
-  for v in pport_8bit.itervalues():
-    print v
-    print wpi.pinMode(v, wpi.OUTPUT)
-    print wpi.digitalWrite(v, 0)
+  print 'Done'
 
-  print pport_en1, pport_en2
 
-  wpi.pinMode(pport_en1, wpi.OUTPUT)
-  wpi.digitalWrite(pport_en1, 0)
-
-  wpi.pinMode(pport_en2, wpi.OUTPUT)
-  wpi.digitalWrite(pport_en2, 0)
-
-def send_freq (ch, freq, prnt=False) :
-  #freq = 27110760 + (241.2224 - 27110760)/(1 + math.pow((float(freq)/21337770),1.027663))
-
+def set_freq(ch, freq, prnt=False):
+  # convert frequency to pair of 16-bit words
   word = freq_word(freq, prnt)
 
-  if (prnt):
-    print spiRW(ch, chr(0b00100000) + chr(0b0))
-    print spiRW(ch, word[1])
-    print spiRW(ch, word[0])
-
-  else:
-    spiRW(ch, chr(0b00100000) + chr(0b0))
-    spiRW(ch, word[1])
-    spiRW(ch, word[0])
-
-  global freq_a, freq_b, freq_c
-
-  if (ch == 0):
-    freq_a = freq
-  elif (ch == 1):
-    freq_b = freq
-  else:
-    freq_c = freq
-
-  #return word
+  spiRW(ch, chr(0x20) + chr(0b0))   # control bytes
+  spiRW(ch, word[1])                # first freq word
+  spiRW(ch, word[0])                # second freq word
 
 
-def freq_sweep (ch, start, end, step, t_delay=100, prnt=True, sine=True):
-
-  freq = start
-
-  while (freq < end):
-    send_freq(ch, freq, prnt, sine)
-    wpi.delay(t_delay)
-    freq += step
-
-  while (freq > start):
-    send_freq(ch, freq, prnt, sine)
-    wpi.delay(t_delay)
-    freq -= step
-
-
-
-def set_levels (ch, level):
-
+def set_volume (ch, level):
+  # for channels 1 and 2 (the overtones) set volume via i2c digital pot
   if (ch > 0):
     command = 0b10101001 if ch == 1 else 0b10101010
-    #print bin(command)
-    return wpi.wiringPiI2CWriteReg8 (digipot1, command, level & 255)
+    return wpi.wiringPiI2CWriteReg8 (digipot, command, level & 255)
 
-  return wpi.wiringPiI2CWriteReg8(digipot2, 0b10101010, level & 255)
+  # master volume has a separate protocol (bit-bang spi)
+  return set_volume_master(level)
 
-def quick_start():
-  init()
+def set_volume_master(level):
+  # get binary representation of level
+  level_bin = bin(level)[2:].zfill(8);
+  print level_bin
+  print bb_mosi, bb_sck
 
-  print 'set osc 0 to 167450-220'
-  send_freq(0, 167450-220)
-
-  print 'set osc 1 to 0'
-  send_freq(1, 0)
-
-  print 'set osc 2 to 0'
-  send_freq(2, 0)
-
-  print 'set pot 1 to 0'
-  set_levels(1, 0)
-
-  print 'set pot 2 to 0'
-  set_levels(2, 0)
+  for i in xrange(16):
+    print int(0 if i > 7 else int(level_bin[i]))
+    wpi.digitalWrite(bb_mosi, 0 if i > 7 else int(level_bin[i]))
+    wpi.digitalWrite(bb_sck, 1)
+    wpi.digitalWrite(bb_sck, 0)
 
 
-def sweep (target=2000, dt=100, df=100):
+# check serial port for intermediate frequency, return None if no data
+def measure_xtal_freq():
+  if not ser.inWaiting(): return None
 
-  global freq_a
-  global freq_b
-  global freq_c
-
-  ctr = 0
-
-  while (ctr < target):
-    send_freq(0, freq_a-df)
-    send_freq(1, freq_b-df)
-    send_freq(2, freq_c-df)
-    wpi.delay(dt)
-    ctr += df
-
-  while (ctr > 0):
-    send_freq(0, freq_a+df)
-    send_freq(1, freq_b+df)
-    send_freq(2, freq_c+df)
-    wpi.delay(dt)
-    ctr -= df
-
-
-def pport_write (en, word):
-  word = bin(int(word) & 255)[2:].zfill(8)
-  #print word
-
-  pport_en = pport_en1 if en == 1 else pport_en2
-
-  wpi.digitalWrite(pport_en, 0)
-  for i in xrange(8):
-    print i, wpi.digitalWrite(pport_8bit[i], int(word[7-i]))
-  
-  wpi.digitalWrite(pport_en, 1)
-  delay_us(4)
-  wpi.digitalWrite(pport_en, 0)
-
-def pband_size(band):
-  wpi.wiringPiI2CWriteReg8(digipot3, 0b10101001, int(band) & 255)
+  while ser.inWaiting():
+    xtal_freq = float(ser.readline().strip())
+  return xtal_freq / 10.0
