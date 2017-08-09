@@ -3,6 +3,7 @@ from pyo import *
 # Global constants
 TABLE_SWAP_TIME = 0.04 # Ramp time in seconds when clearing a table
 MAX_LOOP_LENGTH = 10 # Longest the loop can possibly be, in seconds
+DEFAULT_LOOP_LENGTH = 5
 
 def resetTable(table):
 	table.reset()
@@ -30,7 +31,7 @@ class LiveLooper():
 		self.delayedTableResetter = None
 
 		# Store the loop length, as well as a signal version of the same
-		self.loopLen = 2
+		self.loopLen = DEFAULT_LOOP_LENGTH
 		self.sigLoopLen = Sig(self.loopLen)
 
 		# Create loopers for each table
