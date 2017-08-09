@@ -1,3 +1,4 @@
+import time
 import wiringpi as wpi
 
 chip_select_pins = [21,22,23,24,25,26,27,28,29]
@@ -9,11 +10,14 @@ for pin in chip_select_pins:
 
 def spi_read_write(pin, msg):
     wpi.digitalWrite(pin, 0)
-    wpi.delayMicroseconds(100)
+    #wpi.delayMicroseconds(100)
+    time.sleep(0.1)
     msg = wpi.wiringPiSPIDataRW(0, msg)
-    wpi.delayMicroseconds(100)
+    #wpi.delayMicroseconds(100)
+    time.sleep(0.1)
     wpi.digitalWrite(pin, 1)
-    wpi.delayMicroseconds(100)
+    #wpi.delayMicroseconds(100)
+    time.sleep(0.1)
     return msg
 
 def read_channel(cs, ch):
