@@ -7,6 +7,7 @@ import time
 # Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
+import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 
