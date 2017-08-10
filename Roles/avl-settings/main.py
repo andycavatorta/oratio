@@ -55,7 +55,7 @@ class ADCS(threading.Thread):
     def __init__(self, network_send_ref):
         threading.Thread.__init__(self)
         self.network_send_ref = network_send_ref
-        chip_select_pins = [21,22,23,26]
+        chip_select_pins = [21,22,24]
         #chip_select_pins = [21,22,23,24,25,26]
         potentiometer_names = [
             [
