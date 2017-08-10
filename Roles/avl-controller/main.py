@@ -62,7 +62,7 @@ class Pedals(threading.Thread):
                 pedal_change = pedal.detect_change()
                 if pedal_change is not None:
                     # Layer code expects 1 for down and 0 for up
-                    pedal_change = 1 if pedal_change is 0 else 1
+                    pedal_change = 1 if pedal_change is 0 else 0
                     pedal_name = 'pedal_{}'.format(str(i+1))
                     print pedal_name, pedal_change
                     self.outgoing_msg_queue(pedal_name, pedal_change)
