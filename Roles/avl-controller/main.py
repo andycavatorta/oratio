@@ -61,7 +61,9 @@ class Pedals(threading.Thread):
             for i, pedal in enumerate(self.pedals):
                 pedal_change = pedal.detect_change()
                 if pedal_change is not None:
-                    pedal_name = 'pedal_{}'.format(str(i+1)) 
+                    # Layer code expects 1 for down and 0 for up
+                    pedal_change = 1 if pedal_change is 0 else 0
+                    pedal_name = 'pedal_{}'.format(str(i+1))
                     print pedal_name, pedal_change
                     self.outgoing_msg_queue(pedal_name, pedal_change)
             time.sleep(0.01)
@@ -308,19 +310,19 @@ class Main(threading.Thread):
                 if topic == "pedal_1":
                     self.network.thirtybirds.send("layer_1_play", msg)
                     continue
-                if topic == "pedals_2":
+                if topic == "pedal_2":
                     self.network.thirtybirds.send("layer_2_play", msg)
                     continue
                 if topic == "pedal_3":
                     self.network.thirtybirds.send("layer_3_play", msg)
                     continue
-                if topic == "pedals_4":
+                if topic == "pedal_4":
                     self.network.thirtybirds.send("layer_1_record", msg)
                     continue
                 if topic == "pedal_5":
                     self.network.thirtybirds.send("layer_2_record", msg)
                     continue
-                if topic == "pedals_6":
+                if topic == "pedal_6":
                     self.network.thirtybirds.send("layer_3_record", msg)
                     continue
 

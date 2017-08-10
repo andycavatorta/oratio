@@ -10,7 +10,7 @@ def resetTable(table):
 
 class LiveLooper():
 	def __init__(self):
-		self.audioServer = Server(nchnls=1, sr=44100, duplex=1)
+		self.audioServer = Server(nchnls=1, sr=44100, duplex=1, buffersize=1024)
 
 		# Set the input offset to 1, since all these boards want right channel
 		self.audioServer.setInputOffset(1)

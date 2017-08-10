@@ -2,7 +2,8 @@ import time
 from pyo import *
 
 # Global Constants
-MAX_DURATION_FOR_TAP = 0.1 # duration in seconds of a pedal event, for it to count as a tap
+MIN_DURATION_FOR_TAP = 0.05 # ignore tap events that are faster than this, since they were probably an accident
+MAX_DURATION_FOR_TAP = 0.3 # duration in seconds of a pedal event, for it to count as a tap
 MAX_INTERVAL_FOR_DOUBLE_TAP = 0.4 # interval in seconds between taps, for it to count as a double tap
 
 class LooperController():
@@ -65,16 +66,21 @@ class LooperController():
 
 		# This would mean that you just tapped the pedal for a second
 		# Treat it either as a single or double tap
-		if ts - self.lastLongPedalDownTime <= MAX_DURATION_FOR_TAP:
+		downtime = ts - self.lastLongPedalDownTime
+		if downtime <= MAX_DURATION_FOR_TAP and downtime > MIN_DURATION_FOR_TAP:
 			print("Just tapped the pedal, toggle play")
 			toggledPlay = not self.looper.isPlaying()
 			self.looper.setPlaying(toggledPlay)
 
 		# This means that you're lifting the pedal after having held it down to start playing
 		# So stop playing, if you are playing
-		else:
+		elif downtime > MAX_DURATION_FOR_TAP:
 			print("Releasing the long pedal, stop playing")
 			self.looper.setPlaying(False)
+
+		# This was a super short tap, so probably you should ignore it
+		else:
+			print("Ignoring a super short long pedal tap")
 
 	def handleShortPedalDown(self):
 		# If the short pedal is already down (somehow) then ignore this event
@@ -105,7 +111,8 @@ class LooperController():
 
 		# This would mean that you just tapped the pedal for a second
 		# Treat it either as a single or double tap
-		if ts - self.lastShortPedalDownTime <= MAX_DURATION_FOR_TAP:
+		downtime = ts - self.lastShortPedalDownTime
+		if downtime <= MAX_DURATION_FOR_TAP and downtime > MIN_DURATION_FOR_TAP:
 			print("Just tapped the pedal, toggle recording")
 			self.lastShortPedalTapTime = ts
 			self.shortPedalTapCount = self.shortPedalTapCount + 1
@@ -120,11 +127,15 @@ class LooperController():
 
 		# This means that you're lifting the pedal after having held it down to start recording
 		# So stop recording, if you are recording
-		else:
+		elif downtime > MIN_DURATION_FOR_TAP:
 			print("Releasing the short pedal, stop recording")
 			self.lastShortPedalTapTime = -1
 			self.shortPedalTapCount = 0
 			self.looper.setRecording(False)
+
+		# This was a super short tap, so probably you should ignore it
+		else:
+			print("Ignoring a super short tap")
 
 	def clear(self):
 		self.looper.clear()
