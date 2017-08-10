@@ -8,6 +8,9 @@ import threading
 import traceback
 import sys
 
+print settings
+
+
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
