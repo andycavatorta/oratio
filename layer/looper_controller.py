@@ -2,7 +2,7 @@ import time
 from pyo import *
 
 # Global Constants
-MIN_DURATION_FOR_TAP = 0.1 # ignore tap events that are faster than this, since they were probably an accident
+MIN_DURATION_FOR_TAP = 0.05 # ignore tap events that are faster than this, since they were probably an accident
 MAX_DURATION_FOR_TAP = 0.3 # duration in seconds of a pedal event, for it to count as a tap
 MAX_INTERVAL_FOR_DOUBLE_TAP = 0.4 # interval in seconds between taps, for it to count as a double tap
 
@@ -80,7 +80,7 @@ class LooperController():
 
 		# This was a super short tap, so probably you should ignore it
 		else:
-			print("Ignoring a super long pedal tap")
+			print("Ignoring a super short long pedal tap")
 
 	def handleShortPedalDown(self):
 		# If the short pedal is already down (somehow) then ignore this event
