@@ -30,7 +30,7 @@ class Potentiometer(object):
         change_in_value = abs(self.last_value - current_value)
         self.last_value = current_value
         return  current_value if abs(self.last_value - current_value) >= self.threshold_of_change else None
-    def get_name(self)
+    def get_name(self):
         return self.name
     
 class ADC(object): 
