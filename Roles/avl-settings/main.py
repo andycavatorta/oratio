@@ -37,6 +37,9 @@ class ADC(object):
     def __init__(self, chip_select_pin, potentiometer_names):
         pin_values = [0] * 8
         self.chip_select_pin = chip_select_pin
+        CLK  = 18
+        MISO = 23
+        MOSI = 24
         self.adc = Adafruit_MCP3008.MCP3008(clk=CLK, cs=chip_select_pin, miso=MISO, mosi=MOSI)
         self.potentiometers = [Potentiometer(potentiometer_names[i], self.adc, i) for i in range(len(potentiometer_names) ) ]
 
