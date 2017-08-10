@@ -35,7 +35,7 @@ def test_adc(chip_select_pin):
         time.sleep(0.01)
 
 
-for chip_select_pin in [21,22,23,24,25,26,27,28,29]:
+for chip_select_pin in [21,40]:
     test_adc(chip_select_pin)
 
 
