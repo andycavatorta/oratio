@@ -309,16 +309,16 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("layer_1_play", msg)
                     continue
                 if topic == "pedals_2":
-                    self.network.thirtybirds.send("layer_1_record", msg)
-                    continue
-                if topic == "pedal_3":
                     self.network.thirtybirds.send("layer_2_play", msg)
                     continue
+                if topic == "pedal_3":
+                    self.network.thirtybirds.send("layer_3_play", msg)
+                    continue
                 if topic == "pedals_4":
-                    self.network.thirtybirds.send("layer_2_record", msg)
+                    self.network.thirtybirds.send("layer_1_record", msg)
                     continue
                 if topic == "pedal_5":
-                    self.network.thirtybirds.send("layer_3_play", msg)
+                    self.network.thirtybirds.send("layer_2_record", msg)
                     continue
                 if topic == "pedals_6":
                     self.network.thirtybirds.send("layer_3_record", msg)
