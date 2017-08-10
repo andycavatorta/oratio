@@ -8,11 +8,12 @@ import time
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
+GPIO.setmode(GPIO.BCM)
 
 # Software SPI configuration:
-CLK  = 18
-MISO = 23
-MOSI = 24
+CLK  = 11
+MISO = 9
+MOSI = 10
 CS   = 21
 
 def test_adc(chip_select_pin):
@@ -32,7 +33,7 @@ def test_adc(chip_select_pin):
         # Print the ADC values.
         print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
         # Pause for half a second.
-        time.sleep(0.01)
+        time.sleep(0.05)
 
 
 for chip_select_pin in [8, 7, 24, 26]:
