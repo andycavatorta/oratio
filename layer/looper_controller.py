@@ -67,7 +67,7 @@ class LooperController():
 		# This would mean that you just tapped the pedal for a second
 		# Treat it either as a single or double tap
 		downtime = ts - self.lastLongPedalDownTime
-		if downtime <= MAX_DURATION_FOR_TAP && downtime > MIN_DURATION_FOR_TAP:
+		if downtime <= MAX_DURATION_FOR_TAP and downtime > MIN_DURATION_FOR_TAP:
 			print("Just tapped the pedal, toggle play")
 			toggledPlay = not self.looper.isPlaying()
 			self.looper.setPlaying(toggledPlay)
@@ -112,7 +112,7 @@ class LooperController():
 		# This would mean that you just tapped the pedal for a second
 		# Treat it either as a single or double tap
 		downtime = ts - self.lastShortPedalDownTime
-		if downtime <= MAX_DURATION_FOR_TAP && downtime > MIN_DURATION_FOR_TAP:
+		if downtime <= MAX_DURATION_FOR_TAP and downtime > MIN_DURATION_FOR_TAP:
 			print("Just tapped the pedal, toggle recording")
 			self.lastShortPedalTapTime = ts
 			self.shortPedalTapCount = self.shortPedalTapCount + 1
