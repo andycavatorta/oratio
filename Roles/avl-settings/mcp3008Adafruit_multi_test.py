@@ -15,9 +15,6 @@ MISO = 23
 MOSI = 24
 CS   = 21
 
-for chip_select_pin in [21,22,23,24,25,26,27,28,29]:
-    test_adc(chip_select_pin)
-
 def test_adc(chip_select_pin):
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=chip_select_pin, miso=MISO, mosi=MOSI)
     print('Reading MCP3008 values, press Ctrl-C to quit...')
@@ -36,6 +33,9 @@ def test_adc(chip_select_pin):
         # Pause for half a second.
         time.sleep(0.5)
 
+
+for chip_select_pin in [21,22,23,24,25,26,27,28,29]:
+    test_adc(chip_select_pin)
 
 
 
