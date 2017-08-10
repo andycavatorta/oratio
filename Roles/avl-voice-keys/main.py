@@ -1,5 +1,6 @@
 from __future__ import division
 
+import AMT203
 import os
 import Queue
 import settings
@@ -9,7 +10,7 @@ import traceback
 import sys
 
 from thirtybirds_2_0.Network.manager import init as network_init
-from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
+#from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 
 import RPi.GPIO as GPIO  
 GPIO.setmode(GPIO.BCM)  
@@ -34,7 +35,7 @@ class Voice_Key(object):
         self.max_encoder_position = max_encoder_position
         self.resolution = 4096
         print "Voice_Key.__init__ 0", spi_chip_select_pin
-        self.encoder = AMT203_expanded_spi.AMT203(0, 0, spi_chip_select_pin)
+        self.encoder = AMT203.AMT203(0, 0, spi_chip_select_pin)
         print "Voice_Key.__init__ 1", self.encoder
         time.sleep(1)
         self.encoder.set_zero()
