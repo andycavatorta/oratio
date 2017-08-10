@@ -26,7 +26,7 @@ class Potentiometer(object):
         self.last_value = -1
         self.threshold_of_change = 15
     def get_change(self):
-        current_value = self.adc.read_adc(channel_number)
+        current_value = self.adc.read_adc(self.channel_number)
         change_in_value = abs(self.last_value - current_value)
         self.last_value = current_value
         return  current_value if abs(self.last_value - current_value) >= self.threshold_of_change else None
