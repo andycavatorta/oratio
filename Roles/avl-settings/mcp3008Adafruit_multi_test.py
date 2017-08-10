@@ -31,7 +31,7 @@ def test_adc(chip_select_pin):
         # Print the ADC values.
         print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
         # Pause for half a second.
-        time.sleep(0.5)
+        time.sleep(0.01)
 
 
 for chip_select_pin in [21,22,23,24,25,26,27,28,29]:
