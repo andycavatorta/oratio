@@ -55,7 +55,8 @@ class ADCS(threading.Thread):
     def __init__(self, network_send_ref):
         threading.Thread.__init__(self)
         self.network_send_ref = network_send_ref
-        chip_select_pins = [21,22,23,24,25,26]
+        chip_select_pins = [21]
+        #chip_select_pins = [21,22,23,24,25,26]
         potentiometer_names = [
             [
                 "voice_1_root_harmonic"
@@ -106,7 +107,7 @@ class ADCS(threading.Thread):
                 "voice_3_formant_front_back"
             ]
         ]
-        self.adcs = [ADC(chip_select_pins[i], potentiometer_names[i]) for i in range(len(potentiometer_names))]
+        self.adcs = [ADC(chip_select_pins[i], potentiometer_names[i]) for i in range(len(chip_select_pins))]
 
     def run(self):
         while True:
