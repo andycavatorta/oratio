@@ -8,9 +8,6 @@ import threading
 import traceback
 import sys
 
-print settings
-
-
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
@@ -123,7 +120,7 @@ class Network(object):
         self.thirtybirds = network_init(
             hostname=hostname,
             role="client",
-            discovery_multicastGroup=settings.discovery_multicastrGoup,
+            discovery_multicastGroup=settings.discovery_multicastGoup,
             discovery_multicastPort=settings.discovery_multicastPort,
             discovery_responsePort=settings.discovery_responsePort,
             pubsub_pubPort=settings.pubsub_pubPort,
