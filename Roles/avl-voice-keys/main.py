@@ -67,9 +67,9 @@ class Voice_Key(object):
 
 class Voice_Keys():
     def __init__(self):
-        spi_chip_select_pins = [21,16, 20]
+        spi_chip_select_pins = [20, 21,16]
         min_encoder_positions = [0, 0, 0]
-        max_encoder_positions = [100, 100, 100]
+        max_encoder_positions = [100.0, 100.0, 100.0]
         self.voice_keys = [ Voice_Key(spi_chip_select_pins[key_number], min_encoder_positions[key_number], max_encoder_positions[key_number]) for key_number in range(3) ]
     def get_positions(self):
         voice_key_new_positions = []
