@@ -166,7 +166,7 @@ class Main(threading.Thread):
                             voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
                         print key_number, voice_key_new_position
                         print "button:", name, state
-						print "button_states:", button_states
+                        print "button_states:", button_states
                         self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
                 time.sleep(0.01)
