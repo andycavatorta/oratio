@@ -16,6 +16,30 @@ sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
+class GainRampThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.currentGains = [0x00, 0x00, 0x00]
+        self.target = [0x00, 0x00, 0x00]
+        self.rampTimePerIncrement = 0.001
+
+    def setRampTime(self, r):
+        self.rampTimePerIncrement = r;
+
+    def setTargetGain(self, crystalIndex, gain):
+        self.target = t & 0xFF
+
+    def run(self):
+        while True:
+            for i in range(0, 3):
+                if (self.targetGains[i] > self.currentGains[i]):
+                    self.currentGains[i] = self.currentGains[i] + 1
+                    crystal.set_volume(i, self.currentGains[i])
+                elif (self.targetGains[i] < self.currentGains[i]):
+                    self.currentGains[i] = self.currentGains[i] - 1
+                    crystal.set_volume(i, self.currentGains[i])
+            time.sleep(self.rampTimePerIncrement)
+
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
@@ -33,10 +57,11 @@ class Network(object):
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
-    def __init__(self, hostname):
+    def __init__(self, hostname, gainRampThread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
+        self.gainRampThread = gainRampThread
 
         # default intermediate frequency
         self.xtal_freq = 167465.0
@@ -85,15 +110,15 @@ class Main(threading.Thread):
 
                     # subvoice 1 (fundamental) frequency and voice volume
                     crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
-                    crystal.set_volume(0, map_master_volume(vol))
+                    gainRampThread.setTargetGain(0, map_master_volume(vol))
 
                     # subvoice 2 frequency and volume
                     crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
-                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
+                    gainRampThread.setTargetGain(1, map_subvoice_volume(vol_sub1))
 
                     # subvoice 3 frequency and volume
                     crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
-                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+                    gainRampThread.setTargetGain(2, map_subvoice_volume(vol_sub2))
 
                     
             except Exception as e:
@@ -103,8 +128,10 @@ class Main(threading.Thread):
 
 def init(hostname):
     crystal.init()
-
-    main = Main(hostname)
+    gainRampThread = GainRampThread()
+    gainRampThread.daemon = True
+    gainRampThread.start()
+    main = Main(hostname, gainRampThread)
     main.daemon = True
     main.start()
     return main
