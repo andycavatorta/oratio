@@ -130,11 +130,8 @@ def set_volume (ch, level):
 def set_volume_master(level):
   # get binary representation of level
   level_bin = bin(int(level))[2:].zfill(8);
-  print level_bin
-  print bb_mosi, bb_sck
 
   for i in xrange(16):
-    print int(0 if i > 7 else int(level_bin[i]))
     wpi.digitalWrite(bb_mosi, 0 if i > 7 else int(level_bin[i]))
     wpi.digitalWrite(bb_sck, 1)
     wpi.digitalWrite(bb_sck, 0)
@@ -145,5 +142,6 @@ def measure_xtal_freq():
   if not ser.inWaiting(): return None
 
   while ser.inWaiting():
-    xtal_freq = float(ser.readline().strip())
-  return xtal_freq / 10.0
+    raw = ser.readline()
+
+  return None if len(raw) < 7 else float(raw.strip()) / 10.0
