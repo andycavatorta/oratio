@@ -33,7 +33,7 @@ class MCP3008s(object):
     def scan_all(self):
         for chip_select_pin in self.chip_select_pins:
             for adc_number in range(8):
-                print self.read(chip_select_pin, adc_number)
+                print chip_select_pin, adc_number, self.read(chip_select_pin, adc_number)
 
 
 spi_clock_pin  = 11
