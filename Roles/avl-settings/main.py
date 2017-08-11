@@ -142,7 +142,7 @@ class Potentiometers(threading.Thread):
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
                     print adc, channel, self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
-            time.sleep(1)
+            time.sleep(0.1)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
