@@ -169,10 +169,6 @@ class BitBang(object):
             gpio.setup(mosi, GPIO.OUT)
         if miso is not None:
             gpio.setup(miso, GPIO.IN)
-        if ss is not None:
-            gpio.setup(ss, GPIO.OUT)
-            # Assert SS high to start with device communication off.
-            gpio.set_high(ss)
         # Assume mode 0.
         self.set_mode(0)
         # Assume most significant bit first order.

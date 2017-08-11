@@ -10,6 +10,9 @@ class MCP3008s(object):
         self._spi.set_clock_hz(1000000)
         self._spi.set_mode(0)
         self._spi.set_bit_order(SPI.MSBFIRST)
+        for chip_select_pin in chip_select_pins:
+            self.gpio.setup(chip_select_pin, GPIO.OUT)
+            self.gpio.set_high(chip_select_pin)
 
     def read(self, chip_select_pin, adc_number):
         assert 0 <= adc_number <= 7, 'ADC number must be a value of 0-7!'
