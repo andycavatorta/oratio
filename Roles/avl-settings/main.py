@@ -105,23 +105,23 @@ class Potentiometers(threading.Thread):
                 ""
             ],
             [
-                "",
-                "voice_3_overtone_2_harmonic",
-                "voice_3_overtone_2_volume",
-                "voice_3_overtone_1_fine",
-                "voice_3_overtone_1_harmonic",
-                "voice_3_overtone_1_volume",
+                "voice_3_root_harmonic",
                 "voice_3_root_fine",
-                "voice_3_root_harmonic"
+                "voice_3_overtone_1_volume",
+                "voice_3_overtone_1_harmonic",
+                "voice_3_overtone_1_fine",
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_2_harmonic",
+                ""
             ],
             [
-                "",
-                "",
-                "voice_3_formant_front_back",
-                "voice_3_formant_open_close",
-                "voice_3_formant_pitch",
-                "voice_3_formant_volume",
                 "voice_3_overtone_2_fine",
+                "voice_3_formant_volume",
+                "voice_3_formant_pitch",
+                "voice_3_formant_open_close",
+                "voice_3_formant_front_back",
+                "",
+                "",
                 ""
             ]
         ]
