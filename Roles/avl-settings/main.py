@@ -138,13 +138,10 @@ class Potentiometers(threading.Thread):
     def run(self):
         while True:
             all_adc_values =  self.mcp3008s.scan_all()
+            print all_adc_values
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
-                    print all_adc_values
-                    print""
                     print self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
-                    print""
-                    print""
             time.sleep(1)
 
 class Network(object):
