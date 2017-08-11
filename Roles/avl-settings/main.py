@@ -54,13 +54,103 @@ class MCP3008s(object):
         return result & 0x3FF
 
     def scan_all(self):
+        adcs = []
         for chip_select_pin in self.chip_select_pins:
+            channels = []
             for adc_number in range(8):
-                print self.read(chip_select_pin, adc_number)
+                channels.append(self.read(chip_select_pin, adc_number))
+            adcs.append(channels)
+        return adcs
 
 
+class Potentiometers(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.spi_clock_pin = 11
+        self.miso_pin = 9
+        self.mosi_pin = 10
+        self.chip_select_pins = [7,8,12,16,20,21]
+        self.potentiometers_layout  = [
+            [
+                "",
+                "voice_1_overtone_2_harmonic",
+                "voice_1_overtone_2_volume",
+                "voice_1_overtone_1_fine",
+                "voice_1_overtone_1_harmonic",
+                "voice_1_overtone_1_volume",
+                "voice_1_root_fine",
+                "voice_1_root_harmonic"
+            ],
+            [
+                "",
+                "",
+                "voice_1_formant_front_back",
+                "voice_1_formant_open_close",
+                "voice_1_formant_pitch",
+                "voice_1_formant_volume",
+                "voice_1_overtone_2_fine",
+                ""
+            ],
+            [
+                "",
+                "voice_2_overtone_2_harmonic",
+                "voice_2_overtone_2_volume",
+                "voice_2_overtone_1_fine",
+                "voice_2_overtone_1_harmonic",
+                "voice_2_overtone_1_volume",
+                "voice_2_root_fine",
+                "voice_2_root_harmonic"
+            ],
+            [
+                "",
+                "",
+                "voice_2_formant_front_back",
+                "voice_2_formant_open_close",
+                "voice_2_formant_pitch",
+                "voice_2_formant_volume",
+                "voice_2_overtone_2_fine",
+                ""
+            ],
+            [
+                "",
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_1_fine",
+                "voice_3_overtone_1_harmonic",
+                "voice_3_overtone_1_volume",
+                "voice_3_root_fine",
+                "voice_3_root_harmonic"
+            ],
+            [
+                "",
+                "",
+                "voice_3_formant_front_back",
+                "voice_3_formant_open_close",
+                "voice_3_formant_pitch",
+                "voice_3_formant_volume",
+                "voice_3_overtone_2_fine",
+                ""
+            ]
+        ]
+        self.potentiometer_last_value  = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0]
+        ]
+        self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins)
+    
+    def run(self):
+        while True:
+            all_adc_values =  self.mcp3008s.scan_all()
+            for adc in all_adc_values:
+                for channel in range(8):
+                    print self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
+            time.sleep(1)
 
-
+    
 class Potentiometer(object):
     def __init__(self, name, adc, channel_number):
         self.name = name
