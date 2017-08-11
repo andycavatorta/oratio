@@ -101,9 +101,10 @@ class Buttons(object):
         for button in self.buttons:
             name, state = button.get_state()
             if state is not None:
-                print "button change:", name, state
                 button_states.append((name, state))
         return button_states
+        print "button:", name, state
+        print "button_states:", button_states
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
