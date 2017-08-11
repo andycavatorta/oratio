@@ -39,7 +39,7 @@ class MCP3008s(object):
 spi_clock_pin  = 11
 miso_pin = 9
 mosi_pin = 10
-chip_select_pins = [8,7]
+chip_select_pins = [8,7, 12, 16, 20, 20]
 
 mcp3008s = MCP3008s(spi_clock_pin, miso_pin, mosi_pin, chip_select_pins)
 
