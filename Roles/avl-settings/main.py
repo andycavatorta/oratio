@@ -65,43 +65,43 @@ class Potentiometers(threading.Thread):
         self.chip_select_pins = [7,8,12,16,20,21]
         self.potentiometers_layout  = [
             [
-                "",
-                "voice_1_overtone_2_harmonic",
-                "voice_1_overtone_2_volume",
-                "voice_1_overtone_1_fine",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_overtone_1_volume",
+                "voice_1_root_harmonic",
                 "voice_1_root_fine",
-                "voice_1_root_harmonic"
+                "voice_1_overtone_1_volume",
+                "voice_1_overtone_1_harmonic",
+                "voice_1_overtone_1_fine",
+                "voice_1_overtone_2_volume",
+                "voice_1_overtone_2_harmonic",
+                ""
             ],
             [
                 "",
                 "",
                 "voice_1_formant_front_back",
                 "voice_1_formant_open_close",
-                "voice_1_formant_pitch",
+                "voice_1_formant_pitch",                
                 "voice_1_formant_volume",
-                "voice_1_overtone_2_fine",
+                "voice_1_overtone_2_fine", 
                 ""
             ],
             [
-                "",
-                "voice_2_overtone_2_harmonic",
-                "voice_2_overtone_2_volume",
-                "voice_2_overtone_1_fine",
-                "voice_2_overtone_1_harmonic",
-                "voice_2_overtone_1_volume",
+                "voice_2_root_harmonic",
                 "voice_2_root_fine",
-                "voice_2_root_harmonic"
+                "voice_2_overtone_1_volume",
+                "voice_2_overtone_1_harmonic",
+                "voice_2_overtone_1_fine",
+                "voice_2_overtone_2_volume",
+                "voice_2_overtone_2_harmonic",
+                ""
             ],
             [
                 "",
                 "",
                 "voice_2_formant_front_back",
                 "voice_2_formant_open_close",
-                "voice_2_formant_pitch",
+                "voice_2_formant_pitch",                
                 "voice_2_formant_volume",
-                "voice_2_overtone_2_fine",
+                "voice_2_overtone_2_fine", 
                 ""
             ],
             [
@@ -122,7 +122,7 @@ class Potentiometers(threading.Thread):
                 "voice_3_formant_pitch",                
                 "voice_3_formant_volume",
                 "voice_3_overtone_2_fine", 
-                "",
+                ""
             ]
         ]
         self.potentiometer_last_value  = [
