@@ -65,6 +65,7 @@ class Potentiometers(threading.Thread):
         self.chip_select_pins = [8,7,12,16,20,21]
         self.potentiometers_layout  = [
             [
+                ""
                 "voice_1_root_harmonic",
                 "voice_1_root_fine",
                 "voice_1_overtone_1_volume",
@@ -72,7 +73,6 @@ class Potentiometers(threading.Thread):
                 "voice_1_overtone_1_fine",
                 "voice_1_overtone_2_volume",
                 "voice_1_overtone_2_harmonic",
-                ""
             ],
             [
                 "",
