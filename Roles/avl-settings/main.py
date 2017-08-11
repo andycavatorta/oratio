@@ -1,5 +1,5 @@
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_MCP3008
+import Adafruit_GPIO as GPIO
+import adafruit_spi_modified as SPI
 import os
 import Queue
 import settings
@@ -7,6 +7,7 @@ import time
 import threading
 import traceback
 import sys
+
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -18,105 +19,130 @@ sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
-class Potentiometer(object):
-    def __init__(self, name, adc, channel_number):
-        self.name = name
-        self.adc = adc
-        self.channel_number = channel_number
-        self.last_value = -1
-        self.threshold_of_change = 15
-    def get_change(self):
-        current_value = self.adc.read_adc(self.channel_number)
-        change_in_value = abs(self.last_value - current_value)
-        self.last_value = current_value
-        return  current_value if abs(self.last_value - current_value) >= self.threshold_of_change else None
-    def get_name(self):
-        return self.name
-    
-class ADC(object): 
-    def __init__(self, chip_select_pin, potentiometer_names):
-        pin_values = [0] * 8
-        self.chip_select_pin = chip_select_pin
-        CLK  = 18
-        MISO = 23
-        MOSI = 24
-        self.adc = Adafruit_MCP3008.MCP3008(clk=CLK, cs=chip_select_pin, miso=MISO, mosi=MOSI)
-        self.potentiometers = [Potentiometer(potentiometer_names[i], self.adc, i) for i in range(len(potentiometer_names) ) ]
+class MCP3008s(object):
+    def __init__(self, spi_clock_pin, miso_pin, mosi_pin, chip_select_pins):
+        self.gpio = GPIO.get_platform_gpio()
+        self.chip_select_pins = chip_select_pins
+        self._spi = SPI.BitBang(self.gpio, spi_clock_pin, mosi_pin, miso_pin)
+        self._spi.set_clock_hz(1000000)
+        self._spi.set_mode(0)
+        self._spi.set_bit_order(SPI.MSBFIRST)
+        for chip_select_pin in chip_select_pins:
+            self.gpio.setup(chip_select_pin, GPIO.OUT)
+            self.gpio.set_high(chip_select_pin)
 
-    def get_changes(self):
-        changes_in_value = []
-        for potentiometer in self.potentiometers:
-            change_in_value = potentiometer.get_change()
-            if change_in_value is not None:
-                changes_in_value.append([potentiometer.get_name(), change_in_value])
-        return changes_in_value
+    def read(self, chip_select_pin, adc_number):
+        assert 0 <= adc_number <= 7, 'ADC number must be a value of 0-7!'
+        # Build a single channel read command.
+        # For example channel zero = 0b11000000
+        command = 0b11 << 6                  # Start bit, single channel read
+        command |= (adc_number & 0x07) << 3  # Channel number (in 3 bits)
+        # Note the bottom 3 bits of command are 0, this is to account for the
+        # extra clock to do the conversion, and the low null bit returned at
+        # the start of the response.
+        resp = self._spi.transfer(chip_select_pin,[command, 0x0, 0x0])
+        # Parse out the 10 bits of response data and return it.
+        result = (resp[0] & 0x01) << 9
+        result |= (resp[1] & 0xFF) << 1
+        result |= (resp[2] & 0x80) >> 7
+        return result & 0x3FF
 
-class ADCS(threading.Thread):
-    def __init__(self, network_send_ref):
+    def scan_all(self):
+        adcs = []
+        for chip_select_pin in self.chip_select_pins:
+            channels = []
+            for adc_number in range(8):
+                channels.append(self.read(chip_select_pin, adc_number))
+            adcs.append(channels)
+        return adcs
+
+class Potentiometers(threading.Thread):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.network_send_ref = network_send_ref
-        chip_select_pins = [21]
-        #chip_select_pins = [21,22,23,24,25,26]
-        potentiometer_names = [
+        self.spi_clock_pin = 11
+        self.miso_pin = 9
+        self.mosi_pin = 10
+        self.chip_select_pins = [7,8,12,16,20,21]
+        self.potentiometers_layout  = [
             [
+                "",
+                "voice_1_overtone_2_harmonic",
+                "voice_1_overtone_2_volume",
+                "voice_1_overtone_1_fine",
+                "voice_1_overtone_1_harmonic",
+                "voice_1_overtone_1_volume",
+                "voice_1_root_fine",
                 "voice_1_root_harmonic"
-                "voice_1_root_fine"
-                "voice_1_overtone_1_harmonic"
-                "voice_1_overtone_1_fine"
-                "voice_1_overtone_1_volume"
-                "voice_1_overtone_2_harmonic"
-             ],
-             [   
-                "voice_1_overtone_2_fine"
-                "voice_1_overtone_2_volume"
-                "voice_1_formant_volume"
-                "voice_1_formant_pitch"
-                "voice_1_formant_open_close"
-                "voice_1_formant_front_back"
             ],
             [
+                "",
+                "",
+                "voice_1_formant_front_back",
+                "voice_1_formant_open_close",
+                "voice_1_formant_pitch",
+                "voice_1_formant_volume",
+                "voice_1_overtone_2_fine",
+                ""
+            ],
+            [
+                "",
+                "voice_2_overtone_2_harmonic",
+                "voice_2_overtone_2_volume",
+                "voice_2_overtone_1_fine",
+                "voice_2_overtone_1_harmonic",
+                "voice_2_overtone_1_volume",
+                "voice_2_root_fine",
                 "voice_2_root_harmonic"
-                "voice_2_root_fine"
-                "voice_2_overtone_1_harmonic"
-                "voice_2_overtone_1_fine"
-                "voice_2_overtone_1_volume"
-                "voice_2_overtone_2_harmonic"
-             ],
-             [   
-                "voice_2_overtone_2_fine"
-                "voice_2_overtone_2_volume"
-                "voice_2_formant_volume"
-                "voice_2_formant_pitch"
-                "voice_2_formant_open_close"
-                "voice_2_formant_front_back"
             ],
             [
+                "",
+                "",
+                "voice_2_formant_front_back",
+                "voice_2_formant_open_close",
+                "voice_2_formant_pitch",
+                "voice_2_formant_volume",
+                "voice_2_overtone_2_fine",
+                ""
+            ],
+            [
+                "",
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_1_fine",
+                "voice_3_overtone_1_harmonic",
+                "voice_3_overtone_1_volume",
+                "voice_3_root_fine",
                 "voice_3_root_harmonic"
-                "voice_3_root_fine"
-                "voice_3_overtone_1_harmonic"
-                "voice_3_overtone_1_fine"
-                "voice_3_overtone_1_volume"
-                "voice_3_overtone_2_harmonic"
-             ],
-             [   
-                "voice_3_overtone_2_fine"
-                "voice_3_overtone_2_volume"
-                "voice_3_formant_volume"
-                "voice_3_formant_pitch"
-                "voice_3_formant_open_close"
-                "voice_3_formant_front_back"
+            ],
+            [
+                "",
+                "",
+                "voice_3_formant_front_back",
+                "voice_3_formant_open_close",
+                "voice_3_formant_pitch",
+                "voice_3_formant_volume",
+                "voice_3_overtone_2_fine",
+                ""
             ]
         ]
-        self.adcs = [ADC(chip_select_pins[i], potentiometer_names[i]) for i in range(len(chip_select_pins))]
-
+        self.potentiometer_last_value  = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0]
+        ]
+        self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins)
+    
     def run(self):
         while True:
-            for adc in self.adcs:
-                changes = adc.get_changes()
-                for change in changes:
-                    topic, value = change
-                    self.self.network_send_ref(topic, value)
-                time.sleep(0.01)
+            all_adc_values =  self.mcp3008s.scan_all()
+            print all_adc_values
+            for adc in range(len(all_adc_values)):
+                for channel in range(8):
+                    print self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
+            time.sleep(1)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -139,9 +165,9 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.network.thirtybirds.subscribe_to_topic("door_closed")
-        self.adcs = ADCS(self.network.thirtybirds.send)
-        self.adcs.daemon = True
-        self.adcs.start()
+        self.potentiometers = Potentiometers() # self.network.thirtybirds.send
+        self.potentiometers.daemon = True
+        self.potentiometers.start()
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.

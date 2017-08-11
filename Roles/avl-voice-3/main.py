@@ -1,206 +1,119 @@
-"""
-TASKS:
-    init:
-        maintain SSH tunnel to conductor
-        listen to Web API
-        open DB connection
-    runtime:
-        maintain DB of inventory histories?
-        generate HTML reports
-        serve reports on request
-
-API for conductor:
-    receive_inventory_and_map
-
-Dashboard:
-    web interface
-    websocket push
-    status of all camera_units
-        connected
-        current status ( color coded )
-        inventory
-        exceptions
-
-"""
-
-
-
-
-import importlib
-import json
 import os
-import settings 
 import sys
+import settings
+import traceback
 import threading
-import time
-
-import crystal_helpers as c
-
-from thirtybirds_2_0.Network.manager import init as network_init
-from thirtybirds_2_0.Network.email_simple import init as email_init
+import Queue
+import crystal_helpers as crystal
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
-THIRTYBIRDS_PATH = "%s/thirtybirds" % (UPPER_PATH )
+THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
 
 sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
-global last_f1
-global last_f2
-global last_f3
+from thirtybirds_2_0.Network.manager import init as network_init
 
-offset = 167480
+class Network(object):
+    def __init__(self, hostname, network_message_handler, network_status_handler):
+        self.hostname = hostname
+        self.thirtybirds = network_init(
+            hostname=hostname,
+            role="client",
+            discovery_multicastGroup=settings.discovery_multicastGroup,
+            discovery_multicastPort=settings.discovery_multicastPort,
+            discovery_responsePort=settings.discovery_responsePort,
+            pubsub_pubPort=settings.pubsub_pubPort,
+            message_callback=network_message_handler,
+            status_callback=network_status_handler
+        )
 
-#offset = 167489
 
-"""
+# Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
-        self.hostname = hostname
-        ### NETWORK ###
+        self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
+        self.queue = Queue.Queue()
 
-        ### SET UP SUBSCRIPTIONS AND LISTENERS ###
+        # default intermediate frequency
+        self.xtal_freq = 96131.8
+        self.f_offset = 0           # adjust output freq
 
-        ### SET UP ATTAR ### so any exceptions can be reported
+        # get voice messages
+        self.network.thirtybirds.subscribe_to_topic("voice_3")
+
+    def network_message_handler(self, topic_msg):
+        # this method runs in the thread of the caller, not the tread of Main
+        topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
+        if len(msg) > 0: 
+            msg = eval(msg)
+        self.add_to_queue(topic, msg)
+
+    def network_status_handler(self, topic_msg):
+        # this method runs in the thread of the caller, not the tread of Main
+        print "Main.network_status_handler", topic_msg
+
+    def add_to_queue(self, topic, msg):
+        self.queue.put((topic, msg))
 
     def run(self):
         while True:
-            time.sleep(60)
+            try:
+                topic, msg = self.queue.get(True)
+                if topic == "voice_3":
 
-        ###  ###
-"""
+                    params = []
 
-class FPGA():
-    def __init__(
-        self, 
-        spi_chipeselect, 
-        spi_masterslave
-    ):
-        self.spi_chipeselect = spi_chipeselect
-        self.spi_masterslave = spi_masterslave
-        self.spi_connection = None # to do
-        # create SPI connection
-    def send(self, filter_a, filter_b):
-        #self.spi_connection.send
-        print "FPGA: ", filter_a, filter_b
+                    # mute if volume is below threshold
+                    thresh = [0.01, 0.1, 0.1]
+                    for i in xrange(6):
+                        param = 0 if msg[1] < thresh[0] else msg[i]                   # master
+                        param = 0 if msg[3] < thresh[1] and i in (2,3) else param     # subvoice 1
+                        param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
+                        params.append(param)
 
-class TONE():
-    def __init__(
-        self, 
-        spi_chipeselect_for_dac, 
-        spi_masterslave_for_dac
-    ):
-        self.spi_chipeselect_for_dac = spi_chipeselect_for_dac
-        self.spi_masterslave_for_dac = spi_masterslave_for_dac
-        self.spi_connection = None # to do
+                    
+                    freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
 
-    def send(self, freq, vol):
-        #self.spi_connection.send
-        print "TONE: ", freq, vol
+                    # update intermediate frequency if new data is available
+                    self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
 
-# class TONES():
-#     def __init__(
-#         self, 
-#         spi_chipeselect_for_dac_1, 
-#         spi_masterslave_for_dac_1,
-#         spi_chipeselect_for_dac_2, 
-#         spi_masterslave_for_dac_2,
-#         spi_chipeselect_for_dac_3, 
-#         spi_masterslave_for_dac_3,
-#         spi_chipeselect_for_fpga, 
-#         spi_masterslave_for_fpga
-#     ):
-#         self.tone_1 = TONE(spi_chipeselect_for_dac_1, spi_masterslave_for_dac_1)
-#         self.tone_2 = TONE(spi_chipeselect_for_dac_2 , spi_masterslave_for_dac_2)
-#         self.tone_3 = TONE(spi_chipeselect_for_dac_3, spi_masterslave_for_dac_3)
-#         self.fpga = FPGA(spi_chipeselect_for_fpga,spi_masterslave_for_fpga)
+                    print params, self.xtal_freq
 
-#     def send(self, multi_msg):
-#         self.tone_1.send(multi_msg[0],multi_msg[1])
-#         self.tone_2.send(multi_msg[2],multi_msg[3])
-#         self.tone_3.send(multi_msg[4],multi_msg[5])
-#         self.fpga.send(multi_msg[6],multi_msg[7])
+                    # subvoice 1 (fundamental) frequency and voice volume
+                    crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
+                    crystal.set_volume(0, map_master_volume(vol))
 
-# tones = TONES(
-#         , #spi_chipeselect_for_dac_1, 
-#         0, #spi_masterslave_for_dac_1,
-#         , #spi_chipeselect_for_dac_2, 
-#         0, #spi_masterslave_for_dac_2,
-#         , #spi_chipeselect_for_dac_3, 
-#         0, #spi_masterslave_for_dac_3,
-#         , #spi_chipeselect_for_fpga, 
-#          #spi_masterslave_for_fpga
-# )
+                    # subvoice 2 frequency and volume
+                    crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
+                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
 
-def network_status_handler(msg):
-    print "network_status_handler", msg
+                    # subvoice 3 frequency and volume
+                    crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
+                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
 
-def network_message_handler(msg):
-    global offset
-    #print "network_message_handler", msg
-    topic = msg[0]
-    #host, sensor, data = yaml.safe_load(msg[1])
-    if topic == "__heartbeat__":
-        print "heartbeat received", msg
-    
-    if topic == "voice_3":
-        # tones.send(eval(msg[1]))
-
-        # quick hack -- will make this better later!
-        payload = eval(msg[1])
-        freq_1, gain, freq_2, vol_2, freq_3, vol_3, cutoff_raw, pband = payload
-
-        if (gain > 0.05):
-            c.send_freq(0, offset-int(freq_1))
-            c.send_freq(1, offset-int(freq_2))
-            c.send_freq(2, offset-int(freq_3))
-            c.set_levels(0, 0 if gain < 0.1 else int(240.0 * payload[1]))
-            c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
-            c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
-        else:
-            c.send_freq(0, 0)
-            c.send_freq(1, 0)
-            c.send_freq(2, 0)
-            c.set_levels(0, 0)
-            c.set_levels(1, 0)
-            c.set_levels(2, 0)
+                    
+            except Exception as e:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 
-        cutoff_freq = (cutoff_raw - 0.5) * freq_1 + freq_1
-        adj_period = 1e6 / (cutoff_freq * 100)
-        c.pport_write(1, adj_period)
-        c.pband_size(pband/255)
+def init(hostname):
+    crystal.init()
 
-network = None # makin' it global
+    main = Main(hostname)
+    main.daemon = True
+    main.start()
+    return main
 
-def init(HOSTNAME):
-    c.init()
+def map_subvoice_volume(level):
+    return map_volume(level, 154, 100)
 
-    c.send_freq(0, 0)
-    c.send_freq(1, 0)
-    c.send_freq(2, 0)
+def map_master_volume(level,):
+    return map_volume(level, 100, 100)
 
-    c.set_levels(0, 0)
-    c.set_levels(1, 0)
-    c.set_levels(2, 0)
-
-    global network
-    network = network_init(
-        hostname=HOSTNAME,
-        role="client",
-        discovery_multicastGroup=settings.discovery_multicastGroup,
-        discovery_multicastPort=settings.discovery_multicastPort,
-        discovery_responsePort=settings.discovery_responsePort,
-        pubsub_pubPort=settings.pubsub_pubPort,
-        message_callback=network_message_handler,
-        status_callback=network_status_handler
-    )
-
-    network.subscribe_to_topic("system")  # subscribe to all system messages
-    network.subscribe_to_topic("voice_3")
-    #main = Main(HOSTNAME)
-    #main.start()
-
+def map_volume(level, min, scale):
+    return 0 if level == 0 else min + level * scale
