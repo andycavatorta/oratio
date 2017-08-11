@@ -103,8 +103,6 @@ class Buttons(object):
             if state is not None:
                 button_states.append((name, state))
         return button_states
-        print "button:", name, state
-        print "button_states:", button_states
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
@@ -167,6 +165,8 @@ class Main(threading.Thread):
                         if key_number == 2 and self.staccato_3:
                             voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
                         print key_number, voice_key_new_position
+                        print "button:", name, state
+						print "button_states:", button_states
                         self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
                 time.sleep(0.01)
