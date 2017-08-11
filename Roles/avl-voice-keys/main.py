@@ -114,8 +114,8 @@ class Main(threading.Thread):
         defs = [
             ("hold", 26),
             ("staccato_3", 19),
-            ("staccato_2", 13),
-            ("staccato_1", 06),
+            ("staccato_2", 06),
+            ("staccato_1", 13),
         ]
         self.buttons = Buttons(defs)
         self.hold = False
