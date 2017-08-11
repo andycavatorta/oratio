@@ -101,6 +101,7 @@ class Buttons(object):
         for button in self.buttons:
             name, state = button.get_state()
             if state is not None:
+                print "button change:", name, state
                 button_states.append((name, state))
         return button_states
 
