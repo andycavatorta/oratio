@@ -6,7 +6,7 @@ class MCP3008s(object):
     def __init__(self, spi_clock_pin, miso_pin, mosi_pin, chip_select_pins):
         self.gpio = GPIO.get_platform_gpio()
         self.chip_select_pins = chip_select_pins
-        self._spi = SPI.BitBang(gpio, spi_clock_pin, mosi_pin, miso_pin)
+        self._spi = SPI.BitBang(self.gpio, spi_clock_pin, mosi_pin, miso_pin)
         self._spi.set_clock_hz(1000000)
         self._spi.set_mode(0)
         self._spi.set_bit_order(SPI.MSBFIRST)
