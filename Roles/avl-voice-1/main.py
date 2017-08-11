@@ -101,6 +101,31 @@ class TONE():
         #self.spi_connection.send
         print "TONE: ", freq, vol
 
+class GainRampThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.currentGains = [0x00, 0x00, 0x00]
+        self.target = [0x00, 0x00, 0x00]
+        self.rampTimePerIncrement = 0.001
+
+    def setRampTime(self, r):
+        self.rampTimePerIncrement = r;
+
+    def setTargetGain(self, crystalIndex, gain):
+        self.target = t & 0xFF
+
+    def run(self):
+        while True:
+            for i in range(0, 3):
+                if (self.targetGains[i] > self.currentGains[i]):
+                    self.currentGains[i] = self.currentGains[i] + 1
+                    c.set_levels(i, self.currentGains[i])
+                elif (self.targetGains[i] < self.currentGains[i]):
+                    self.currentGains[i] = self.currentGains[i] - 1
+            time.sleep(self.rampTimePerIncrement)
+
+gainRampThread = GainRampThread()
+
 # class TONES():
 #     def __init__(
 #         self, 
@@ -139,7 +164,7 @@ def network_status_handler(msg):
     print "network_status_handler", msg
 
 def network_message_handler(msg):
-    global offset
+    global offset, gainRampThread
     print "network_message_handler", msg
     topic = msg[0]
     #host, sensor, data = yaml.safe_load(msg[1])
@@ -157,16 +182,16 @@ def network_message_handler(msg):
             c.send_freq(0, offset-int(freq_1))
             c.send_freq(1, offset-int(freq_2))
             c.send_freq(2, offset-int(freq_3))
-            c.set_levels(0, 0 if gain < 0.1 else int(240.0 * payload[1]))
-            c.set_levels(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
-            c.set_levels(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
+            gainRampThread.setTargetGain(0, 0 if gain < 0.1 else int(240.0 * payload[1]))
+            gainRampThread.setTargetGain(1, 0 if vol_2 < 0.1 else int(255.0 * vol_2))
+            gainRampThread.setTargetGain(2, 0 if vol_3 < 0.1 else int(255.0 * vol_3))
         else:
             c.send_freq(0, 0)
             c.send_freq(1, 0)
             c.send_freq(2, 0)
-            c.set_levels(0, 0)
-            c.set_levels(1, 0)
-            c.set_levels(2, 0)
+            gainRampThread.setTargetGain(0, 0)
+            gainRampThread.setTargetGain(1, 0)
+            gainRampThread.setTargetGain(2, 0)
         """
         #offset = 119104.6
         #print offset-int(payload[0])
@@ -219,9 +244,13 @@ def init(HOSTNAME):
     c.send_freq(1, 0)
     c.send_freq(2, 0)
 
-    c.set_levels(0, 0)
-    c.set_levels(1, 0)
-    c.set_levels(2, 0)
+    gainRampThread = GainRampThread()
+    gainRampThread.daemon = True
+    gainRampThread.start()
+
+    gainRampThread.setTargetGain(0, 0)
+    gainRampThread.setTargetGain(1, 0)
+    gainRampThread.setTargetGain(2, 0)
 
     global network
     network = network_init(
