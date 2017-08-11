@@ -36,10 +36,5 @@ def test_adc(chip_select_pin):
         # Pause for half a second.
         #time.sleep(0.1)
 
-
 for chip_select_pin in [8,7,8,7,8,7,8,7,8,7]:
     test_adc(chip_select_pin)
-
-
-
-
