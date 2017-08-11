@@ -1,5 +1,3 @@
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_MCP3008
 import os
 import Queue
 import settings
@@ -7,6 +5,7 @@ import time
 import threading
 import traceback
 import sys
+import wiringpi as wpi
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -17,6 +16,24 @@ sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
+
+
+
+
+
+
+class MCP3008(object):
+    def __init__(self, clk, miso, mosi, chip_select_pins):
+        
+
+
+
+
+    def read(self, chip_select_pin, adc_number):
+
+
+
+
 
 class Potentiometer(object):
     def __init__(self, name, adc, channel_number):
