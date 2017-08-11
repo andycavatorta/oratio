@@ -19,23 +19,17 @@ sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
-
-
-
-
-
 class MCP3008s(object):
     def __init__(self, spi_clock_pin, miso_pin, mosi_pin, chip_select_pins):
         self.gpio = GPIO.get_platform_gpio()
         self.chip_select_pins = chip_select_pins
-        self._spi = SPI.BitBang(gpio, spi_clock_pin, mosi_pin, miso_pin)
+        self._spi = SPI.BitBang(self.gpio, spi_clock_pin, mosi_pin, miso_pin)
         self._spi.set_clock_hz(1000000)
         self._spi.set_mode(0)
         self._spi.set_bit_order(SPI.MSBFIRST)
         for chip_select_pin in chip_select_pins:
             self.gpio.setup(chip_select_pin, GPIO.OUT)
             self.gpio.set_high(chip_select_pin)
-
 
     def read(self, chip_select_pin, adc_number):
         assert 0 <= adc_number <= 7, 'ADC number must be a value of 0-7!'
@@ -61,7 +55,6 @@ class MCP3008s(object):
                 channels.append(self.read(chip_select_pin, adc_number))
             adcs.append(channels)
         return adcs
-
 
 class Potentiometers(threading.Thread):
     def __init__(self):
@@ -150,7 +143,6 @@ class Potentiometers(threading.Thread):
                     print self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
             time.sleep(1)
 
-    
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
