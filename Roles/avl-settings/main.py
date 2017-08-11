@@ -117,12 +117,12 @@ class Potentiometers(threading.Thread):
             [
                 "",
                 "",
-                "",
                 "voice_3_formant_front_back",
                 "voice_3_formant_open_close",
                 "voice_3_formant_pitch",                
                 "voice_3_formant_volume",
-                "voice_3_overtone_2_fine"
+                "voice_3_overtone_2_fine", 
+                "",
             ]
         ]
         self.potentiometer_last_value  = [
