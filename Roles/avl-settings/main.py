@@ -117,14 +117,14 @@ class Potentiometers(threading.Thread):
                 ""
             ],
             [
-                "layer_speed",
+                "",
                 "",
                 "voice_3_formant_front_back",
                 "voice_3_formant_open_close",
                 "voice_3_formant_pitch",                
                 "voice_3_formant_volume",
                 "voice_3_overtone_2_fine", 
-                "layer_speed_2"
+                "layer_speed"
             ]
         ]
         self.potentiometer_last_value  = [
@@ -144,9 +144,11 @@ class Potentiometers(threading.Thread):
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
                     adc_value = 1023 - all_adc_values[adc][channel]
-                    if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
-                        self.network_send_ref(self.potentiometers_layout[adc][channel], adc_value/1023.0)
-                        print adc, channel, self.potentiometers_layout[adc][channel], adc_value
+                    potentiometer_name = self.potentiometers_layout[adc][channel]
+                    if potentiometer_name != "":
+                        if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
+                            self.network_send_ref(, adc_value/1023.0)
+                            print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.1)
 
