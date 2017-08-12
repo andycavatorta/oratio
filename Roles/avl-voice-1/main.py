@@ -38,9 +38,11 @@ class GainRampThread(threading.Thread):
             for i in range(0, 3):
                 if (self.targetGains[i] > self.currentGains[i]):
                     self.currentGains[i] = self.currentGains[i] + 1
+                    print "GainRampThread", i, self.currentGains[i]
                     crystal.set_volume(i, self.currentGains[i])
                 elif (self.targetGains[i] < self.currentGains[i]):
                     self.currentGains[i] = self.currentGains[i] - 1
+                    print "GainRampThread", i, self.currentGains[i]
                     crystal.set_volume(i, self.currentGains[i])
             time.sleep(self.rampTimePerIncrement)
 
@@ -66,11 +68,9 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.gainRampThread = gainRampThread
-
         # default intermediate frequency
         self.xtal_freq = 167465.0
         self.f_offset = 0           # adjust output freq
-
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_1")
 
@@ -93,9 +93,7 @@ class Main(threading.Thread):
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "voice_1":
-
                     params = []
-
                     # mute if volume is below threshold
                     thresh = [0.01, 0.1, 0.1]
                     for i in xrange(6):
@@ -103,27 +101,19 @@ class Main(threading.Thread):
                         param = 0 if msg[3] < thresh[1] and i in (2,3) else param     # subvoice 1
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
-
-                    
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
-
                     # update intermediate frequency if new data is available
                     self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
-
                     print params, self.xtal_freq
-
                     # subvoice 1 (fundamental) frequency and voice volume
                     crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
                     self.gainRampThread.setTargetGain(0, map_master_volume(vol))
-
                     # subvoice 2 frequency and volume
                     crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
                     self.gainRampThread.setTargetGain(1, map_subvoice_volume(vol_sub1))
-
                     # subvoice 3 frequency and volume
                     crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
                     self.gainRampThread.setTargetGain(2, map_subvoice_volume(vol_sub2))
-
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
