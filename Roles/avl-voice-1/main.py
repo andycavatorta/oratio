@@ -1,10 +1,12 @@
+
+import crystal_helpers as crystal
 import os
+import Queue
 import sys
 import settings
+import time
 import traceback
 import threading
-import Queue
-import crystal_helpers as crystal
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -25,7 +27,7 @@ class GainRampThread(threading.Thread):
         self.queue = Queue.Queue()
 
     def setRampTime(self, r):
-        self.rampTimePerIncrement = r;
+        self.rampTimePerIncrement = r
 
     def setTargetGain(self, crystalIndex, gain):
         print "setTargetGain", crystalIndex, gain
@@ -56,7 +58,7 @@ class GainRampThread(threading.Thread):
                     print "----> 8"
                     crystal.set_volume(i, self.currentGains[i])
                     print "----> 9"
-            time.sleep(self.rampTimePerIncrement)
+            time.sleep(rampTimePerIncrement)
             print "----> 10"
 
 class Network(object):
