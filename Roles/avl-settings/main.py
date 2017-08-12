@@ -59,6 +59,7 @@ class MCP3008s(object):
 class Potentiometers(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
+        self.noise_threshold = 5
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
@@ -141,7 +142,10 @@ class Potentiometers(threading.Thread):
             print all_adc_values
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
-                    print adc, channel, self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
+                    adc_value = 1023 - all_adc_values[adc][channel]
+                    if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
+                        print adc, channel, self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
+                    self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.1)
 
 class Network(object):
