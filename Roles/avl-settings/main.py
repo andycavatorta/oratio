@@ -57,9 +57,10 @@ class MCP3008s(object):
         return adcs
 
 class Potentiometers(threading.Thread):
-    def __init__(self):
+    def __init__(self, network_send_ref):
         threading.Thread.__init__(self)
-        self.noise_threshold = 5
+        self.network_send_ref = network_send_ref
+        self.noise_threshold = 10
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
@@ -144,6 +145,7 @@ class Potentiometers(threading.Thread):
                 for channel in range(8):
                     adc_value = 1023 - all_adc_values[adc][channel]
                     if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
+                        self.network_send_ref(self.potentiometers_layout[adc][channel], adc_value/1023.0)
                         print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.1)
@@ -169,7 +171,7 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.network.thirtybirds.subscribe_to_topic("door_closed")
-        self.potentiometers = Potentiometers() # self.network.thirtybirds.send
+        self.potentiometers = Potentiometers(self.network.thirtybirds.send) # self.network.thirtybirds.send
         self.potentiometers.daemon = True
         self.potentiometers.start()
     def network_message_handler(self, topic_msg):
