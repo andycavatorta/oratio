@@ -75,7 +75,7 @@ class Main(threading.Thread):
                     params = []
 
                     # mute if volume is below threshold
-                    thresh = [0.01, 0.1, 0.1]
+                    thresh = [0.02, 0.1, 0.1]
                     for i in xrange(6):
                         param = 0 if msg[1] < thresh[0] else msg[i]                   # master
                         param = 0 if msg[3] < thresh[1] and i in (2,3) else param     # subvoice 1
@@ -118,12 +118,11 @@ def init(hostname):
     return main
 
 def map_subvoice_volume(level):
-    return map_volume(level, 154, 100)
+    return map_volume(level, 180, 40)
 
-def map_master_volume(level):
-    return map_volume(level, 100, 100)
+def map_master_volume(level,):
+    return map_volume(level, 150, 35)
 
 def map_volume(level, min, scale):
-    return 0 if level == 0 else min + level * scale
-
+    return 0 if level == 0 else int(min + level * scale)
 
