@@ -36,10 +36,10 @@ class GainRampThread(threading.Thread):
     def run(self):
         while True:
             #print "self.queue.empty()", self.queue.empty()
-            print "----> 0"#, self.queue.get(False)
-            #while not self.queue.empty():
-            #    crystalIndex, gain = self.queue.get()
-            #    self.targetGains[crystalIndex] = gain & 0xFF
+            #print "----> 0"#, self.queue.get(False)
+            while not self.queue.empty():
+                crystalIndex, gain = self.queue.get()
+                self.targetGains[crystalIndex] = gain & 0xFF
             for i in range(0, 3):
                 print "----> 1"
                 if (self.targetGains[i] > self.currentGains[i]):
