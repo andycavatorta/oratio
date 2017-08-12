@@ -20,17 +20,21 @@ class GainRampThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.currentGains = [0x00, 0x00, 0x00]
-        self.target = [0x00, 0x00, 0x00]
+        self.targetGains = [0x00, 0x00, 0x00]
         self.rampTimePerIncrement = 0.001
+        self.queue = Queue.Queue()
 
     def setRampTime(self, r):
         self.rampTimePerIncrement = r;
 
     def setTargetGain(self, crystalIndex, gain):
-        self.target = t & 0xFF
+        self.queue.put((crystalIndex, gain))
 
     def run(self):
         while True:
+            while not self.queue.empty():
+                crystalIndex, gain = self.queue.get()
+                self.targetGains[crystalIndex] = gain & 0xFF
             for i in range(0, 3):
                 if (self.targetGains[i] > self.currentGains[i]):
                     self.currentGains[i] = self.currentGains[i] + 1
