@@ -139,12 +139,12 @@ class Potentiometers(threading.Thread):
     def run(self):
         while True:
             all_adc_values =  self.mcp3008s.scan_all()
-            print all_adc_values
+            #print all_adc_values
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
                     adc_value = 1023 - all_adc_values[adc][channel]
                     if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
-                        print adc, channel, self.potentiometers_layout[adc][channel], all_adc_values[adc][channel]
+                        print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.1)
 
