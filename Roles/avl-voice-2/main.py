@@ -62,6 +62,13 @@ class Main(threading.Thread):
     def run(self):
         while True:
             try:
+
+                # update intermediate frequency if new data is available
+                xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
+
+                # right now this is blocking, which means we aren't measuring the intermediate
+                # frequency untill we get data from inputs. Which could be a problem for
+                # sustained notes. So maybe address that soon?
                 topic, msg = self.queue.get(True)
                 if topic == "voice_2":
 
@@ -75,24 +82,25 @@ class Main(threading.Thread):
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
 
-                    
-                    freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
-
-                    # update intermediate frequency if new data is available
-                    self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
-
                     print params, self.xtal_freq
 
+                # if intermediate frequency has changed, or voice params have changed, update
+                if xtal_freq != self.xtal_freq or params != self.voice_params:
+                    self.voice_params = params
+                    self.xtal_freq = xtal_freq
+
+                    freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
+
                     # subvoice 1 (fundamental) frequency and voice volume
-                    crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
+                    crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
                     crystal.set_volume(0, map_master_volume(vol))
 
                     # subvoice 2 frequency and volume
-                    crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
+                    crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
                     crystal.set_volume(1, map_subvoice_volume(vol_sub1))
 
                     # subvoice 3 frequency and volume
-                    crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
+                    crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
                     crystal.set_volume(2, map_subvoice_volume(vol_sub2))
 
                     
