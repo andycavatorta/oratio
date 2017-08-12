@@ -77,10 +77,10 @@ class Main(threading.Thread):
         self.gainRampThread.start()
         #self.gainRampThread = gainRampThread
         # default intermediate frequency
-        self.xtal_freq = 167465.0
+        self.xtal_freq = 167233.6
         self.f_offset = 0           # adjust output freq
         self.last_master_vol = 0
-        
+
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_1")
 
