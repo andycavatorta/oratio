@@ -147,7 +147,7 @@ class Potentiometers(threading.Thread):
                     potentiometer_name = self.potentiometers_layout[adc][channel]
                     if potentiometer_name != "":
                         if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
-                            self.network_send_ref(, adc_value/1023.0)
+                            self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.1)
