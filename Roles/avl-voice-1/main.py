@@ -141,10 +141,10 @@ def init(hostname):
     return main
 
 def map_subvoice_volume(level):
-    return map_volume(level, 154, 100)
+    return map_volume(level, 180, 40)
 
 def map_master_volume(level,):
-    return map_volume(level, 100, 100)
+    return map_volume(level, 150, 35)
 
 def map_volume(level, min, scale):
-    return 0 if level == 0 else min + level * scale
+    return 0 if level == 0 else int(min + level * scale)
