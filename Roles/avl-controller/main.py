@@ -145,8 +145,8 @@ class Voice(object):
             self.calculate_frequencies()
         if name == "transport_position":
             self.transport_position = value
-            self.calculate_frequencies()       
-        return [
+            self.calculate_frequencies()   
+        voice_control_message = [
             self._root_frequency,
             self._root_volume,
             self._overtone_1_frequency,
@@ -156,6 +156,7 @@ class Voice(object):
             0,
             0
         ]
+        return voice_control_message
 
     def calculate_frequencies(self):
         #### root pitch ####
