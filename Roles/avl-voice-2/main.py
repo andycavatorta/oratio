@@ -41,6 +41,7 @@ class Main(threading.Thread):
         # default intermediate frequency
         self.xtal_freq = 119050.0
         self.f_offset = 0           # adjust output freq
+        self.last_master_vol = 0
 
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_2")
@@ -93,7 +94,9 @@ class Main(threading.Thread):
 
                     # subvoice 1 (fundamental) frequency and voice volume
                     crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
-                    crystal.set_volume(0, map_master_volume(vol))
+                    if map_master_volume(vol) != map_master_volume(self.last_master_vol):
+                        crystal.set_volume(0, map_master_volume(vol))
+                        self.last_master_vol = vol
 
                     # subvoice 2 frequency and volume
                     crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
