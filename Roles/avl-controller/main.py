@@ -156,6 +156,7 @@ class Voice(object):
             0,
             0
         ]
+        print voice_control_message
         return voice_control_message
 
     def calculate_frequencies(self):
@@ -169,17 +170,17 @@ class Voice(object):
         root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
 
         # add harmonic
-        root_harmonic_freq = (int(self.root_harmonic) + 1) * root_pitch
+        root_harmonic_freq = (int(self.root_harmonic * 10) + 1) * root_pitch
         # add fine pitch adjust
         self._root_frequency = root_harmonic_freq * pow(2, (  ((self.root_fine*60)-30)  /1200.0))
         #### overtone 1 pitch ####
         # add harmonic
-        overtone_1_harmonic_freq = (int(self.overtone_1_harmonic) + 1) * self._root_frequency
+        overtone_1_harmonic_freq = (int(self.overtone_1_harmonic * 10) + 1) * self._root_frequency
         # add fine pitch adjust
         self._overtone_1_frequency = overtone_1_harmonic_freq * pow(2, (  ((self.overtone_1_fine*60)-30)  /1200.0))
         #### overtone 2 pitch ####
         # add harmonic
-        overtone_2_harmonic_freq = (int(self.overtone_2_harmonic) + 1) * self._root_frequency
+        overtone_2_harmonic_freq = (int(self.overtone_2_harmonic * 10) + 1) * self._root_frequency
         # add fine pitch adjust
         self._overtone_2_frequency = overtone_2_harmonic_freq * pow(2, (  ((self.overtone_2_fine*60)-30)  /1200.0))
 
