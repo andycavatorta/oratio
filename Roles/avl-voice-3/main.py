@@ -86,7 +86,10 @@ class Main(threading.Thread):
 
                     # subvoice 1 (fundamental) frequency and voice volume
                     crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
-                    if vol != self.last_master_vol:
+                    
+                    print vol, map_master_volume(vol)
+
+                    if map_master_volume(vol) != map_master_volume(self.last_master_vol):
                         crystal.set_volume(0, map_master_volume(vol))
                         self.last_master_vol = vol
 
