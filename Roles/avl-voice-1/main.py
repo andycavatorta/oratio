@@ -33,6 +33,7 @@ class GainRampThread(threading.Thread):
 
     def run(self):
         while True:
+            print "self.queue.empty()", self.queue.empty()
             while not self.queue.empty():
                 crystalIndex, gain = self.queue.get()
                 self.targetGains[crystalIndex] = gain & 0xFF
