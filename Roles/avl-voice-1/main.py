@@ -114,14 +114,28 @@ class Main(threading.Thread):
                     self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
                     print params, self.xtal_freq
                     # subvoice 1 (fundamental) frequency and voice volume
-                    crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
-                    self.gainRampThread.setTargetGain(0, map_master_volume(vol))
+
+
+                    # subvoice 1 (fundamental) frequency and voice volume
+                    crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
+                    crystal.set_volume(0, map_master_volume(vol))
+
                     # subvoice 2 frequency and volume
-                    crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
-                    self.gainRampThread.setTargetGain(1, map_subvoice_volume(vol_sub1))
+                    crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
+                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
+
                     # subvoice 3 frequency and volume
-                    crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
-                    self.gainRampThread.setTargetGain(2, map_subvoice_volume(vol_sub2))
+                    crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
+                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+
+                    #crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
+                    #self.gainRampThread.setTargetGain(0, map_master_volume(vol))
+                    # subvoice 2 frequency and volume
+                    #crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
+                    #self.gainRampThread.setTargetGain(1, map_subvoice_volume(vol_sub1))
+                    # subvoice 3 frequency and volume
+                    #crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
+                    #self.gainRampThread.setTargetGain(2, map_subvoice_volume(vol_sub2))
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
