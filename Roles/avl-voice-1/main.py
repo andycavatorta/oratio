@@ -23,7 +23,7 @@ class GainRampThread(threading.Thread):
         threading.Thread.__init__(self)
         self.currentGains = [0x00, 0x00, 0x00]
         self.targetGains = [0x00, 0x00, 0x00]
-        self.rampTimePerIncrement = 0.01
+        self.rampTimePerIncrement = 0.02
         self.queue = Queue.Queue()
 
     def setRampTime(self, r):
@@ -42,11 +42,11 @@ class GainRampThread(threading.Thread):
                 self.targetGains[crystalIndex] = gain & 0xFF
             for i in range(0, 3):
                 if (self.targetGains[i] > self.currentGains[i]):
-                    self.currentGains[i] = self.currentGains[i] + 1
+                    self.currentGains[i] = self.currentGains[i] + 2
                     print "GainRampThread", i, self.currentGains[i]
                     crystal.set_volume(i, self.currentGains[i])
                 elif (self.targetGains[i] < self.currentGains[i]):
-                    self.currentGains[i] = self.currentGains[i] - 1
+                    self.currentGains[i] = self.currentGains[i] - 2
                     print "GainRampThread", i, self.currentGains[i]
                     crystal.set_volume(i, self.currentGains[i])
             time.sleep(self.rampTimePerIncrement)
