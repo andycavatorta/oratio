@@ -23,7 +23,7 @@ class GainRampThread(threading.Thread):
         threading.Thread.__init__(self)
         self.currentGains = [0x00, 0x00, 0x00]
         self.targetGains = [0x00, 0x00, 0x00]
-        self.rampTimePerIncrement = 0.001
+        self.rampTimePerIncrement = 0.01
         self.queue = Queue.Queue()
 
     def setRampTime(self, r):
