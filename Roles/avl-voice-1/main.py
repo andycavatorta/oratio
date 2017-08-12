@@ -25,7 +25,7 @@ class GainRampThread(threading.Thread):
         self.queue = Queue.Queue()
 
     def setRampTime(self, r):
-        self.rampTimePerIncrement = r;
+        self.rampTimePerIncrement = r
 
     def setTargetGain(self, crystalIndex, gain):
         print "setTargetGain", crystalIndex, gain
@@ -56,7 +56,7 @@ class GainRampThread(threading.Thread):
                     print "----> 8"
                     crystal.set_volume(i, self.currentGains[i])
                     print "----> 9"
-            time.sleep(self.rampTimePerIncrement)
+            #time.sleep(self.rampTimePerIncrement)
             print "----> 10"
 
 class Network(object):
