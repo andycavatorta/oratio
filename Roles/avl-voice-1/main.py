@@ -56,7 +56,7 @@ class GainRampThread(threading.Thread):
                     print "----> 8"
                     crystal.set_volume(i, self.currentGains[i])
                     print "----> 9"
-            #time.sleep(self.rampTimePerIncrement)
+            time.sleep(0.01)
             print "----> 10"
 
 class Network(object):
