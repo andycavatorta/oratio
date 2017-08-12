@@ -41,25 +41,15 @@ class GainRampThread(threading.Thread):
                 crystalIndex, gain = self.queue.get()
                 self.targetGains[crystalIndex] = gain & 0xFF
             for i in range(0, 3):
-                print "----> 1"
                 if (self.targetGains[i] > self.currentGains[i]):
-                    print "----> 2"
                     self.currentGains[i] = self.currentGains[i] + 1
-                    print "----> 3"
                     print "GainRampThread", i, self.currentGains[i]
-                    print "----> 4"
                     crystal.set_volume(i, self.currentGains[i])
-                    print "----> 5"
                 elif (self.targetGains[i] < self.currentGains[i]):
-                    print "----> 6"
                     self.currentGains[i] = self.currentGains[i] - 1
-                    print "----> 7"
                     print "GainRampThread", i, self.currentGains[i]
-                    print "----> 8"
                     crystal.set_volume(i, self.currentGains[i])
-                    print "----> 9"
             time.sleep(self.rampTimePerIncrement)
-            print "----> 10"
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
