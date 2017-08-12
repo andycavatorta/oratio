@@ -28,6 +28,7 @@ class GainRampThread(threading.Thread):
         self.rampTimePerIncrement = r;
 
     def setTargetGain(self, crystalIndex, gain):
+        print "setTargetGain", crystalIndex, gain
         self.queue.put((crystalIndex, gain))
 
     def run(self):
@@ -63,11 +64,14 @@ class Network(object):
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
-    def __init__(self, hostname, gainRampThread):
+    def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.gainRampThread = gainRampThread
+        self.gainRampThread = GainRampThread()
+        self.gainRampThread.daemon = True
+        self.gainRampThread.start()
+        #self.gainRampThread = gainRampThread
         # default intermediate frequency
         self.xtal_freq = 167465.0
         self.f_offset = 0           # adjust output freq
@@ -122,10 +126,7 @@ class Main(threading.Thread):
 
 def init(hostname):
     crystal.init()
-    gainRampThread = GainRampThread()
-    gainRampThread.daemon = True
-    gainRampThread.start()
-    main = Main(hostname, gainRampThread)
+    main = Main(hostname)
     main.daemon = True
     main.start()
     return main
