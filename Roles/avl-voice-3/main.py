@@ -84,15 +84,15 @@ class Main(threading.Thread):
                     print params, self.xtal_freq
 
                     # subvoice 1 (fundamental) frequency and voice volume
-                    crystal.set_freq(0, self.xtal_freq - (freq_root + self.f_offset))
+                    crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
                     crystal.set_volume(0, map_master_volume(vol))
 
                     # subvoice 2 frequency and volume
-                    crystal.set_freq(1, self.xtal_freq - (freq_sub1 + self.f_offset))
+                    crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
                     crystal.set_volume(1, map_subvoice_volume(vol_sub1))
 
                     # subvoice 3 frequency and volume
-                    crystal.set_freq(2, self.xtal_freq - (freq_sub2 + self.f_offset))
+                    crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
                     crystal.set_volume(2, map_subvoice_volume(vol_sub2))
 
                     
@@ -110,10 +110,10 @@ def init(hostname):
     return main
 
 def map_subvoice_volume(level):
-    return map_volume(level, 154, 100)
+    return map_volume(level, 180, 40)
 
 def map_master_volume(level,):
-    return map_volume(level, 100, 100)
+    return map_volume(level, 150, 35)
 
 def map_volume(level, min, scale):
-    return 0 if level == 0 else min + level * scale
+    return 0 if level == 0 else int(min + level * scale)
