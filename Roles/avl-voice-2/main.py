@@ -75,7 +75,7 @@ class Main(threading.Thread):
                     params = []
 
                     # mute if volume is below threshold
-                    thresh = [0.02, 0.1, 0.1]
+                    thresh = [0.1, 0.1, 0.1]
                     for i in xrange(6):
                         param = 0 if msg[1] < thresh[0] else msg[i]                   # master
                         param = 0 if msg[3] < thresh[1] and i in (2,3) else param     # subvoice 1
