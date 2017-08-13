@@ -77,8 +77,8 @@ class Potentiometers(threading.Thread):
                 "voice_1_root_harmonic",
             ],
             [
-                "",
-                "",
+                "voice_1_root_half_steps",
+                "voice_1_root_octave",
                 "voice_1_formant_front_back",
                 "voice_1_formant_open_close",
                 "voice_1_formant_pitch",                
@@ -97,8 +97,8 @@ class Potentiometers(threading.Thread):
                 ""
             ],
             [
-                "",
-                "",
+                "voice_2_root_half_steps",
+                "voice_2_root_octave",
                 "voice_2_formant_front_back",
                 "voice_2_formant_open_close",
                 "voice_2_formant_pitch",                
@@ -117,8 +117,8 @@ class Potentiometers(threading.Thread):
                 ""
             ],
             [
-                "",
-                "",
+                "voice_3_root_half_steps",
+                "voice_3_root_octave",
                 "voice_3_formant_front_back",
                 "voice_3_formant_open_close",
                 "voice_3_formant_pitch",                

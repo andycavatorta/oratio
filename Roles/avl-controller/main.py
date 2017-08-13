@@ -85,6 +85,8 @@ class Voice(object):
         self.formant_pitch = 0.0
         self.formant_open_close = 0.0
         self.formant_front_back = 0.0
+        self.root_octave = 0
+        self.root_half_steps = 0
         self.pitch_key = 0.0
         self.transport_position = 0.0
         self.transport_pos_at_last_pitch_key_touched = 0.0
@@ -127,6 +129,13 @@ class Voice(object):
         if name == "overtone_2_fine":
             self.overtone_2_fine = value
             self.calculate_frequencies()
+        if name == "root_octave":
+            self.root_octave = value
+            self.calculate_frequencies()
+        if name == "root_half_steps":
+            self.root_half_steps = value
+            self.calculate_frequencies()
+
         if name == "formant_volume":
             self.formant_volume = value
             self.calculate_formant_pattern()
@@ -138,7 +147,7 @@ class Voice(object):
             self.calculate_formant_pattern()
         if name == "formant_front_back":
             self.formant_front_back = value
-            self.calculate_formant_pattern()
+            self.calculate_formant_pattern()            
         if name == "pitch_key":
             self.pitch_key = value
             self.transport_pos_at_last_pitch_key_touched = self.transport_position
@@ -166,9 +175,8 @@ class Voice(object):
         # add transport
 
         pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
-        pitch_diff_from_transport_and_last_key = self.pitch_key + pitch_diff_from_transport 
+        pitch_diff_from_transport_and_last_key = self.pitch_key + int(self.root_half_steps * 12) + (int(self.root_octave * 5) * 12) + pitch_diff_from_transport 
         root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
-
         # add harmonic
         root_harmonic_freq = (int(self.root_harmonic * 10) + 1) * root_pitch
         # add fine pitch adjust
@@ -226,6 +234,8 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_1_formant_pitch")
         self.network.thirtybirds.subscribe_to_topic("voice_1_formant_open_close")
         self.network.thirtybirds.subscribe_to_topic("voice_1_formant_front_back")
+        self.network.thirtybirds.subscribe_to_topic("voice_1_root_half_steps")
+        self.network.thirtybirds.subscribe_to_topic("voice_1_root_octave")
 
         self.network.thirtybirds.subscribe_to_topic("voice_key_2_position")
         self.network.thirtybirds.subscribe_to_topic("voice_2_root_harmonic")
@@ -240,6 +250,8 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_2_formant_pitch")
         self.network.thirtybirds.subscribe_to_topic("voice_2_formant_open_close")
         self.network.thirtybirds.subscribe_to_topic("voice_2_formant_front_back")
+        self.network.thirtybirds.subscribe_to_topic("voice_2_root_half_steps")
+        self.network.thirtybirds.subscribe_to_topic("voice_2_root_octave")
 
         self.network.thirtybirds.subscribe_to_topic("voice_key_3_position")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_harmonic")
@@ -254,6 +266,8 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_3_formant_pitch")
         self.network.thirtybirds.subscribe_to_topic("voice_3_formant_open_close")
         self.network.thirtybirds.subscribe_to_topic("voice_3_formant_front_back")
+        self.network.thirtybirds.subscribe_to_topic("voice_3_root_half_steps")
+        self.network.thirtybirds.subscribe_to_topic("voice_3_root_octave")
 
         self.voices = [ Voice(i) for i in range(3) ]
 
