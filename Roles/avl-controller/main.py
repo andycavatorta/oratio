@@ -427,10 +427,10 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_front_back", msg))
                     continue
                 if topic == "voice_2_root_half_steps":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("root_half_steps", msg))
+                    self.network.thirtybirds.send("voice_1", self.voices[1].update("root_half_steps", msg))
                     continue
                 if topic == "voice_2_root_octave":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("root_octave", msg))
+                    self.network.thirtybirds.send("voice_1", self.voices[1].update("root_octave", msg))
                     continue
 
                 if topic == "voice_3_root_harmonic":
@@ -470,10 +470,10 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_front_back", msg))
                     continue
                 if topic == "voice_3_root_half_steps":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("root_half_steps", msg))
+                    self.network.thirtybirds.send("voice_1", self.voices[2].update("root_half_steps", msg))
                     continue
                 if topic == "voice_3_root_octave":
-                    self.network.thirtybirds.send("voice_1", self.voices[0].update("root_octave", msg))
+                    self.network.thirtybirds.send("voice_1", self.voices[2].update("root_octave", msg))
                     continue
 
             except Exception as e:
