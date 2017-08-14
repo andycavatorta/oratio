@@ -545,7 +545,9 @@ class Main(threading.Thread):
                 if topic == "voice_3_root_octave":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_octave", msg))
                     continue
-
+                if topic == "client_monitor_response":
+                    self.client_monitor_server.add_to_queue(msg[0],msg[2],msg[1])
+                    
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
