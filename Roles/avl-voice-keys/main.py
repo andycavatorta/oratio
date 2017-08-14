@@ -169,10 +169,11 @@ class Main(threading.Thread):
                         #print "button_states:", button_states
                         self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
-                time.sleep(0.01)
+                time.sleep(0.03)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
+                time.sleep(0.03)
 
 def init(hostname):
     main = Main(hostname)
