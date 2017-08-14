@@ -30,6 +30,51 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+
+########################
+## UTILS
+########################
+
+class Utils(object):
+    def __init__(self, hostname):
+        self.hostname = hostname
+    def reboot(self):
+        os.system("sudo reboot now")
+
+    def get_shelf_id(self):
+        return self.hostname[11:][:1]
+
+    def get_camera_id(self):
+        return self.hostname[12:]
+
+    def create_image_file_name(self, timestamp, light_level, process_type):
+        return "{}_{}_{}_{}_{}.png".format(timestamp, self.get_shelf_id() ,  self.get_camera_id(), light_level, process_type) 
+
+    def remote_update_git(self, oratio, thirtybirds, update, upgrade):
+        if oratio:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
+        if thirtybirds:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
+        return 
+
+    def remote_update_scripts(self):
+        updates_init("/home/pi/oratio", False, True)
+        return
+
+    def get_update_script_version(self):
+        (updates, ghStatus, bsStatus) = updates_init("/home/pi/oratio", False, False)
+        return updates.read_version_pickle()
+
+    def get_git_timestamp(self):
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+
+    def get_client_status(self):
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp())
+
+
+
+
+
 class Voice_Key(object):
     def __init__(self, spi_chip_select_pin, min_encoder_position, max_encoder_position):
         self.min_encoder_position = min_encoder_position
@@ -110,6 +155,7 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
+        self.utils = Utils(hostname)
         self.voice_keys = Voice_Keys()
         defs = [
             ("hold", 26),
@@ -123,6 +169,7 @@ class Main(threading.Thread):
         self.staccato_2 = False
         self.staccato_3 = False
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -142,6 +189,7 @@ class Main(threading.Thread):
         topic_names = ["voice_key_1_position", "voice_key_2_position", "voice_key_3_position"]
         while True:
             try:
+                # how do I add this with non-blocking queues
                 button_states = self.buttons.get_states()
                 for button_state in button_states:
                     name, state = button_state

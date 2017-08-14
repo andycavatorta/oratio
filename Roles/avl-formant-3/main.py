@@ -35,46 +35,48 @@ class Network(object):
             status_callback=network_status_handler
         )
 
-class Transport(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.encoder = AMT203_expanded_spi.AMT203(0, 0, 16) # initialize encoder
-        self.encoder.set_zero()                # set zero position -- move transport to left!
-        self.resolution = self.encoder.get_resolution() # should be 4096
-        self.gap = 2000              # this is the largest jump we want to detect (I think?)
-        self.lap = 0
-        self.last_encoder_value = 0
-        self.last_accumulated_transport_postion = 0
-        self.queue = Queue.Queue(maxsize=1  )
 
-    def track_transport_position(self):
-        current_encoder_value = self.encoder.get_position()
-        # direction is True if moving to the right, else False
-        direction = True if (self.last_encoder_value < current_encoder_value and current_encoder_value - self.last_encoder_value < self.gap) or (self.last_encoder_value - current_encoder_value > self.gap) else False
-        # if the encoder has made a complete revolution, increment lap
-        if current_encoder_value < self.last_encoder_value and direction:
-            self.lap += 1  
-        # decrement lap if moving in the opposite direction
-        elif self.last_encoder_value - current_encoder_value < 0 and not direction:
-            self.lap -= 1
-        self.last_encoder_value = current_encoder_value                      # store raw position
-        current_accumulated_transport_postion = (self.lap * self.resolution) + current_encoder_value  # calculate relative position
-        # only send update if encoder has changed position sincfe last reading
-        if current_accumulated_transport_postion != self.last_accumulated_transport_postion:
-            # update encoder position
-            self.last_accumulated_transport_postion = current_accumulated_transport_postion
-            # send normalized encoder info to voice pi
-            self.queue.put(current_accumulated_transport_postion)
-            #print "{'transport_pos':" + str(current_accumulated_transport_postion) + "}"
-            # trigger next encoder reading in 10 msg
+########################
+## UTILS
+########################
 
-    def get_position(self):
-        return self.queue.get(True)
+class Utils(object):
+    def __init__(self, hostname):
+        self.hostname = hostname
+    def reboot(self):
+        os.system("sudo reboot now")
 
-    def run(self):
-        while True:
-            self.track_transport_position()
-            time.sleep(0.01)
+    def get_shelf_id(self):
+        return self.hostname[11:][:1]
+
+    def get_camera_id(self):
+        return self.hostname[12:]
+
+    def create_image_file_name(self, timestamp, light_level, process_type):
+        return "{}_{}_{}_{}_{}.png".format(timestamp, self.get_shelf_id() ,  self.get_camera_id(), light_level, process_type) 
+
+    def remote_update_git(self, oratio, thirtybirds, update, upgrade):
+        if oratio:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
+        if thirtybirds:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
+        return 
+
+    def remote_update_scripts(self):
+        updates_init("/home/pi/oratio", False, True)
+        return
+
+    def get_update_script_version(self):
+        (updates, ghStatus, bsStatus) = updates_init("/home/pi/oratio", False, False)
+        return updates.read_version_pickle()
+
+    def get_git_timestamp(self):
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+
+    def get_client_status(self):
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp())
+
+
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
@@ -83,7 +85,9 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         self.last_master_volume_level = 0
+        self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("voice_3")
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -103,7 +107,10 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "voice_3":
+                if topic == "client_monitor_request":
+                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
+
+                if topic == "voice_1":
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume
                     if master_volume != self.last_master_volume_level :
