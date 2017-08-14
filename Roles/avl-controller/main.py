@@ -147,14 +147,14 @@ class Voice(object):
             self.calculate_formant_pattern()
         if name == "formant_front_back":
             self.formant_front_back = value
-            self.calculate_formant_pattern()            
+            self.calculate_formant_pattern()
         if name == "pitch_key":
             self.pitch_key = value
             self.transport_pos_at_last_pitch_key_touched = self.transport_position
             self.calculate_frequencies()
         if name == "transport_position":
             self.transport_position = value
-            self.calculate_frequencies()   
+            self.calculate_frequencies()
         voice_control_message = [
             self._root_frequency,
             self._root_volume,
