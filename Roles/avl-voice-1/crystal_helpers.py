@@ -139,9 +139,14 @@ def set_volume_master(level):
 
 # check serial port for intermediate frequency, return None if no data
 def measure_xtal_freq():
-  if not ser.inWaiting(): return None
+  try:
+    if not ser.inWaiting(): return None
 
-  while ser.inWaiting():
-    raw = ser.readline()
+    while ser.inWaiting():
+      raw = ser.readline()
+
+  except IOError:
+    print "error measuring frequency"
+    return None
 
   return None if len(raw) < 7 else float(raw.strip()) / 10.0
