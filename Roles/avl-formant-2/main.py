@@ -1,3 +1,4 @@
+import commands
 import os
 import Queue
 import settings
