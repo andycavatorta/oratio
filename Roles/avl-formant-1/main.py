@@ -4,6 +4,8 @@ import settings
 import time
 import threading
 import wiringpi as wpi
+import sys
+import traceback
 
 #BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 #UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
