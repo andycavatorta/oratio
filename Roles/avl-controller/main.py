@@ -33,6 +33,58 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+class Thirtybirds_Client_Monitor_Server(threading.Thread):
+    def __init__(self, network, hostnames, update_period=60):
+        threading.Thread.__init__(self)
+        self.update_period = update_period
+        self.current_clients = {}
+        self.remembered_clients = {}
+        self.network = network
+        self.hostnames = hostnames
+        self.queue = Queue.Queue()
+        self.hosts = {}
+
+    def empty_host_list(self):
+        self.hosts = {}
+        for hostname in self.hostnames:
+            self.hosts[hostname] = {
+                "present":False,
+                "timestamp":False,
+                "pickle_version":False,
+                "git_pull_date":False
+            }
+
+    def add_to_queue(self, hostname, git_pull_date, pickle_version):
+        self.queue.put((hostname, git_pull_date, pickle_version, time.time()))
+
+    def print_current_clients(self):
+        print ""
+        print "CURRENT CLIENTS:"
+        for hostname in self.hostnames:
+            print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
+
+    def run(self):
+        previous_hosts = {}
+        while True:
+            self.empty_host_list()
+            self.network.thirtybirds.send("client_monitor_request", "")
+            time.sleep(self.update_period)
+            while not self.queue.empty():
+                [hostname, git_pull_date, pickle_version, timestamp] = self.queue.get(True)
+                #print ">>", hostname, git_pull_date, pickle_version, timestamp
+                self.hosts[hostname]["present"] = True
+                self.hosts[hostname]["timestamp"] = timestamp
+                self.hosts[hostname]["pickle_version"] = pickle_version
+                self.hosts[hostname]["git_pull_date"] = git_pull_date
+            #if not cmp(previous_hosts,self.hosts):
+            #    self.print_current_clients()
+            #previous_hosts = self.hosts
+            self.print_current_clients()
+
+
+
+
+
 class Pedal(object):
     def __init__(self, pin_number):
             self.pin_number = pin_number
@@ -211,7 +263,29 @@ class Main(threading.Thread):
         self.pedals.daemon = True
         self.pedals.start()
 
+        self.hostnames = [
+            "avl-formant-1",
+            "avl-formant-2",
+            "avl-formant-3",
+            "avl-input-1",
+            "avl-input-2",
+            "avl-input-3",
+            "avl-layer-1",
+            "avl-layer-2",
+            "avl-layer-3",
+            "avl-pitch-keys",
+            "avl-settings",
+            "avl-transport",
+            "avl-voice-1",
+            "avl-voice-2",
+            "avl-voice-3",
+            "avl-voice-keys"
+        ]
+        self.client_monitor_server = Thirtybirds_Client_Monitor_Server(self.network, self.hostnames)
+        self.client_monitor_server.daemon = True
+        self.client_monitor_server.start()
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_response")
 
         self.network.thirtybirds.subscribe_to_topic("pitch_key_touched")
         self.network.thirtybirds.subscribe_to_topic("transport_position")
