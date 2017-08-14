@@ -112,7 +112,7 @@ class Main(threading.Thread):
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                if topic == "voice_1":
+                if topic == "voice_3":
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume
                     if master_volume != self.last_master_volume_level :
