@@ -147,14 +147,14 @@ class Voice(object):
             self.calculate_formant_pattern()
         if name == "formant_front_back":
             self.formant_front_back = value
-            self.calculate_formant_pattern()            
+            self.calculate_formant_pattern()
         if name == "pitch_key":
             self.pitch_key = value
             self.transport_pos_at_last_pitch_key_touched = self.transport_position
             self.calculate_frequencies()
         if name == "transport_position":
             self.transport_position = value
-            self.calculate_frequencies()   
+            self.calculate_frequencies()
         voice_control_message = [
             self._root_frequency,
             self._root_volume,
@@ -274,7 +274,7 @@ class Main(threading.Thread):
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
-        if len(msg) > 0: 
+        if len(msg) > 0:
             msg = eval(msg)
         self.add_to_queue(topic, msg)
 
