@@ -36,7 +36,7 @@ class Network(object):
 class Pedal(object):
     def __init__(self, pin_number):
             self.pin_number = pin_number
-            GPIO.setup(pin_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+            GPIO.setup(pin_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
             self.last_value = 0
     def detect_change(self):
             current_value = GPIO.input(self.pin_number)
