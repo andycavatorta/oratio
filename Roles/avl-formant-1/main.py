@@ -105,9 +105,10 @@ class Main(threading.Thread):
                 topic, msg = self.queue.get(True)
                 if topic == "voice_1":
                     master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.05 else master_volume
+                    master_volume = 0 if master_volume < 0.1 else master_volume
                     if master_volume != self.last_master_volume_level :
                         gain = int(140 + master_volume * 40)
+                        print "master_volume", master_volume, "gain", gain
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
                 time.sleep(0.01)
