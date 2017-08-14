@@ -107,7 +107,7 @@ class Main(threading.Thread):
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.05 else master_volume
                     if master_volume != self.last_master_volume_level :
-                        gain = int(140 + level * 40)
+                        gain = int(140 + master_volume * 40)
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
                 time.sleep(0.01)
