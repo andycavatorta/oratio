@@ -10,6 +10,10 @@ def resetTable(table):
 
 class LiveLooper():
 	def __init__(self):
+
+		# This will be a function to call whenever the layer loops back around to the beginning
+		self.loopCallback = None
+
 		self.audioServer = Server(nchnls=1, sr=44100, duplex=1, buffersize=1024)
 
 		# Set the input offset to 1, since all these boards want right channel
@@ -53,6 +57,9 @@ class LiveLooper():
 			mul=1.0,
 			xfade=0
 		).play()
+
+		# Add the looper trigger
+		self.trigger = TrigFunc(self.readA['trig'], self.triggerLoopCallback)
 
 		# Create a mixer to mix between the output from the two loopers
 		self.readmixr = Mixer(outs=1, time=0.25, chnls=1)
@@ -119,6 +126,9 @@ class LiveLooper():
 	def stop(self):
 		self.audioServer.stop()
 
+	def setLoopCallback(self, cb):
+		self.loopCallback = cb
+
 	def setIsTableAActive(self, isA):
 		print("Clearing table %s" % ("tableB" if isA else "tableA"))
 		tableToClear = self.tableB if isA else self.tableA
@@ -162,3 +172,8 @@ class LiveLooper():
 
 	def setVolume(self, vol):
 		self.sigVolume.setValue(vol)
+
+	def triggerLoopCallback(self):
+		# print "Do trigger"
+		if self.loopCallback is not None:
+			self.loopCallback()

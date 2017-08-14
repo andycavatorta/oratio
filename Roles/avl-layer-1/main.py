@@ -43,6 +43,10 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
 
+    def loop_callback(self):
+        # print "Sending layer trigger 1"
+        self.network.thirtybirds.send("layer_1_trigger", "1")
+
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
@@ -60,6 +64,7 @@ class Layer(threading.Thread):
 
     def run(self):
         self.looper = LiveLooper()
+        self.looper.setLoopCallback(self.loop_callback)
         self.looperController = LooperController(self.looper)
         self.looper.start()
         while True:
