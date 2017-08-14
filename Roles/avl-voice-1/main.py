@@ -18,39 +18,6 @@ sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 
-class GainRampThread(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.currentGains = [0x00, 0x00, 0x00]
-        self.targetGains = [0x00, 0x00, 0x00]
-        self.rampTimePerIncrement = 0.02
-        self.queue = Queue.Queue()
-
-    def setRampTime(self, r):
-        self.rampTimePerIncrement = r
-
-    def setTargetGain(self, crystalIndex, gain):
-        print "setTargetGain", crystalIndex, gain
-        self.queue.put((crystalIndex, gain))
-
-    def run(self):
-        while True:
-            #print "self.queue.empty()", self.queue.empty()
-            #print "----> 0"#, self.queue.get(False)
-            while not self.queue.empty():
-                crystalIndex, gain = self.queue.get()
-                self.targetGains[crystalIndex] = gain & 0xFF
-            for i in range(0, 3):
-                if (self.targetGains[i] > self.currentGains[i]):
-                    self.currentGains[i] = self.currentGains[i] + 2
-                    print "GainRampThread", i, self.currentGains[i]
-                    crystal.set_volume(i, self.currentGains[i])
-                elif (self.targetGains[i] < self.currentGains[i]):
-                    self.currentGains[i] = self.currentGains[i] - 2
-                    print "GainRampThread", i, self.currentGains[i]
-                    crystal.set_volume(i, self.currentGains[i])
-            time.sleep(self.rampTimePerIncrement)
-
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
         self.hostname = hostname
@@ -65,16 +32,12 @@ class Network(object):
             status_callback=network_status_handler
         )
 
-
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.gainRampThread = GainRampThread()
-        self.gainRampThread.daemon = True
-        self.gainRampThread.start()
         #self.gainRampThread = gainRampThread
         # default intermediate frequency
         self.xtal_freq = 167233.6

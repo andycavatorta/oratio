@@ -311,7 +311,6 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_volume", msg))
                     continue
 
-
                 if topic == "layer_speed":
                     self.network.thirtybirds.send("layer_speed", float(msg)*10.0)
                     continue
