@@ -55,15 +55,15 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
                 "git_pull_date":False
             }
 
-    def add_to_queue(self, hostname, git_pull_date, temp, pickle_version):
-        print  "add_to_queue", hostname, git_pull_date, temp, pickle_version
-        self.queue.put((hostname, git_pull_date, pickle_version, temp, time.time()))
+    def add_to_queue(self, hostname, pickle_version, git_pull_date, temp):
+        print  "add_to_queue", hostname, pickle_version, git_pull_date, temp
+        self.queue.put((hostname, pickle_version, git_pull_date, temp, time.time()))
 
     def print_current_clients(self):
         print ""
         print "CURRENT CLIENTS:"
         for hostname in self.hostnames:
-            print hostname, repr( self.hosts[hostname])
+            print "print_current_clients", hostname, repr( self.hosts[hostname])
             #print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
 
     def run(self):
@@ -73,8 +73,8 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             self.network.thirtybirds.send("client_monitor_request", "")
             time.sleep(self.update_period)
             while not self.queue.empty():
-                [hostname, git_pull_date, pickle_version, temp, timestamp] = self.queue.get(True)
-                print ">>", hostname, git_pull_date, pickle_version, temp, timestamp
+                [hostname, pickle_version, git_pull_date, temp, timestamp] = self.queue.get(True)
+                print ">>", hostname, pickle_version, git_pull_date, temp, timestamp
                 self.hosts[hostname]["present"] = True
                 self.hosts[hostname]["timestamp"] = timestamp
                 self.hosts[hostname]["pickle_version"] = pickle_version
@@ -548,8 +548,7 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_octave", msg))
                     continue
                 if topic == "client_monitor_response":
-                    print "client_monitor_response", msg
-                    self.client_monitor_server.add_to_queue(msg[0],msg[2],msg[1],msg[3])
+                    self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3])
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
