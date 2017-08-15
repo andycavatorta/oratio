@@ -74,19 +74,17 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             time.sleep(self.update_period)
             while not self.queue.empty():
                 [hostname, git_pull_date, pickle_version, temp, timestamp] = self.queue.get(True)
-                print ">>", hostname, temp, git_pull_date, pickle_version, timestamp
+                print ">>", hostname, git_pull_date, pickle_version, temp, timestamp
                 self.hosts[hostname]["present"] = True
                 self.hosts[hostname]["timestamp"] = timestamp
                 self.hosts[hostname]["pickle_version"] = pickle_version
                 self.hosts[hostname]["temp"] = temp
                 self.hosts[hostname]["git_pull_date"] = git_pull_date
+                print "self.hosts[hostname]=", repr(self.hosts[hostname])
             #if not cmp(previous_hosts,self.hosts):
             #    self.print_current_clients()
             #previous_hosts = self.hosts
             self.print_current_clients()
-
-
-
 
 
 class Pedal(object):
