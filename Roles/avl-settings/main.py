@@ -259,6 +259,7 @@ class Main(threading.Thread):
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "client_monitor_request":
+                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
