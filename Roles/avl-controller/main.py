@@ -560,7 +560,7 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_octave", msg))
                     continue
                 if topic == "client_monitor_response":
-                    self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3])
+                    self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
