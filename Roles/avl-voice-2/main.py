@@ -70,10 +70,24 @@ class Utils(object):
         return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
 
     def get_temp(self):
-        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]   
+        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
+
+    def get_cpu(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[12]
+
+    def get_uptime(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[4]
+
+    def get_disk(self):
+        # stub for now
+        return "0"
 
     def get_client_status(self):
-        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp())
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
 
 
 # Main handles network send/recv and can see all other classes directly
@@ -117,9 +131,7 @@ class Main(threading.Thread):
                 # sustained notes. So maybe address that soon?
                 topic, msg = self.queue.get(True)
                 if topic == "voice_2":
-
                     params = []
-
                     # mute if volume is below threshold
                     thresh = [0.1, 0.1, 0.1]
                     for i in xrange(6):
@@ -127,23 +139,17 @@ class Main(threading.Thread):
                         param = 0 if msg[3] < thresh[1] and i in (2,3) else param     # subvoice 1
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
-
                     print params, self.xtal_freq
-
                     # if intermediate frequency has changed, or voice params have changed, update
                     if xtal_freq != self.xtal_freq or params != self.voice_params:
                         self.voice_params = params
                         self.xtal_freq = xtal_freq
-
                         freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
-
                         # subvoice 1 (fundamental) frequency
                         crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
-
                         # subvoice 2 frequency and volume
                         crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
                         crystal.set_volume(1, map_subvoice_volume(vol_sub1))
-
                         # subvoice 3 frequency and volume
                         crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
                         crystal.set_volume(2, map_subvoice_volume(vol_sub2))

@@ -52,17 +52,30 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
                 "timestamp":False,
                 "pickle_version":False,
                 "temp":False,
-                "git_pull_date":False
+                "git_pull_date":False,
+                "cpu":False,
+                "uptime":False,
+                "disk":False
             }
 
-    def add_to_queue(self, hostname, pickle_version, git_pull_date, temp):
-        self.queue.put((hostname, pickle_version, git_pull_date, temp, time.time()))
+    def add_to_queue(self, hostname, pickle_version, git_pull_date, temp, cpu, uptime, disk):
+        self.queue.put((hostname, pickle_version, git_pull_date, temp, cpu, uptime, disk, time.time()))
 
     def print_current_clients(self):
         print ""
         print "CURRENT CLIENTS:"
         for hostname in self.hostnames:
-            print "%s: %s : %s: %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
+            print "%s: %s : %s: %s: %s: %s: %s: %s: %s" % (
+                hostname, 
+                self.hosts[hostname]["present"], 
+                self.hosts[hostname]["temp"], 
+                self.hosts[hostname]["timestamp"], 
+                self.hosts[hostname]["pickle_version"], 
+                self.hosts[hostname]["git_pull_date"],
+                self.hosts[hostname]["cpu"],
+                self.hosts[hostname]["uptime"],
+                self.hosts[hostname]["disk"]
+            )
 
     def run(self):
         previous_hosts = {}
@@ -77,6 +90,9 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
                 self.hosts[hostname]["pickle_version"] = pickle_version
                 self.hosts[hostname]["temp"] = temp
                 self.hosts[hostname]["git_pull_date"] = git_pull_date
+                self.hosts[hostname]["cpu"] = cpu
+                self.hosts[hostname]["uptime"] = uptime
+                self.hosts[hostname]["disk"] = disk
             #if not cmp(previous_hosts,self.hosts):
             #    self.print_current_clients()
             #previous_hosts = self.hosts

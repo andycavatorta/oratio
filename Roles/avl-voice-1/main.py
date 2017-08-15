@@ -70,13 +70,27 @@ class Utils(object):
         return updates.read_version_pickle()
 
     def get_git_timestamp(self):
-        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]
 
     def get_temp(self):
-        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]   
+        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
+
+    def get_cpu(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[12]
+
+    def get_uptime(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[4]
+
+    def get_disk(self):
+        # stub for now
+        return "0"
 
     def get_client_status(self):
-        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp())
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
 
 
 
