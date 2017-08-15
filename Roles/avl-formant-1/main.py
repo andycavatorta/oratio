@@ -75,10 +75,11 @@ class Utils(object):
     def get_git_timestamp(self):
         return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
 
+    def get_temp(self):
+        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]   
+
     def get_client_status(self):
-        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp())
-
-
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp())
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):

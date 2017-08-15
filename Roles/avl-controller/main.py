@@ -51,17 +51,18 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
                 "present":False,
                 "timestamp":False,
                 "pickle_version":False,
+                "temp":False,
                 "git_pull_date":False
             }
 
     def add_to_queue(self, hostname, git_pull_date, pickle_version):
-        self.queue.put((hostname, git_pull_date, pickle_version, time.time()))
+        self.queue.put((hostname, git_pull_date, pickle_version, temp, time.time()))
 
     def print_current_clients(self):
         print ""
         print "CURRENT CLIENTS:"
         for hostname in self.hostnames:
-            print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
+            print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
 
     def run(self):
         previous_hosts = {}
@@ -70,11 +71,12 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             self.network.thirtybirds.send("client_monitor_request", "")
             time.sleep(self.update_period)
             while not self.queue.empty():
-                [hostname, git_pull_date, pickle_version, timestamp] = self.queue.get(True)
+                [hostname, git_pull_date, pickle_version, temp, timestamp] = self.queue.get(True)
                 #print ">>", hostname, git_pull_date, pickle_version, timestamp
                 self.hosts[hostname]["present"] = True
                 self.hosts[hostname]["timestamp"] = timestamp
                 self.hosts[hostname]["pickle_version"] = pickle_version
+                self.hosts[hostname]["temp"] = temp
                 self.hosts[hostname]["git_pull_date"] = git_pull_date
             #if not cmp(previous_hosts,self.hosts):
             #    self.print_current_clients()
@@ -546,7 +548,7 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_octave", msg))
                     continue
                 if topic == "client_monitor_response":
-                    self.client_monitor_server.add_to_queue(msg[0],msg[2],msg[1])
+                    self.client_monitor_server.add_to_queue(msg[0],msg[2],msg[1],msg[3])
                     
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

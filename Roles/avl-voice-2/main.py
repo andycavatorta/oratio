@@ -1,3 +1,4 @@
+import commands
 import os
 import sys
 import settings
@@ -15,6 +16,7 @@ sys.path.append(BASE_PATH)
 sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Updates.manager import init as updates_init
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -30,6 +32,49 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+########################
+## UTILS
+########################
+
+class Utils(object):
+    def __init__(self, hostname):
+        self.hostname = hostname
+    def reboot(self):
+        os.system("sudo reboot now")
+
+    def get_shelf_id(self):
+        return self.hostname[11:][:1]
+
+    def get_camera_id(self):
+        return self.hostname[12:]
+
+    def create_image_file_name(self, timestamp, light_level, process_type):
+        return "{}_{}_{}_{}_{}.png".format(timestamp, self.get_shelf_id() ,  self.get_camera_id(), light_level, process_type) 
+
+    def remote_update_git(self, oratio, thirtybirds, update, upgrade):
+        if oratio:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
+        if thirtybirds:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
+        return 
+
+    def remote_update_scripts(self):
+        updates_init("/home/pi/oratio", False, True)
+        return
+
+    def get_update_script_version(self):
+        (updates, ghStatus, bsStatus) = updates_init("/home/pi/oratio", False, False)
+        return updates.read_version_pickle()
+
+    def get_git_timestamp(self):
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+
+    def get_temp(self):
+        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]   
+
+    def get_client_status(self):
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp())
+
 
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
@@ -37,13 +82,14 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-
+        self.utils = Utils(hostname)
         # default intermediate frequency
         self.xtal_freq = 119050.0
         self.f_offset = 0           # adjust output freq
 
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_2")
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -101,6 +147,8 @@ class Main(threading.Thread):
                     # subvoice 3 frequency and volume
                     crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
                     crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+                if topic == "client_monitor_request":
+                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
                     
             except Exception as e:

@@ -116,4 +116,3 @@ def init(hostname):
     main.daemon = True
     main.start()
     return main
-
