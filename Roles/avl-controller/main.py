@@ -56,6 +56,7 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             }
 
     def add_to_queue(self, hostname, git_pull_date, temp, pickle_version):
+        print  "add_to_queue", hostname, git_pull_date, temp, pickle_version
         self.queue.put((hostname, git_pull_date, pickle_version, temp, time.time()))
 
     def print_current_clients(self):
