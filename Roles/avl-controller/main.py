@@ -64,7 +64,7 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
         print "CURRENT CLIENTS:"
         for hostname in self.hostnames:
             print "print_current_clients", hostname, repr( self.hosts[hostname])
-            #print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
+            print "%s: %s : %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
 
     def run(self):
         previous_hosts = {}
