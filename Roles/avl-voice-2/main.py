@@ -130,23 +130,23 @@ class Main(threading.Thread):
 
                     print params, self.xtal_freq
 
-                # if intermediate frequency has changed, or voice params have changed, update
-                if xtal_freq != self.xtal_freq or params != self.voice_params:
-                    self.voice_params = params
-                    self.xtal_freq = xtal_freq
+                    # if intermediate frequency has changed, or voice params have changed, update
+                    if xtal_freq != self.xtal_freq or params != self.voice_params:
+                        self.voice_params = params
+                        self.xtal_freq = xtal_freq
 
-                    freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
+                        freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
 
-                    # subvoice 1 (fundamental) frequency
-                    crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
+                        # subvoice 1 (fundamental) frequency
+                        crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
 
-                    # subvoice 2 frequency and volume
-                    crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
-                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
+                        # subvoice 2 frequency and volume
+                        crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
+                        crystal.set_volume(1, map_subvoice_volume(vol_sub1))
 
-                    # subvoice 3 frequency and volume
-                    crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
-                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+                        # subvoice 3 frequency and volume
+                        crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
+                        crystal.set_volume(2, map_subvoice_volume(vol_sub2))
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
