@@ -84,7 +84,7 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             self.network.thirtybirds.send("client_monitor_request", "")
             time.sleep(self.update_period)
             while not self.queue.empty():
-                [hostname, pickle_version, git_pull_date, temp, timestamp] = self.queue.get(True)
+                [hostname, pickle_version, git_pull_date, temp, cpu, uptime, disk, timestamp] = self.queue.get(True)
                 self.hosts[hostname]["present"] = True
                 self.hosts[hostname]["timestamp"] = timestamp
                 self.hosts[hostname]["pickle_version"] = pickle_version
