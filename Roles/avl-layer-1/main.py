@@ -1,3 +1,4 @@
+import commands
 import os
 import sys
 import Queue
@@ -6,6 +7,7 @@ import threading
 import traceback
 
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Updates.manager import init as updates_init
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.normpath(os.path.join(BASE_PATH, '..'))
@@ -32,6 +34,64 @@ class Network(object):
             status_callback=network_status_handler
         )
 
+########################
+## UTILS
+########################
+
+class Utils(object):
+    def __init__(self, hostname):
+        self.hostname = hostname
+    def reboot(self):
+        os.system("sudo reboot now")
+
+    def get_shelf_id(self):
+        return self.hostname[11:][:1]
+
+    def get_camera_id(self):
+        return self.hostname[12:]
+
+    def create_image_file_name(self, timestamp, light_level, process_type):
+        return "{}_{}_{}_{}_{}.png".format(timestamp, self.get_shelf_id() ,  self.get_camera_id(), light_level, process_type) 
+
+    def remote_update_git(self, oratio, thirtybirds, update, upgrade):
+        if oratio:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
+        if thirtybirds:
+            subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
+        return 
+
+    def remote_update_scripts(self):
+        updates_init("/home/pi/oratio", False, True)
+        return
+
+    def get_update_script_version(self):
+        (updates, ghStatus, bsStatus) = updates_init("/home/pi/oratio", False, False)
+        return updates.read_version_pickle()
+
+    def get_git_timestamp(self):
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+
+    def get_temp(self):
+        return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
+
+    def get_cpu(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[12]
+
+    def get_uptime(self):
+        bash_output = commands.getstatusoutput("uptime")[1]
+        split_output = bash_output.split(" ")
+        return split_output[4]
+
+    def get_disk(self):
+        # stub for now
+        return "0"
+
+    def get_client_status(self):
+        return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
+
+
 class Layer(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
@@ -42,6 +102,10 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
         self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
+
+        self.utils = Utils(hostname)
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+
 
     def loop_callback(self):
         # print "Sending layer trigger 1"
@@ -70,6 +134,12 @@ class Layer(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
+
+
+                if topic == "client_monitor_request":
+                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
+
+                
                 if topic == "layer_1_record":
                     if msg:
                         self.looperController.handleShortPedalDown()
