@@ -56,14 +56,12 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             }
 
     def add_to_queue(self, hostname, pickle_version, git_pull_date, temp):
-        print  "add_to_queue", hostname, pickle_version, git_pull_date, temp
         self.queue.put((hostname, pickle_version, git_pull_date, temp, time.time()))
 
     def print_current_clients(self):
         print ""
         print "CURRENT CLIENTS:"
         for hostname in self.hostnames:
-            print "print_current_clients", hostname, repr( self.hosts[hostname])
             print "%s: %s : %s: %s: %s: %s" % (hostname, self.hosts[hostname]["present"], self.hosts[hostname]["temp"], self.hosts[hostname]["timestamp"], self.hosts[hostname]["pickle_version"], self.hosts[hostname]["git_pull_date"])
 
     def run(self):
@@ -74,13 +72,11 @@ class Thirtybirds_Client_Monitor_Server(threading.Thread):
             time.sleep(self.update_period)
             while not self.queue.empty():
                 [hostname, pickle_version, git_pull_date, temp, timestamp] = self.queue.get(True)
-                print ">>", hostname, pickle_version, git_pull_date, temp, timestamp
                 self.hosts[hostname]["present"] = True
                 self.hosts[hostname]["timestamp"] = timestamp
                 self.hosts[hostname]["pickle_version"] = pickle_version
                 self.hosts[hostname]["temp"] = temp
                 self.hosts[hostname]["git_pull_date"] = git_pull_date
-                print "self.hosts[hostname]=", repr(self.hosts[hostname])
             #if not cmp(previous_hosts,self.hosts):
             #    self.print_current_clients()
             #previous_hosts = self.hosts
