@@ -165,7 +165,7 @@ class Voice(object):
         self._overtone_2_volume = 0.0
         self._formant_pattern = {}
 
-        self.transport_encoder_pulses_per_pitch = 1333
+        self.transport_encoder_pulses_per_pitch = 1564
 
     def update(self, name, value):
         if name == "root_volume":
