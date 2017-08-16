@@ -7,6 +7,7 @@ import threading
 import traceback
 
 from thirtybirds_2_0.Network.manager import init as network_init
+from thirtybirds_2_0.Updates.manager import init as updates_init
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 UPPER_PATH = os.path.normpath(os.path.join(BASE_PATH, '..'))
