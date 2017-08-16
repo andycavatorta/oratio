@@ -125,6 +125,7 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
+                print topic, msg
                 if topic == "voice_3":
 
                     params = []
