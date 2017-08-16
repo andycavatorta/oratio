@@ -142,7 +142,9 @@ class Main(threading.Thread):
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
 
                     # update intermediate frequency if new data is available
+                    print "xtal_freq 0=",crystal.measure_xtal_freq()
                     self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
+                    print "xtal_freq 1=",self.xtal_freq
 
                     print params, self.xtal_freq
 
