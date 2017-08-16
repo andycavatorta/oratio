@@ -37,6 +37,20 @@ class Main(threading.Thread):
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.network.thirtybirds.subscribe_to_topic("voice_1")
+        self.network.thirtybirds.subscribe_to_topic("voice_2")
+        self.network.thirtybirds.subscribe_to_topic("voice_3")
+        self.network.thirtybirds.subscribe_to_topic("layer_speed")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
+        self.network.thirtybirds.subscribe_to_topic("layer_2_volume")
+        self.network.thirtybirds.subscribe_to_topic("layer_3_volume")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_play")
+        self.network.thirtybirds.subscribe_to_topic("layer_2_play")
+        self.network.thirtybirds.subscribe_to_topic("layer_3_play")
+        self.network.thirtybirds.subscribe_to_topic("layer_1_record")
+        self.network.thirtybirds.subscribe_to_topic("layer_2_record")
+        self.network.thirtybirds.subscribe_to_topic("layer_3_record")
+
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -57,7 +71,6 @@ class Main(threading.Thread):
             try:
                 topic, msg = self.queue.get(True)
                 print "main Main.run topic/queue", topic, msg
-                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
