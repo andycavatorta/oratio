@@ -166,11 +166,13 @@ class Main(threading.Thread):
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
+mainloop = False
 
 def init(hostname):
+    global mainloop
     crystal.init()
 
-    main = Main(hostname)
+    mainloop= main = Main(hostname)
     main.daemon = True
     main.start()
     return main
