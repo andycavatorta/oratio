@@ -231,7 +231,7 @@ class Voice(object):
             0,
             0
         ]
-        print voice_control_message
+        print "voice", self.voice_number, voice_control_message
         return voice_control_message
 
     def calculate_frequencies(self):
