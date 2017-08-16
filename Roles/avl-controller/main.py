@@ -294,7 +294,7 @@ class Main(threading.Thread):
         ]
         self.client_monitor_server = Thirtybirds_Client_Monitor_Server(self.network, self.hostnames)
         self.client_monitor_server.daemon = True
-        #self.client_monitor_server.start()
+        self.client_monitor_server.start()
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
         self.network.thirtybirds.subscribe_to_topic("client_monitor_response")
 
@@ -426,7 +426,6 @@ class Main(threading.Thread):
                 if topic == "pedal_6":
                     self.network.thirtybirds.send("layer_3_record", msg)
                     continue
-
 
                 if topic == "voice_1_root_harmonic":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_harmonic", msg))
