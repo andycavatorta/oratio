@@ -100,7 +100,7 @@ class Main(threading.Thread):
         # default intermediate frequency
         self.xtal_freq = 119050.0
         self.f_offset = 0           # adjust output freq
-
+        self.voice_params = []
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_2")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
