@@ -1,9 +1,11 @@
 from pyo import *
+from math import trunc
 
 # Global constants
 TABLE_SWAP_TIME = 0.04 # Ramp time in seconds when clearing a table
 MAX_LOOP_LENGTH = 10 # Longest the loop can possibly be, in seconds
 DEFAULT_LOOP_LENGTH = 5
+SAMPLE_RATE = 44100
 
 def resetTable(table):
 	table.reset()
@@ -14,7 +16,11 @@ class LiveLooper():
 		# This will be a function to call whenever the layer loops back around to the beginning
 		self.loopCallback = None
 
-		self.audioServer = Server(nchnls=1, sr=44100, duplex=1, buffersize=1024)
+		# When this flag is up, the layer will clear extra audio from the end of the buffer
+		# as soon as the layer comes back around to the first sample
+		self.needsClear = False
+
+		self.audioServer = Server(nchnls=1, sr=SAMPLE_RATE, duplex=1, buffersize=1024)
 
 		# Set the input offset to 1, since all these boards want right channel
 		self.audioServer.setInputOffset(1)
@@ -26,10 +32,11 @@ class LiveLooper():
 		# Create tables A and B, so that we can clear the table without causing a click
 		self.tableA = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 		self.tableB = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
+		self.scratchTable = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 
 		self.recording = False
 		self.playing = False
-		self.isTableAActive = False
+		self.isTableAActive = True
 
 		# This CallAfter resets a table after a delay
 		self.delayedTableResetter = None
@@ -58,6 +65,22 @@ class LiveLooper():
 			xfade=0
 		).play()
 
+		# Wrap the loop length signal in a sample and hold
+		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
+
+		# Make a counting indexer bound to the loops
+		self.loopIndexCounter = Count(self.readA["trig"], max=0)
+
+		# Create nonfading readers for each table
+		self.indexA = TableIndex(
+			table=self.tableA,
+			index=self.loopIndexCounter
+		)
+		self.indexB = TableIndex(
+			table=self.tableB,
+			index=self.loopIndexCounter
+		)
+
 		# Add the looper trigger
 		self.trigger = TrigFunc(self.readA['trig'], self.triggerLoopCallback)
 
@@ -68,13 +91,17 @@ class LiveLooper():
 		self.readmixr.setAmp(0, 0, 1)
 		self.readmixr.setAmp(1, 0, 1)
 
+		# Create a mixer to mix between the output from the two indexers
+		self.indexMixer = Mixer(outs=1, time=0.25, chnls=1)
+		self.indexMixer.addInput(0, self.indexA)
+		self.indexMixer.addInput(1, self.indexB)
+		self.indexMixer.setAmp(0, 0, 1)
+		self.indexMixer.setAmp(1, 0, 1)
+
 		# Create another mixer, for silencing the output from the mixer
 		self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
 		self.readOutput.addInput(0, self.readmixr[0])
 		self.readOutput.setAmp(0, 0, 0)
-
-		# Wrap the loop length signal in a sample and hold
-		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
 
 		# Mix the input with the output from the looper. In the first,
 		# the loop is recording, in which case we write directly from the
@@ -82,7 +109,7 @@ class LiveLooper():
 		# in which case we write from the table back into the table.
 		self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
 		self.inmixr.addInput(0, self.input) # On the left you've got your mic input
-		self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
+		self.inmixr.addInput(1, self.indexMixer[0]) # On the right there's the table values
 		self.inmixr.setAmp(0, 0, 0)
 		self.inmixr.setAmp(1, 0, 0)
 
@@ -108,7 +135,6 @@ class LiveLooper():
 		self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
 		self.masterLoopOutput.addInput(0, self.readOutput[0])
 		self.masterLoopOutput.setAmp(0, 0, 0)
-		self.masterLoopOutput
 
 		# And finally, multiply that output by an overall output
 		self.sigVolume = SigTo(1, time=0.025, init=1)
@@ -152,6 +178,7 @@ class LiveLooper():
 		self.recording = isRecording
 		if isRecording:
 			print("Start recording")
+			self.needsClear = True
 		else:
 			print("Stop recording")
 
@@ -168,12 +195,12 @@ class LiveLooper():
 			self.readOutput.setAmp(0, 0, 1)
 
 	def setLoopLength(self, l):
+		self.loopLen = l
 		self.sigLoopLen.setValue(l)
 
 	def setVolume(self, vol):
 		self.sigVolume.setValue(vol)
 
 	def triggerLoopCallback(self):
-		# print "Do trigger"
 		if self.loopCallback is not None:
 			self.loopCallback()

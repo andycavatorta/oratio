@@ -1,9 +1,11 @@
 import commands
 import os
+import RPi.GPIO as GPIO
 import sys
 import Queue
 import settings
 import threading
+import time
 import traceback
 
 from thirtybirds_2_0.Network.manager import init as network_init
@@ -58,7 +60,7 @@ class Utils(object):
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
         if thirtybirds:
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
-        return 
+        return
 
     def remote_update_scripts(self):
         updates_init("/home/pi/oratio", False, True)
@@ -69,7 +71,7 @@ class Utils(object):
         return updates.read_version_pickle()
 
     def get_git_timestamp(self):
-        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]
 
     def get_temp(self):
         return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
@@ -102,14 +104,22 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
         self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
-
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.blinkTimer = None
 
+    def lights_out(self):
+        GPIO.output(26, GPIO.LOW)
+        self.blinkTimer = None
 
     def loop_callback(self):
         # print "Sending layer trigger 1"
         self.network.thirtybirds.send("layer_1_trigger", "1")
+        GPIO.output(26, GPIO.HIGH)
+        if (self.blinkTimer is not None):
+            self.blinkTimer.cancel()
+        self.blinkTimer = threading.Timer(0.3, self.lights_out)
+        self.blinkTimer.start()
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
@@ -139,7 +149,6 @@ class Layer(threading.Thread):
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                
                 if topic == "layer_1_record":
                     if msg:
                         self.looperController.handleShortPedalDown()
@@ -168,6 +177,8 @@ class Layer(threading.Thread):
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 def init(hostname):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(26, GPIO.OUT)
     layer = Layer(hostname)
     layer.daemon = True
     layer.start()
