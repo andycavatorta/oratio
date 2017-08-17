@@ -202,15 +202,5 @@ class LiveLooper():
 		self.sigVolume.setValue(vol)
 
 	def triggerLoopCallback(self):
-		if (self.needsClear):
-			self.needsClear = False
-			print "Clearing out that stuff"
-			self.scratchTable.copyData(self.tableA if self.isTableAActive else self.tableB)
-			if self.isTableAActive:
-				self.tableA.reset()
-				self.tableA.copyData(self.scratchTable, 0, 0, trunc(self.loopLen * SAMPLE_RATE))
-			else:
-				self.tableB.reset()
-				self.tableB.copyData(self.scratchTable, 0, 0, trunc(self.loopLen * SAMPLE_RATE))
 		if self.loopCallback is not None:
 			self.loopCallback()
