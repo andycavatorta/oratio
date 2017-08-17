@@ -168,7 +168,7 @@ class Potentiometers(threading.Thread):
                 "voice_2_overtone_2_harmonic",
                 "voice_2_overtone_2_fine",
                 "voice_2_overtone_2_volume"
-                "",
+                ""
             ],
             [
                 "voice_3_root_octave",
