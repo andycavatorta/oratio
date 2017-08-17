@@ -1,9 +1,11 @@
 from pyo import *
+from math import trunc
 
 # Global constants
 TABLE_SWAP_TIME = 0.04 # Ramp time in seconds when clearing a table
 MAX_LOOP_LENGTH = 10 # Longest the loop can possibly be, in seconds
 DEFAULT_LOOP_LENGTH = 5
+SAMPLE_RATE = 44100
 
 def resetTable(table):
 	table.reset()
@@ -14,7 +16,11 @@ class LiveLooper():
 		# This will be a function to call whenever the layer loops back around to the beginning
 		self.loopCallback = None
 
-		self.audioServer = Server(nchnls=1, sr=44100, duplex=1, buffersize=1024)
+		# When this flag is up, the layer will clear extra audio from the end of the buffer
+		# as soon as the layer comes back around to the first sample
+		self.needsClear = False
+
+		self.audioServer = Server(nchnls=1, sr=SAMPLE_RATE, duplex=1, buffersize=1024)
 
 		# Set the input offset to 1, since all these boards want right channel
 		self.audioServer.setInputOffset(1)
@@ -26,10 +32,11 @@ class LiveLooper():
 		# Create tables A and B, so that we can clear the table without causing a click
 		self.tableA = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 		self.tableB = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
+		self.scratchTable = NewTable(length=MAX_LOOP_LENGTH, chnls=1, feedback=0.0)
 
 		self.recording = False
 		self.playing = False
-		self.isTableAActive = False
+		self.isTableAActive = True
 
 		# This CallAfter resets a table after a delay
 		self.delayedTableResetter = None
@@ -108,7 +115,6 @@ class LiveLooper():
 		self.masterLoopOutput = Mixer(chnls=1, time=0.04, outs=1)
 		self.masterLoopOutput.addInput(0, self.readOutput[0])
 		self.masterLoopOutput.setAmp(0, 0, 0)
-		self.masterLoopOutput
 
 		# And finally, multiply that output by an overall output
 		self.sigVolume = SigTo(1, time=0.025, init=1)
@@ -152,6 +158,7 @@ class LiveLooper():
 		self.recording = isRecording
 		if isRecording:
 			print("Start recording")
+			self.needsClear = True
 		else:
 			print("Stop recording")
 
@@ -168,12 +175,22 @@ class LiveLooper():
 			self.readOutput.setAmp(0, 0, 1)
 
 	def setLoopLength(self, l):
+		self.loopLen = l
 		self.sigLoopLen.setValue(l)
 
 	def setVolume(self, vol):
 		self.sigVolume.setValue(vol)
 
 	def triggerLoopCallback(self):
-		# print "Do trigger"
+		if (self.needsClear):
+			self.needsClear = False
+			print "Clearing out that stuff"
+			self.scratchTable.copyData(self.tableA if self.isTableAActive else self.tableB)
+			if self.isTableAActive:
+				self.tableA.reset()
+				self.tableA.copyData(self.scratchTable, 0, 0, trunc(self.loopLen * SAMPLE_RATE))
+			else:
+				self.tableB.reset()
+				self.tableB.copyData(self.scratchTable, 0, 0, trunc(self.loopLen * SAMPLE_RATE))
 		if self.loopCallback is not None:
 			self.loopCallback()

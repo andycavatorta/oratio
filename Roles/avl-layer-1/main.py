@@ -58,7 +58,7 @@ class Utils(object):
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
         if thirtybirds:
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
-        return 
+        return
 
     def remote_update_scripts(self):
         updates_init("/home/pi/oratio", False, True)
@@ -69,7 +69,7 @@ class Utils(object):
         return updates.read_version_pickle()
 
     def get_git_timestamp(self):
-        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]
 
     def get_temp(self):
         return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
@@ -139,7 +139,6 @@ class Layer(threading.Thread):
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                
                 if topic == "layer_1_record":
                     if msg:
                         self.looperController.handleShortPedalDown()
