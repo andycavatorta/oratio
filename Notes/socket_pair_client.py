@@ -25,7 +25,7 @@ socket.setsockopt(zmq.SUBSCRIBE, topicfilter)
 
 # Process 5 updates
 total_value = 0
-for update_nbr in range (5):
+for update_nbr in range (50):
     string = socket.recv()
     topic, messagedata = string.split()
     total_value += int(messagedata)
