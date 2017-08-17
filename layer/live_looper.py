@@ -65,6 +65,22 @@ class LiveLooper():
 			xfade=0
 		).play()
 
+		# Wrap the loop length signal in a sample and hold
+		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
+
+		# Make a counting indexer bound to the loops
+		self.loopIndexCounter = Count(self.readA["trig"], max=0)
+
+		# Create nonfading readers for each table
+		self.indexA = TableIndex(
+			table=self.tableA,
+			index=self.loopIndexCounter
+		)
+		self.indexB = TableIndex(
+			table=self.tableB,
+			index=self.loopIndexCounter
+		)
+
 		# Add the looper trigger
 		self.trigger = TrigFunc(self.readA['trig'], self.triggerLoopCallback)
 
@@ -75,13 +91,17 @@ class LiveLooper():
 		self.readmixr.setAmp(0, 0, 1)
 		self.readmixr.setAmp(1, 0, 1)
 
+		# Create a mixer to mix between the output from the two indexers
+		self.indexMixer = Mixer(outs=1, time=0.25, chnls=1)
+		self.indexMixer.addInput(0, self.indexA)
+		self.indexMixer.addInput(1, self.indexB)
+		self.indexMixer.setAmp(0, 0, 1)
+		self.indexMixer.setAmp(1, 0, 1)
+
 		# Create another mixer, for silencing the output from the mixer
 		self.readOutput = Mixer(outs=1, time=0.04, chnls=1)
 		self.readOutput.addInput(0, self.readmixr[0])
 		self.readOutput.setAmp(0, 0, 0)
-
-		# Wrap the loop length signal in a sample and hold
-		self.sigLoopLenSynced = SampHold(self.sigLoopLen, self.readA["trig"], value=1)
 
 		# Mix the input with the output from the looper. In the first,
 		# the loop is recording, in which case we write directly from the
@@ -89,7 +109,7 @@ class LiveLooper():
 		# in which case we write from the table back into the table.
 		self.inmixr = Mixer(outs=1, time=0.04, chnls=1)
 		self.inmixr.addInput(0, self.input) # On the left you've got your mic input
-		self.inmixr.addInput(1, self.readmixr[0]) # On the right there's the table values
+		self.inmixr.addInput(1, self.indexMixer[0]) # On the right there's the table values
 		self.inmixr.setAmp(0, 0, 0)
 		self.inmixr.setAmp(1, 0, 0)
 
