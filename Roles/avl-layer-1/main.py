@@ -177,6 +177,7 @@ class Layer(threading.Thread):
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 def init(hostname):
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(26, GPIO.OUT)
     layer = Layer(hostname)
     layer.daemon = True
