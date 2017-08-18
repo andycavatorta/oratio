@@ -58,7 +58,7 @@ class Transport(threading.Thread):
         # only send update if encoder has changed position sincfe last reading
         if current_accumulated_transport_postion != self.last_accumulated_transport_postion:
             # send normalized encoder info to voice pi
-            if abs(current_accumulated_transport_postion - self.last_accumulated_transport_postion) >= 100:
+            if abs(current_accumulated_transport_postion - self.last_accumulated_transport_postion) >= 10:
                 self.queue.put(current_accumulated_transport_postion)
             # update encoder position
             self.last_accumulated_transport_postion = current_accumulated_transport_postion
