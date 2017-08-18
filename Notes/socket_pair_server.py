@@ -17,3 +17,4 @@ while True:
     print "%d %d" % (topic, messagedata)
     socket.send("%d %d" % (topic, messagedata))
     time.sleep(1)
+    

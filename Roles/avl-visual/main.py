@@ -3,6 +3,7 @@ import Queue
 import settings
 import time
 import threading
+import zmq
 
 
 #BASE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -14,7 +15,6 @@ import threading
 #sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
-
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -34,8 +34,13 @@ class Network(object):
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
+
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
+        self.port = "5556"
         self.queue = Queue.Queue()
+        self.context = zmq.Context()
+        self.socket = context.socket(zmq.PUB)
+        self.socket.bind("tcp://*:%s" % self.port)
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
         self.network.thirtybirds.subscribe_to_topic("voice_1")
         self.network.thirtybirds.subscribe_to_topic("voice_2")
@@ -70,6 +75,7 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
+                self.socket.send("%d %d" % (topic, msg))
                 print "main Main.run topic/queue", topic, msg
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

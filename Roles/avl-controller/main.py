@@ -380,180 +380,238 @@ class Main(threading.Thread):
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("pitch_key", msg))
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("pitch_key", msg))
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("pitch_key", msg))
+                    self.network.thirtybirds.send("pitch_key_touched",msg)
                     continue
                 if topic == "transport_position":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("transport_position", msg))
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("transport_position", msg))
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("transport_position", msg))
+                    self.network.thirtybirds.send("transport_position",msg)
                     continue
                 if topic == "voice_key_1_position":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_volume", msg))
+                    self.network.thirtybirds.send("voice_key_1_position",msg)
                     continue
                 if topic == "voice_key_2_position":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_volume", msg))
+                    self.network.thirtybirds.send("voice_key_2_position",msg)
                     continue
                 if topic == "voice_key_3_position":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_volume", msg))
+                    self.network.thirtybirds.send("voice_key_3_position",msg)
                     continue
 
                 if topic == "layer_speed":
                     self.network.thirtybirds.send("layer_speed", float(msg)*10.0)
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "layer_1_volume":
                     self.network.thirtybirds.send("layer_1_volume", msg)
+                    self.network.thirtybirds.send("layer_1_volume",msg)
                     continue
                 if topic == "layer_2_volume":
                     self.network.thirtybirds.send("layer_2_volume", msg)
+                    self.network.thirtybirds.send("layer_2_volume",msg)
                     continue
                 if topic == "layer_3_volume":
                     self.network.thirtybirds.send("layer_3_volume", msg)
+                if topic == "layer_3_volume":
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "pedal_1":
                     self.network.thirtybirds.send("layer_1_play", msg)
+                    self.network.thirtybirds.send("pedal_1",msg)
                     continue
                 if topic == "pedal_2":
                     self.network.thirtybirds.send("layer_2_play", msg)
+                    self.network.thirtybirds.send("pedal_2",msg)
                     continue
                 if topic == "pedal_3":
                     self.network.thirtybirds.send("layer_3_play", msg)
+                    self.network.thirtybirds.send("pedal_3",msg)
                     continue
                 if topic == "pedal_4":
                     self.network.thirtybirds.send("layer_1_record", msg)
+                    self.network.thirtybirds.send("pedal_4",msg)
                     continue
                 if topic == "pedal_5":
                     self.network.thirtybirds.send("layer_2_record", msg)
+                    self.network.thirtybirds.send("pedal_5",msg)
                     continue
                 if topic == "pedal_6":
                     self.network.thirtybirds.send("layer_3_record", msg)
+                    self.network.thirtybirds.send("pedal_6",msg)
                     continue
 
                 if topic == "voice_1_root_harmonic":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_harmonic", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_root_fine":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_fine", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_1_harmonic":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_1_harmonic", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_1_fine":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_1_fine", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_1_volume":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_1_volume", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_2_harmonic":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_2_harmonic", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_2_fine":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_2_fine", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_overtone_2_volume":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("overtone_2_volume", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_formant_volume":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("formant_volume", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_formant_pitch":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("formant_pitch", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_formant_open_close":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("formant_open_close", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_formant_front_back":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("formant_front_back", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_root_half_steps":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_half_steps", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "voice_1_root_octave":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("root_octave", msg))
+                    self.network.thirtybirds.send("",msg)
                     continue
 
                 if topic == "voice_2_root_harmonic":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_harmonic", msg))
+                    self.network.thirtybirds.send("voice_2_root_harmonic",msg)
                     continue
                 if topic == "voice_2_root_fine":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_fine", msg))
+                    self.network.thirtybirds.send("voice_2_root_fine",msg)
                     continue
                 if topic == "voice_2_overtone_1_harmonic":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_1_harmonic", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_1_harmonic",msg)
                     continue
                 if topic == "voice_2_overtone_1_fine":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_1_fine", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_1_fine",msg)
                     continue
                 if topic == "voice_2_overtone_1_volume":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_1_volume", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_1_volume",msg)
                     continue
                 if topic == "voice_2_overtone_2_harmonic":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_2_harmonic", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_2_harmonic",msg)
                     continue
                 if topic == "voice_2_overtone_2_fine":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_2_fine", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_2_fine",msg)
                     continue
                 if topic == "voice_2_overtone_2_volume":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("overtone_2_volume", msg))
+                    self.network.thirtybirds.send("voice_2_overtone_2_volume",msg)
                     continue
                 if topic == "voice_2_formant_volume":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_volume", msg))
+                    self.network.thirtybirds.send("voice_2_formant_volume",msg)
                     continue
                 if topic == "voice_2_formant_pitch":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_pitch", msg))
+                    self.network.thirtybirds.send("voice_2_formant_volume",msg)
                     continue
                 if topic == "voice_2_formant_open_close":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_open_close", msg))
+                    self.network.thirtybirds.send("voice_2_formant_open_close",msg)
                     continue
                 if topic == "voice_2_formant_front_back":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("formant_front_back", msg))
+                    self.network.thirtybirds.send("voice_2_formant_front_back",msg)
                     continue
                 if topic == "voice_2_root_half_steps":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_half_steps", msg))
+                    self.network.thirtybirds.send("voice_2_root_half_steps",msg)
                     continue
                 if topic == "voice_2_root_octave":
                     self.network.thirtybirds.send("voice_2", self.voices[1].update("root_octave", msg))
+                    self.network.thirtybirds.send("voice_2_root_octave",msg)
                     continue
 
                 if topic == "voice_3_root_harmonic":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_harmonic", msg))
+                    self.network.thirtybirds.send("voice_3_root_harmonic",msg)
                     continue
                 if topic == "voice_3_root_fine":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_fine", msg))
+                    self.network.thirtybirds.send("voice_3_root_fine",msg)
                     continue
                 if topic == "voice_3_overtone_1_harmonic":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_1_harmonic", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_1_harmonic",msg)
                     continue
                 if topic == "voice_3_overtone_1_fine":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_1_fine", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_1_fine",msg)
                     continue
                 if topic == "voice_3_overtone_1_volume":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_1_volume", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_1_volume",msg)
                     continue
                 if topic == "voice_3_overtone_2_harmonic":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_2_harmonic", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_2_harmonic",msg)
                     continue
                 if topic == "voice_3_overtone_2_fine":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_2_fine", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_2_fine",msg)
                     continue
                 if topic == "voice_3_overtone_2_volume":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("overtone_2_volume", msg))
+                    self.network.thirtybirds.send("voice_3_overtone_2_volume",msg)
                     continue
                 if topic == "voice_3_formant_volume":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_volume", msg))
+                    self.network.thirtybirds.send("voice_3_formant_volume",msg)
                     continue
                 if topic == "voice_3_formant_pitch":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_pitch", msg))
+                    self.network.thirtybirds.send("voice_3_formant_pitch",msg)
                     continue
                 if topic == "voice_3_formant_open_close":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_open_close", msg))
+                    self.network.thirtybirds.send("voice_3_formant_open_close",msg)
                     continue
                 if topic == "voice_3_formant_front_back":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("formant_front_back", msg))
+                    self.network.thirtybirds.send("voice_3_formant_front_back",msg)
                     continue
                 if topic == "voice_3_root_half_steps":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_half_steps", msg))
+                    self.network.thirtybirds.send("voice_3_root_half_steps",msg)
                     continue
                 if topic == "voice_3_root_octave":
                     self.network.thirtybirds.send("voice_3", self.voices[2].update("root_octave", msg))
+                    self.network.thirtybirds.send("voice_3_root_octave",msg)
                     continue
                 if topic == "client_monitor_response":
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])

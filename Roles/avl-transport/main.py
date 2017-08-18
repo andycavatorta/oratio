@@ -53,7 +53,7 @@ class Transport(threading.Thread):
         # decrement lap if moving in the opposite direction
         elif self.last_encoder_value - current_encoder_value < 0 and not direction:
             self.lap -= 1
-        self.last_encoder_value = current_encoder_value                      # store raw position
+        self.last_encoder_value = current_encoder_value # store raw position
         current_accumulated_transport_postion = (self.lap * self.resolution) + current_encoder_value  # calculate relative position
         # only send update if encoder has changed position sincfe last reading
         if current_accumulated_transport_postion != self.last_accumulated_transport_postion:
