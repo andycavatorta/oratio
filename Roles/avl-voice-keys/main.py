@@ -207,11 +207,11 @@ class Main(threading.Thread):
                     for voice_key_position in voice_key_positions:
                         key_number, voice_key_new_position = voice_key_position
                         if key_number == 0 and self.staccato_1:
-                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
+                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.15 else 0.0
                         if key_number == 1 and self.staccato_2:
-                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
+                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.15 else 0.0
                         if key_number == 2 and self.staccato_3:
-                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.05 else 0.0
+                            voice_key_new_position = 1.0 if voice_key_new_position >= 0.15 else 0.0
                         print key_number, voice_key_new_position
                         #print "button:", name, state
                         #print "button_states:", button_states

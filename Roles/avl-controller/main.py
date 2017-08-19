@@ -275,7 +275,7 @@ class Main(threading.Thread):
         self.queue = Queue.Queue()
         self.pedals = Pedals(self.add_to_queue)
         self.pedals.daemon = True
-        self.pedals.start()
+        #self.pedals.start()
 
         self.hostnames = [
             "avl-formant-1",
