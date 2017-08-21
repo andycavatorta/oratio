@@ -104,7 +104,7 @@ class Main(threading.Thread):
         #self.gainRampThread = gainRampThread
         # default intermediate frequency
         #self.xtal_freq = 167233.6
-        self.xtal_freq = 167223.6
+        self.xtal_freq = 167218.6
         self.f_offset = 0           # adjust output freq
 
         # get voice messages
