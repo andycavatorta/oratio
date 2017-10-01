@@ -100,9 +100,6 @@ class Utils(object):
         return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
 
 
-
-
-
 class Capacitive_Sensors(threading.Thread):
     def __init__(self, network_send_callback):
         threading.Thread.__init__(self)
