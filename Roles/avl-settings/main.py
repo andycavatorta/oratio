@@ -124,7 +124,7 @@ class Potentiometers(threading.Thread):
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
-        self.chip_select_pins = [8]
+        self.chip_select_pins = [8,7]
         #self.chip_select_pins = [8,7,12,16,20,21]
 
 
@@ -149,6 +149,7 @@ class Potentiometers(threading.Thread):
                 "",
                 "",
             ],
+            """
             [
                 "voice_2_overtone_2_volume",
                 "voice_2_overtone_2_fine", 
@@ -189,6 +190,7 @@ class Potentiometers(threading.Thread):
                 "",
                 "",
             ],
+            """
         ]
 
         """
