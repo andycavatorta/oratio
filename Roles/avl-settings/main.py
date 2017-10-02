@@ -120,7 +120,7 @@ class Potentiometers(threading.Thread):
     def __init__(self, network_send_ref):
         threading.Thread.__init__(self)
         self.network_send_ref = network_send_ref
-        self.noise_threshold = 10
+        self.noise_threshold = 5
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
@@ -187,7 +187,7 @@ class Potentiometers(threading.Thread):
                 "",
             ]
         ]
-        
+
         self.potentiometer_last_value  = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -204,14 +204,14 @@ class Potentiometers(threading.Thread):
             #print all_adc_values
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
-                    adc_value = 1023 - all_adc_values[adc][channel]
+                    adc_value = all_adc_values[adc][channel]
                     potentiometer_name = self.potentiometers_layout[adc][channel]
                     if potentiometer_name != "":
                         if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
                             self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
-            time.sleep(0.1)
+            time.sleep(0.05)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
