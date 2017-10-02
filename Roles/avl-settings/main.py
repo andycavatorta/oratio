@@ -124,10 +124,7 @@ class Potentiometers(threading.Thread):
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
-        self.chip_select_pins = [8,7,12,16]
-        #self.chip_select_pins = [8,7,12,16,20,21]
-
-
+        self.chip_select_pins = [8,7,12,16,20,21]
         self.potentiometers_layout  = [
             [
                 "voice_1_overtone_2_volume",
@@ -140,10 +137,10 @@ class Potentiometers(threading.Thread):
                 "",
             ],
             [
-                "voice_1_overtone_1_fine",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_root_fine",
                 "voice_1_root_half_steps",
+                "voice_1_root_fine",
+                "voice_1_overtone_1_harmonic",
+                "voice_1_overtone_1_fine",
                 "",
                 "",
                 "",
@@ -160,83 +157,37 @@ class Potentiometers(threading.Thread):
                 "",
             ],
             [
-                "voice_2_overtone_1_fine",
-                "voice_2_overtone_1_harmonic",
-                "voice_2_root_fine",
                 "voice_2_root_half_steps",
+                "voice_2_root_fine",
+                "voice_2_overtone_1_harmonic",
+                "voice_2_overtone_1_fine",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_2_fine", 
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_1_volume",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_3_root_half_steps",
+                "voice_3_root_fine",
+                "voice_3_overtone_1_harmonic",
+                "voice_3_overtone_1_fine",
                 "",
                 "",
                 "",
                 "",
             ]
         ]
-
-        """
-        self.potentiometers_layout  = [
-            [
-                "",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_overtone_1_fine",
-                "voice_1_overtone_1_volume",
-                "",
-                "voice_1_root_fine",
-                "voice_1_root_half_steps",
-                "voice_1_root_octave"
-            ],
-            [
-                "",
-                "",
-                "",
-                "",
-                "voice_1_overtone_2_harmonic",
-                "voice_1_overtone_2_fine", 
-                "voice_1_overtone_2_volume",
-                ""
-            ],
-
-            [
-                "voice_2_root_octave",
-                "voice_2_root_half_steps",
-                "voice_2_root_fine",
-                "",
-                "voice_2_overtone_1_volume",
-                "voice_2_overtone_1_fine",
-                "voice_2_overtone_1_harmonic",
-                ""
-            ],
-            [
-                "",
-                "",
-                "",
-                "",
-                "voice_2_overtone_2_harmonic",
-                "voice_2_overtone_2_fine",
-                "voice_2_overtone_2_volume",
-                ""
-            ],
-            [
-                "voice_3_root_octave",
-                "voice_3_root_half_steps",
-                "voice_3_root_fine",
-                "",
-                "voice_3_overtone_1_volume",
-                "voice_3_overtone_1_fine",
-                "voice_3_overtone_1_harmonic",
-                ""
-            ],
-            [
-                "",
-                "",
-                "",
-                "",
-                "voice_3_overtone_2_harmonic",
-                "voice_3_overtone_2_fine",
-                "voice_3_overtone_2_volume",
-                "layer_speed"
-            ],
-        ]
-        """
-
+        
         self.potentiometer_last_value  = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
