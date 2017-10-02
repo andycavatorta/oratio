@@ -130,15 +130,65 @@ class Potentiometers(threading.Thread):
 
         self.potentiometers_layout  = [
             [
-                "asdf",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_overtone_1_fine",
+                "voice_1_overtone_2_volume",
+                "voice_1_overtone_2_fine", 
+                "voice_1_overtone_2_harmonic",
                 "voice_1_overtone_1_volume",
-                "fdsa",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_1_overtone_1_fine",
+                "voice_1_overtone_1_harmonic",
                 "voice_1_root_fine",
                 "voice_1_root_half_steps",
-                "voice_1_root_octave"
-            ]
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_2_overtone_2_volume",
+                "voice_2_overtone_2_fine", 
+                "voice_2_overtone_2_harmonic",
+                "voice_2_overtone_1_volume",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_2_overtone_1_fine",
+                "voice_2_overtone_1_harmonic",
+                "voice_2_root_fine",
+                "voice_2_root_half_steps",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_2_fine", 
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_1_volume",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_3_overtone_1_fine",
+                "voice_3_overtone_1_harmonic",
+                "voice_3_root_fine",
+                "voice_3_root_half_steps",
+                "",
+                "",
+                "",
+                "",
+            ],
         ]
 
         """
