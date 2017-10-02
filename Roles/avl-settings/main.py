@@ -149,7 +149,6 @@ class Potentiometers(threading.Thread):
                 "",
                 "",
             ],
-            """
             [
                 "voice_2_overtone_2_volume",
                 "voice_2_overtone_2_fine", 
@@ -169,7 +168,8 @@ class Potentiometers(threading.Thread):
                 "",
                 "",
                 "",
-            ],
+            ]
+            """,
             [
                 "voice_3_overtone_2_volume",
                 "voice_3_overtone_2_fine", 
