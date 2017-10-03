@@ -121,7 +121,7 @@ class Potentiometers(threading.Thread):
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
         self.network_send_ref = network_send_ref
-        self.noise_threshold = 10
+        self.noise_threshold = 20
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
