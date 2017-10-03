@@ -124,88 +124,69 @@ class Potentiometers(threading.Thread):
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
-        self.chip_select_pins = [8]
-        #self.chip_select_pins = [8,7,12,16,20,21]
-
-
+        self.chip_select_pins = [8,7,12,16,20,21]
         self.potentiometers_layout  = [
             [
-                "asdf",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_overtone_1_fine",
-                "voice_1_overtone_1_volume",
-                "fdsa",
-                "voice_1_root_fine",
-                "voice_1_root_half_steps",
-                "voice_1_root_octave"
-            ]
-        ]
-
-        """
-        self.potentiometers_layout  = [
-            [
-                "",
-                "voice_1_overtone_1_harmonic",
-                "voice_1_overtone_1_fine",
-                "voice_1_overtone_1_volume",
-                "",
-                "voice_1_root_fine",
-                "voice_1_root_half_steps",
-                "voice_1_root_octave"
-            ],
-            [
-                "",
-                "",
-                "",
-                "",
-                "voice_1_overtone_2_harmonic",
-                "voice_1_overtone_2_fine", 
                 "voice_1_overtone_2_volume",
-                ""
+                "voice_1_overtone_2_fine", 
+                "voice_1_overtone_2_harmonic",
+                "voice_1_overtone_1_volume",
+                "",
+                "",
+                "",
+                "",
             ],
-
             [
-                "voice_2_root_octave",
+                "voice_1_root_half_steps",
+                "voice_1_root_fine",
+                "voice_1_overtone_1_harmonic",
+                "voice_1_overtone_1_fine",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
+                "voice_2_overtone_2_volume",
+                "voice_2_overtone_2_fine", 
+                "voice_2_overtone_2_harmonic",
+                "voice_2_overtone_1_volume",
+                "",
+                "",
+                "",
+                "",
+            ],
+            [
                 "voice_2_root_half_steps",
                 "voice_2_root_fine",
-                "",
-                "voice_2_overtone_1_volume",
-                "voice_2_overtone_1_fine",
                 "voice_2_overtone_1_harmonic",
-                ""
+                "voice_2_overtone_1_fine",
+                "",
+                "",
+                "",
+                "",
             ],
             [
+                "voice_3_overtone_2_volume",
+                "voice_3_overtone_2_fine", 
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_1_volume",
                 "",
                 "",
                 "",
                 "",
-                "voice_2_overtone_2_harmonic",
-                "voice_2_overtone_2_fine",
-                "voice_2_overtone_2_volume",
-                ""
             ],
             [
-                "voice_3_root_octave",
                 "voice_3_root_half_steps",
                 "voice_3_root_fine",
-                "",
-                "voice_3_overtone_1_volume",
-                "voice_3_overtone_1_fine",
                 "voice_3_overtone_1_harmonic",
-                ""
-            ],
-            [
+                "voice_3_overtone_1_fine",
                 "",
                 "",
                 "",
                 "",
-                "voice_3_overtone_2_harmonic",
-                "voice_3_overtone_2_fine",
-                "voice_3_overtone_2_volume",
-                "layer_speed"
-            ],
+            ]
         ]
-        """
 
         self.potentiometer_last_value  = [
             [0,0,0,0,0,0,0,0],
@@ -223,14 +204,14 @@ class Potentiometers(threading.Thread):
             #print all_adc_values
             for adc in range(len(all_adc_values)):
                 for channel in range(8):
-                    adc_value = 1023 - all_adc_values[adc][channel]
-                    potentiometer_name = self.potentiometers_layout[adc][channel]
+                    adc_value = all_adc_values[adc][channel]
+                    potentiometer_name = self.potentiometers_layout[adc][channel]       
                     if potentiometer_name != "":
                         if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
                             self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
-            time.sleep(0.1)
+            time.sleep(0.05)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
