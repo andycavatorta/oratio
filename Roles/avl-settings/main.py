@@ -214,7 +214,7 @@ class Potentiometers(threading.Thread):
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.05)
-            if last_summary_sent < time.time() + 60:
+            if time.time() - 60 > last_summary_sent:
                 for adc in range(len(self.potentiometers_layout)):
                     for channel in range(8):
                         potentiometer_name = self.potentiometers_layout[adc][channel]       
