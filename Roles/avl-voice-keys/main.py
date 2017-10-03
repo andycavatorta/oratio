@@ -1,4 +1,4 @@
-from __future__ import division
+    from __future__ import division
 
 import test_that_works
 import AMT203
@@ -160,8 +160,8 @@ class Main(threading.Thread):
         defs = [
             ("hold", 26),
             ("staccato_3", 19),
-            ("staccato_2", 06),
-            ("staccato_1", 13),
+            ("staccato_2", 13),
+            ("staccato_1", 06),
         ]
         self.buttons = Buttons(defs)
         self.hold = False
