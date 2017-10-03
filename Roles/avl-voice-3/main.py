@@ -156,7 +156,7 @@ class Main(threading.Thread):
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                    
+            
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))

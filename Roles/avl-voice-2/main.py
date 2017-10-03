@@ -121,7 +121,7 @@ class Main(threading.Thread):
 
     def run(self):
         while True:
-             try:
+            try:
                 topic, msg = self.queue.get(True)
                 print topic, msg
                 if topic == "voice_2":
