@@ -121,7 +121,7 @@ class Potentiometers(threading.Thread):
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
         self.network_send_ref = network_send_ref
-        self.noise_threshold = 25
+        self.noise_threshold = 20
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
@@ -198,10 +198,9 @@ class Potentiometers(threading.Thread):
             [0,0,0,0,0,0,0,0]
         ]
         self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins)
-    def request_state(self):
-        self.queue.put(True)
 
     def run(self):
+        last_summary_sent = time.time()
         while True:
             all_adc_values =  self.mcp3008s.scan_all()
             #print all_adc_values
@@ -214,14 +213,14 @@ class Potentiometers(threading.Thread):
                             self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
-            try:
-                self.queue.get(False)
-                #send all
-            except Exception as e:
-                pass
-            
             time.sleep(0.05)
-
+            if last_summary_sent < time.time() + 60:
+                for adc in range(len(self.potentiometers_layout)):
+                    for channel in range(8):
+                        potentiometer_name = self.potentiometers_layout[adc][channel]       
+                        if potentiometer_name != "":
+                            self.network_send_ref(potentiometer_name, self.potentiometer_last_value[adc][channel]/1023.0)
+                last_summary_sent == time.time()
 
 
 
