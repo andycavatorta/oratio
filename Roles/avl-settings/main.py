@@ -121,17 +121,17 @@ class Potentiometers(threading.Thread):
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
         self.network_send_ref = network_send_ref
-        self.noise_threshold = 10
+        self.noise_threshold = 25
         self.spi_clock_pin = 11
         self.miso_pin = 9
         self.mosi_pin = 10
         self.chip_select_pins = [20,21,12,16,8,7]
         self.potentiometers_layout  = [
             [
-                "voice_1_overtone_2_volume",
-                "voice_1_overtone_2_fine", 
-                "voice_1_overtone_2_harmonic",
                 "voice_1_overtone_1_volume",
+                "voice_1_overtone_2_harmonic",
+                "voice_1_overtone_2_fine", 
+                "voice_1_overtone_2_volume",
                 "",
                 "",
                 "",
@@ -148,10 +148,10 @@ class Potentiometers(threading.Thread):
                 "",
             ],
             [
-                "voice_2_overtone_2_volume",
-                "voice_2_overtone_2_fine", 
-                "voice_2_overtone_2_harmonic",
                 "voice_2_overtone_1_volume",
+                "voice_2_overtone_2_harmonic",
+                "voice_2_overtone_2_fine", 
+                "voice_2_overtone_2_volume",
                 "",
                 "",
                 "",
@@ -168,10 +168,10 @@ class Potentiometers(threading.Thread):
                 "",
             ],
             [
-                "voice_3_overtone_2_volume",
-                "voice_3_overtone_2_fine", 
-                "voice_3_overtone_2_harmonic",
                 "voice_3_overtone_1_volume",
+                "voice_3_overtone_2_harmonic",
+                "voice_3_overtone_2_fine", 
+                "voice_3_overtone_2_volume",
                 "",
                 "",
                 "",
