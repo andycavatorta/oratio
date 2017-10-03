@@ -214,6 +214,7 @@ class Potentiometers(threading.Thread):
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.05)
+            """
             if time.time() - 60 > last_summary_sent:
                 for adc in range(len(self.potentiometers_layout)):
                     for channel in range(8):
@@ -221,7 +222,7 @@ class Potentiometers(threading.Thread):
                         if potentiometer_name != "":
                             self.network_send_ref(potentiometer_name, self.potentiometer_last_value[adc][channel]/1023.0)
                 last_summary_sent == time.time()
-
+            """
 
 
 class Network(object):
