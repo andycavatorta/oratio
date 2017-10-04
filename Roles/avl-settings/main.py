@@ -200,7 +200,7 @@ class Potentiometers(threading.Thread):
         self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins)
 
     def run(self):
-        last_summary_sent = time.time()
+        last_summary_timestamp = time.time()
         while True:
             all_adc_values =  self.mcp3008s.scan_all()
             #print all_adc_values
@@ -214,16 +214,13 @@ class Potentiometers(threading.Thread):
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
             time.sleep(0.05)
-            """
-            if time.time() - 60 > last_summary_sent:
+            if time.time() - 60 > last_summary_timestamp:
                 for adc in range(len(self.potentiometers_layout)):
                     for channel in range(8):
                         potentiometer_name = self.potentiometers_layout[adc][channel]       
                         if potentiometer_name != "":
                             self.network_send_ref(potentiometer_name, self.potentiometer_last_value[adc][channel]/1023.0)
-                last_summary_sent == time.time()
-            """
-
+                last_summary_timestamp = time.time()
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):

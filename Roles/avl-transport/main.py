@@ -72,7 +72,7 @@ class Transport(threading.Thread):
     def run(self):
         while True:
             self.track_transport_position()
-            time.sleep(0.01)
+            time.sleep(0.02)
 
 
 # Main handles network send/recv and can see all other classes directly
