@@ -242,9 +242,9 @@ class Voice(object):
         # add transport
 
         pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
-        root_half_steps_increment = int(self.root_half_steps * 14)
+        root_half_steps_increment = int(self.root_half_steps * 15)
         print "root_half_steps_increment = ", root_half_steps_increment
-        if root_half_steps_increment == 14:
+        if root_half_steps_increment >= 14:
             root_half_steps_value = 36
         elif root_half_steps_increment == 13:
             root_half_steps_value = 24
