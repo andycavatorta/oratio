@@ -245,7 +245,7 @@ class Voice(object):
         root_half_steps_increment = self.root_half_steps * 14
         if root_half_steps_increment == 14:
             root_half_steps_value = 36
-        else if root_half_steps_increment == 13:
+        elif root_half_steps_increment == 13:
             root_half_steps_value = 24
         else:
             root_half_steps_value = int(self.root_half_steps * 12)
