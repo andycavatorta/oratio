@@ -244,12 +244,12 @@ class Voice(object):
         pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
         root_half_steps_increment = int(self.root_half_steps * 17)
         print "root_half_steps_increment = ", root_half_steps_increment
-        if root_half_steps_increment >= 14:
+        if root_half_steps_increment >= 16:
             root_half_steps_value = 36
-        elif root_half_steps_increment == 13:
+        elif root_half_steps_increment == 15:
             root_half_steps_value = 24
         else:
-            root_half_steps_value = int(self.root_half_steps * 12)
+            root_half_steps_value = int(self.root_half_steps * 15)
         pitch_diff_from_transport_and_last_key = self.pitch_key + root_half_steps_value * 12 + pitch_diff_from_transport 
         pitch_diff_from_transport_and_last_key = self.pitch_key + int(self.root_half_steps * 12) + int(self.root_octave * 5) * 12 + pitch_diff_from_transport 
         root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 55.375
