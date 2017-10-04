@@ -243,7 +243,7 @@ class Voice(object):
 
         pitch_diff_from_transport = (self.transport_position - self.transport_pos_at_last_pitch_key_touched ) / float(self.transport_encoder_pulses_per_pitch)
         pitch_diff_from_transport_and_last_key = self.pitch_key + int(self.root_half_steps * 12) + int(self.root_octave * 5) * 12 + pitch_diff_from_transport 
-        root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 55.0
+        root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 55.375
         #root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
         # add harmonic
         root_harmonic_freq = (int(self.root_harmonic * 10) + 1) * root_pitch
