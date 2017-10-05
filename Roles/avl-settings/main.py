@@ -80,9 +80,10 @@ class Utils(object):
 
 
 class MCP3008s(object):
-    def __init__(self, spi_clock_pin, miso_pin, mosi_pin, chip_select_pins):
+    def __init__(self, spi_clock_pin, miso_pin, mosi_pin, chip_select_pins, list_of_noise_thresholds):
         self.gpio = GPIO.get_platform_gpio()
         self.chip_select_pins = chip_select_pins
+        self.list_of_noise_thresholds = list_of_noise_thresholds
         self._spi = SPI.BitBang(self.gpio, spi_clock_pin, mosi_pin, miso_pin)
         self._spi.set_clock_hz(1000000)
         self._spi.set_mode(0)
@@ -109,10 +110,13 @@ class MCP3008s(object):
 
     def scan_all(self):
         adcs = []
-        for chip_select_pin in self.chip_select_pins:
+        for chip_number, chip_select_pin in enumerate(self.chip_select_pins):
             channels = []
             for adc_number in range(8):
-                channels.append(self.read(chip_select_pin, adc_number))
+                if self.list_of_noise_thresholds[chip_number][adc_number] < -1:
+                    channels.append(self.read(chip_select_pin, adc_number))
+                else:
+                    channels.append(0)
             adcs.append(channels)
         return adcs
 
@@ -197,7 +201,70 @@ class Potentiometers(threading.Thread):
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]
         ]
-        self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins)
+        self.list_of_noise_thresholds = [
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ],
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ],
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ],
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ],
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ],
+            [
+                10,
+                10,
+                10,
+                10,
+                -1,
+                -1,
+                -1,
+                -1,
+            ]
+        ]
+        
+        self.mcp3008s = MCP3008s(self.spi_clock_pin, self.miso_pin, self.mosi_pin, self.chip_select_pins, self.list_of_noise_thresholds)
 
     def run(self):
         last_summary_timestamp = time.time()
@@ -209,7 +276,7 @@ class Potentiometers(threading.Thread):
                     adc_value = all_adc_values[adc][channel]
                     potentiometer_name = self.potentiometers_layout[adc][channel]       
                     if potentiometer_name != "":
-                        if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.noise_threshold:
+                        if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.list_of_noise_thresholds[adc][channel]:
                             self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
                     self.potentiometer_last_value[adc][channel] = adc_value
