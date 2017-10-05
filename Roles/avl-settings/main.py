@@ -276,7 +276,7 @@ class Potentiometers(threading.Thread):
                     adc_value = all_adc_values[adc][channel]
                     potentiometer_name = self.potentiometers_layout[adc][channel]       
                     if potentiometer_name != "":
-                        print adc, channel, self.list_of_noise_thresholds[adc][channel]
+                        print adc_value, self.potentiometer_last_value[adc][channel], self.list_of_noise_thresholds[adc][channel]
                         if abs(adc_value - self.potentiometer_last_value[adc][channel] ) > self.list_of_noise_thresholds[adc][channel]:
                             self.network_send_ref(potentiometer_name, adc_value/1023.0)
                             print adc, channel, self.potentiometers_layout[adc][channel], adc_value
