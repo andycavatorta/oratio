@@ -130,11 +130,12 @@ class Main(threading.Thread):
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                if topic == "voice_2":
+                if topic == "voice_1":
                     master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.1 else master_volume
+                    master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
                     if master_volume != self.last_master_volume_level :
-                        gain = int(120 + master_volume * 55) if master_volume > 0.1 else 0
+                        gain = int(120 + master_volume * 55)
+                        #gain = int(110 + master_volume * 55) if master_volume > 0.1 else 0
                         print "master_volume", master_volume, "gain", gain
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
@@ -142,7 +143,6 @@ class Main(threading.Thread):
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
-
 
 def init(hostname):
     main = Main(hostname)
