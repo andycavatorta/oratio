@@ -177,7 +177,7 @@ def map_subvoice_volume(level):
     # return map_volume(level, 0, 100)
     # return map_volume(level, 50, 100)
     # print "level=", level
-    return map_volume(level, 0, 180)
+    return map_volume(level-0.1, 0, 200)
 
 def map_volume(level, min, scale):
     print "map_volume=", 0 if level == 0 else int(min + level * scale)
