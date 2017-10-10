@@ -1,8 +1,10 @@
 import os
 import Queue
 import settings
+import sys
 import time
 import threading
+import traceback
 import zmq
 
 
@@ -39,22 +41,25 @@ class Main(threading.Thread):
         self.port = "5556"
         self.queue = Queue.Queue()
         self.context = zmq.Context()
-        self.socket = context.socket(zmq.PUB)
+        self.socket = self.context.socket(zmq.PUB)
         self.socket.bind("tcp://*:%s" % self.port)
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
-        self.network.thirtybirds.subscribe_to_topic("voice_1")
-        self.network.thirtybirds.subscribe_to_topic("voice_2")
-        self.network.thirtybirds.subscribe_to_topic("voice_3")
-        self.network.thirtybirds.subscribe_to_topic("layer_speed")
-        self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
-        self.network.thirtybirds.subscribe_to_topic("layer_2_volume")
-        self.network.thirtybirds.subscribe_to_topic("layer_3_volume")
-        self.network.thirtybirds.subscribe_to_topic("layer_1_play")
-        self.network.thirtybirds.subscribe_to_topic("layer_2_play")
-        self.network.thirtybirds.subscribe_to_topic("layer_3_play")
-        self.network.thirtybirds.subscribe_to_topic("layer_1_record")
-        self.network.thirtybirds.subscribe_to_topic("layer_2_record")
-        self.network.thirtybirds.subscribe_to_topic("layer_3_record")
+        #self.network.thirtybirds.subscribe_to_topic("voice_1")
+        #self.network.thirtybirds.subscribe_to_topic("voice_2")
+        #self.network.thirtybirds.subscribe_to_topic("voice_3")
+        self.network.thirtybirds.subscribe_to_topic("voice_key_1_position")
+        self.network.thirtybirds.subscribe_to_topic("voice_key_2_position")
+        self.network.thirtybirds.subscribe_to_topic("voice_key_3_position")
+        self.network.thirtybirds.subscribe_to_topic("pitch_key_touched")
+        #self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
+        #self.network.thirtybirds.subscribe_to_topic("layer_2_volume")
+        #self.network.thirtybirds.subscribe_to_topic("layer_3_volume")
+        #self.network.thirtybirds.subscribe_to_topic("layer_1_play")
+        #self.network.thirtybirds.subscribe_to_topic("layer_2_play")
+        #self.network.thirtybirds.subscribe_to_topic("layer_3_play")
+        #self.network.thirtybirds.subscribe_to_topic("layer_1_record")
+        #self.network.thirtybirds.subscribe_to_topic("layer_2_record")
+        #self.network.thirtybirds.subscribe_to_topic("layer_3_record")
 
 
     def network_message_handler(self, topic_msg):
@@ -73,13 +78,13 @@ class Main(threading.Thread):
 
     def run(self):
         while True:
-            try:
+            #try:
                 topic, msg = self.queue.get(True)
-                self.socket.send("%d %d" % (topic, msg))
+                self.socket.send("{} {}".format(topic, msg))
                 print "main Main.run topic/queue", topic, msg
-            except Exception as e:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
+            #except Exception as e:
+            #    exc_type, exc_value, exc_traceback = sys.exc_info()
+            #    print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 def init(hostname):
     main = Main(hostname)
