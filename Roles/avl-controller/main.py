@@ -254,7 +254,7 @@ class Voice(object):
         #print "root_half_steps_value = ", root_half_steps_value
         pitch_diff_from_transport_and_last_key = self.pitch_key + root_half_steps_value + pitch_diff_from_transport 
         #pitch_diff_from_transport_and_last_key = self.pitch_key + int(self.root_half_steps * 12) + int(self.root_octave * 5) * 12 + pitch_diff_from_transport 
-        root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 50.00
+        root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 55.00
         #root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 55.375
         #root_pitch = pow( 2, ( pitch_diff_from_transport_and_last_key  / 12.0 ) ) * 27.5
         # add harmonic
