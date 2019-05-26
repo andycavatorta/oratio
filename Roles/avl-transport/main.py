@@ -1,21 +1,22 @@
+"""
+pin info:
+  the AMT203 encoder is connected through SPI
+  pin 19: SPI 0 MOSI
+  pin 21: SPI 0 MISO
+  pin 23: SPI 0 CLOCK
+  pin 24: SPI 0 CHIP_SELECT_MASTER
+  pin 36: SPI * CHIP_SELECT_* ( can be overwritten with passed variable 'cs' )
+
+"""
+
 import os
 import Queue
 import settings
 import time
 import threading
 
-
-#BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-#UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
-#DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
-#THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
-
-#sys.path.append(BASE_PATH)
-#sys.path.append(UPPER_PATH)
-
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
-
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):

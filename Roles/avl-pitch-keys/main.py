@@ -1,7 +1,12 @@
 """
-encountered an error that required manually loading the module
-
 sudo modprobe i2c_bcm2708
+
+pin info:
+the pitch key sensors are daisy-chained together in an I2C bus with four wires.
+    pin 1: +3.3VDC
+    pin 9: GND
+    pin 3: SDA [ Serial Data ]
+    pin 5: SCL [ Serial Clock ]
 
 """
 import commands

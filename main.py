@@ -92,6 +92,7 @@ def handleSimulatedNetworkMessage(addr, tags, stuff, source):
     msg = "" if len(stuff) <= 1 else stuff[1]
     client.network_message_handler((topic, msg))
 
+"""
 try:
     run_osc_debug_server = args.index("--run-osc")
 except ValueError:
@@ -104,3 +105,4 @@ if run_osc_debug_server is not False:
     osc_server_tester = OSCServerWrapper('0.0.0.0', 7000)
     osc_server_tester.addOSCHandler("/network_message", handleSimulatedNetworkMessage)
     osc_server_tester.startOSCSServer()
+"""
