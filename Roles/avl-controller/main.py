@@ -371,8 +371,7 @@ class Main(threading.Thread):
 
         self.voices = [ Voice(i) for i in range(3) ]
 
-        self.mandala = {}
-        self.mandala.devices = {
+        self.mandala_devices = {
             "avl-layer-1":"unset",
             "avl-layer-2":"unset",
             "avl-layer-3":"unset",
@@ -418,11 +417,11 @@ class Main(threading.Thread):
         # this method runs in the thread of the caller, not the tread of Main
         print "Main.network_status_handler", topic_msg
         if topic_msg["status"]=="device_discovered":
-            self.mandala.devices[topic_msg["hostname"]] = "pass"
-            self.network.thirtybirds.send("mandala_device_status", self.mandala.devices)
+            self.mandala_devices[topic_msg["hostname"]] = "pass"
+            self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
         if topic_msg["status"]=="device_removed":
-            self.mandala.devices[topic_msg["hostname"]] = "fail"
-            self.network.thirtybirds.send("mandala_device_status", self.mandala.devices)
+            self.mandala_devices[topic_msg["hostname"]] = "fail"
+            self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
