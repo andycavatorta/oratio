@@ -376,38 +376,38 @@ class Main(threading.Thread):
         self.mandala.FAIL = 2000
         self.mandala.PASS = 4000
         self.mandala.devices = {
-            "avl-layer-1":self.mandala.UNSET,
-            "avl-layer-2":self.mandala.UNSET,
-            "avl-layer-3":self.mandala.UNSET,
-            "avl-transport":self.mandala.UNSET,
-            "avl-transport-encoder":self.mandala.UNSET,
-            "avl-voice_keys":self.mandala.UNSET,
-            "avl-voice-keys-encoder-1":self.mandala.UNSET,
-            "avl-voice-keys-encoder-2":self.mandala.UNSET,
-            "avl-voice-keys-encoder-3":self.mandala.UNSET,
-            "avl-formant-1":self.mandala.UNSET,
-            "avl-formant-1-amplifier":self.mandala.UNSET,
-            "avl-formant-2":self.mandala.UNSET,
-            "avl-formant-2-amplifier":self.mandala.UNSET,
-            "avl-formant-3":self.mandala.UNSET,
-            "avl-formant-3-amplifier":self.mandala.UNSET,
-            "avl-pitch-keys":self.mandala.UNSET,
-            "avl-pitch-keys-sensor-1":self.mandala.UNSET,
-            "avl-pitch-keys-sensor-2":self.mandala.UNSET,
-            "avl-pitch-keys-sensor-3":self.mandala.UNSET,
-            "avl-pitch-keys-sensor-4":self.mandala.UNSET,
-            "avl-settings":self.mandala.UNSET,
-            "medulla":self.mandala.UNSET,
-            "avl-voice-1":self.mandala.UNSET,
-            "avl-voice-1-crystal-frequency-counter":self.mandala.UNSET,
-            "avl-voice-1-voice_board":self.mandala.UNSET,
-            "avl-voice-2":self.mandala.UNSET,
-            "avl-voice-2-crystal-frequency-counter":self.mandala.UNSET,
-            "avl-voice-2-voice_board":self.mandala.UNSET,
-            "avl-voice-3":self.mandala.UNSET,
-            "avl-voice-3-crystal-frequency-counter":self.mandala.UNSET,
-            "avl-voice-3-voice_board":self.mandala.UNSET,
-            "controller":self.mandala.UNSET,
+            "avl-layer-1":self.mandala["UNSET"],
+            "avl-layer-2":self.mandala["UNSET"],
+            "avl-layer-3":self.mandala["UNSET"],
+            "avl-transport":self.mandala["UNSET"],
+            "avl-transport-encoder":self.mandala["UNSET"],
+            "avl-voice_keys":self.mandala["UNSET"],
+            "avl-voice-keys-encoder-1":self.mandala["UNSET"],
+            "avl-voice-keys-encoder-2":self.mandala["UNSET"],
+            "avl-voice-keys-encoder-3":self.mandala["UNSET"],
+            "avl-formant-1":self.mandala["UNSET"],
+            "avl-formant-1-amplifier":self.mandala["UNSET"],
+            "avl-formant-2":self.mandala["UNSET"],
+            "avl-formant-2-amplifier":self.mandala["UNSET"],
+            "avl-formant-3":self.mandala["UNSET"],
+            "avl-formant-3-amplifier":self.mandala["UNSET"],
+            "avl-pitch-keys":self.mandala["UNSET"],
+            "avl-pitch-keys-sensor-1":self.mandala["UNSET"],
+            "avl-pitch-keys-sensor-2":self.mandala["UNSET"],
+            "avl-pitch-keys-sensor-3":self.mandala["UNSET"],
+            "avl-pitch-keys-sensor-4":self.mandala["UNSET"],
+            "avl-settings":self.mandala["UNSET"],
+            "medulla":self.mandala["UNSET"],
+            "avl-voice-1":self.mandala["UNSET"],
+            "avl-voice-1-crystal-frequency-counter":self.mandala["UNSET"],
+            "avl-voice-1-voice_board":self.mandala["UNSET"],
+            "avl-voice-2":self.mandala["UNSET"],
+            "avl-voice-2-crystal-frequency-counter":self.mandala["UNSET"],
+            "avl-voice-2-voice_board":self.mandala["UNSET"],
+            "avl-voice-3":self.mandala["UNSET"],
+            "avl-voice-3-crystal-frequency-counter":self.mandala["UNSET"],
+            "avl-voice-3-voice_board":self.mandala["UNSET"],
+            "controller":self.mandala["UNSET"],
         }
 
     def network_message_handler(self, topic_msg):
@@ -421,10 +421,10 @@ class Main(threading.Thread):
         # this method runs in the thread of the caller, not the tread of Main
         print "Main.network_status_handler", topic_msg
         if topic_msg["status"]=="device_discovered":
-            self.mandala.devices[topic_msg["hostname"]] = self.mandala.PASS
+            self.mandala.devices[topic_msg["hostname"]] = self.mandala["PASS"]
             self.network.thirtybirds.send("mandala_device_status", self.mandala.devices)
         if topic_msg["status"]=="device_removed":
-            self.mandala.devices[topic_msg["hostname"]] = self.mandala.FAIL
+            self.mandala.devices[topic_msg["hostname"]] = self.mandala["FAIL"]
             self.network.thirtybirds.send("mandala_device_status", self.mandala.devices)
 
     def add_to_queue(self, topic, msg):
