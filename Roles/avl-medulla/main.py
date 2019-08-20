@@ -97,6 +97,7 @@ class Main(threading.Thread):
         self.UNSET = 0
         self.FAIL = 2000
         self.PASS = 4000
+        self.mandala_device_status = None
         self.mandala_devices = {
             "avl-layer-1":{"tlc_id":29,"status":self.UNSET},
             "avl-layer-2":{"tlc_id":30,"status":self.UNSET},
@@ -157,9 +158,11 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
-        time.sleep(5)
-        self.network.thirtybirds.send("mandala_device_status_request", True)
+        
         while True:
+            if self.mandala_device_status == None:
+                time.sleep(1)
+                self.network.thirtybirds.send("mandala_device_status_request", True)
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "mandala_device_status":
