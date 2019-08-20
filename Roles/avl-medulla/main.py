@@ -93,8 +93,7 @@ class Main(threading.Thread):
         self.queue = Queue.Queue()
         self.last_master_volume_level = 0
         self.utils = Utils(hostname)
-        self.network.thirtybirds.subscribe_to_topic("mandala_device_discovered")
-        self.network.thirtybirds.subscribe_to_topic("mandala_device_removed")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
         self.UNSET = 0
         self.FAIL = 2000
         self.PASS = 4000
@@ -161,7 +160,7 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "mandala_device_discovered":
+                if topic == "mandala_device_status":
                     print topic, msg
                 time.sleep(0.01)
             except Exception as e:
