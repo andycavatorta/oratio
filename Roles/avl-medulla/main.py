@@ -160,7 +160,8 @@ class Main(threading.Thread):
                     devicenames = self.mandala_device_status.keys()
                     devicenames.sort()
                     for devicename in devicenames:
-                        print self.mandala_device_status[devicename], devicename
+                        tlc_id = self.mandala_tlc_ids[devicename]
+                        print self.mandala_device_status[devicename], tlc_id, devicename
                     print ""
                     print ""
                     #self.mandala_tlc_ids
