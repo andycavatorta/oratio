@@ -394,7 +394,7 @@ class Main(threading.Thread):
             "avl-pitch-keys-sensor-3":"unset",
             "avl-pitch-keys-sensor-4":"unset",
             "avl-settings":"unset",
-            "medulla":"unset",
+            "avl-medulla":"unset",
             "avl-voice-1":"unset",
             "avl-voice-1-crystal-frequency-counter":"unset",
             "avl-voice-1-voice-board":"unset",
@@ -404,7 +404,7 @@ class Main(threading.Thread):
             "avl-voice-3":"unset",
             "avl-voice-3-crystal-frequency-counter":"unset",
             "avl-voice-3-voice-board":"unset",
-            "controller":"unset",
+            "avl-controller":"unset",
         }
 
     def network_message_handler(self, topic_msg):
