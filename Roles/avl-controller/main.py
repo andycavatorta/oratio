@@ -368,6 +368,8 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_3_formant_front_back")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_half_steps")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_octave")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_status_request")
+
 
         self.voices = [ Voice(i) for i in range(3) ]
 
@@ -671,7 +673,9 @@ class Main(threading.Thread):
                     continue
                 if topic == "client_monitor_response":
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
-                    
+                if topic == "mandala_device_status_request":
+                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
+
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
