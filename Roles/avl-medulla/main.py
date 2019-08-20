@@ -98,50 +98,40 @@ class Main(threading.Thread):
         self.FAIL = 2000
         self.PASS = 4000
         self.mandala_device_status = None
-        self.mandala_devices = {
-            "avl-layer-1":{"tlc_id":29,"status":self.UNSET},
-            "avl-layer-2":{"tlc_id":30,"status":self.UNSET},
-            "avl-layer-3":{"tlc_id":31,"status":self.UNSET},
-
-            "avl-transport":{"tlc_id":27,"status":self.UNSET},
-            "avl-transport-encoder":{"tlc_id":10,"status":self.UNSET},
-
-            "avl-voice_keys":{"tlc_id":25,"status":self.UNSET},
-            "avl-voice-keys-encoder-1":{"tlc_id":6,"status":self.UNSET},
-            "avl-voice-keys-encoder-2":{"tlc_id":7,"status":self.UNSET},
-            "avl-voice-keys-encoder-3":{"tlc_id":8,"status":self.UNSET},
-
-            "avl-formant-1":{"tlc_id":33,"status":self.UNSET},
-            "avl-formant-1-amplifier":{"tlc_id":33,"status":self.UNSET},
-            "avl-formant-2":{"tlc_id":34,"status":self.UNSET},
-            "avl-formant-2-amplifier":{"tlc_id":34,"status":self.UNSET},
-            "avl-formant-3":{"tlc_id":35,"status":self.UNSET},
-            "avl-formant-3-amplifier":{"tlc_id":35,"status":self.UNSET},
-
-            "avl-pitch-keys":{"tlc_id":28,"status":self.UNSET},
-            "avl-pitch-keys-sensor-1":{"tlc_id":11,"status":self.UNSET},
-            "avl-pitch-keys-sensor-2":{"tlc_id":12,"status":self.UNSET},
-            "avl-pitch-keys-sensor-3":{"tlc_id":13,"status":self.UNSET},
-            "avl-pitch-keys-sensor-4":{"tlc_id":14,"status":self.UNSET},
-
-            "avl-settings":{"tlc_id":32,"status":self.UNSET},
-
-            "medulla":{"tlc_id":24,"status":self.UNSET},
-
-            "avl-voice-1":{"tlc_id":21,"status":self.UNSET},
-            "avl-voice-1-crystal-frequency-counter":{"tlc_id":0,"status":self.UNSET},
-            "avl-voice-1-voice_board":{"tlc_id":1,"status":self.UNSET},
-
-            "avl-voice-2":{"tlc_id":22,"status":self.UNSET},
-            "avl-voice-2-crystal-frequency-counter":{"tlc_id":2,"status":self.UNSET},
-            "avl-voice-2-voice_board":{"tlc_id":3,"status":self.UNSET},
-
-            "avl-voice-3":{"tlc_id":23,"status":self.UNSET},
-            "avl-voice-3-crystal-frequency-counter":{"tlc_id":4,"status":self.UNSET},
-            "avl-voice-3-voice_board":{"tlc_id":5,"status":self.UNSET},
-
-            "controller":{"tlc_id":26,"status":self.UNSET},
-        }
+        self.mandala_tlc_ids = [
+            "avl-controller",
+            "avl-formant-1",
+            "avl-formant-1-amplifier",
+            "avl-formant-2",
+            "avl-formant-2-amplifier",
+            "avl-formant-3",
+            "avl-formant-3-amplifier",
+            "avl-layer-1",
+            "avl-layer-2",
+            "avl-layer-3",
+            "avl-medulla",
+            "avl-pitch-keys",
+            "avl-pitch-keys-sensor-1",
+            "avl-pitch-keys-sensor-2",
+            "avl-pitch-keys-sensor-3",
+            "avl-pitch-keys-sensor-4",
+            "avl-settings",
+            "avl-transport",
+            "avl-transport-encoder",
+            "avl-voice-1",
+            "avl-voice-1-crystal-frequency-counter",
+            "avl-voice-1-voice-board",
+            "avl-voice-2",
+            "avl-voice-2-crystal-frequency-counter",
+            "avl-voice-2-voice-board",
+            "avl-voice-3",
+            "avl-voice-3-crystal-frequency-counter",
+            "avl-voice-3-voice-board",
+            "avl-voice-keys",
+            "avl-voice-keys-encoder-1",
+            "avl-voice-keys-encoder-2",
+            "avl-voice-keys-encoder-3",
+        ]
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -166,7 +156,15 @@ class Main(threading.Thread):
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "mandala_device_status":
-                    print topic, msg
+                    self.mandala_device_status = msg
+                    devicenames = self.mandala_device_status.keys()
+                    devicenames.sort()
+                    for devicename in devicenames:
+                        print self.mandala_device_status[devicename], devicename
+                    print ""
+                    print ""
+                    #self.mandala_tlc_ids
+                    #print topic, msg
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

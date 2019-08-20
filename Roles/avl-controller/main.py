@@ -674,7 +674,6 @@ class Main(threading.Thread):
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
                     continue
                 if topic == "mandala_device_status_request":
-                    print "------------------------------------------"
                     self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
                     continue
 
