@@ -157,6 +157,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        time.sleep(5)
         self.network.thirtybirds.send("mandala_device_status_request", True)
         while True:
             try:
