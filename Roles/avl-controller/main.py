@@ -380,6 +380,10 @@ class Main(threading.Thread):
     def network_status_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         print "Main.network_status_handler", topic_msg
+        if topic_msg["status"]=="device_discovered":
+            self.network.thirtybirds.send("mandala_device_discovered", topic_msg["hostname"])
+        if topic_msg["status"]=="device_removed":
+            self.network.thirtybirds.send("mandala_device_removed", topic_msg["hostname"])
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))

@@ -93,8 +93,55 @@ class Main(threading.Thread):
         self.queue = Queue.Queue()
         self.last_master_volume_level = 0
         self.utils = Utils(hostname)
-        self.network.thirtybirds.subscribe_to_topic("voice_1")
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_discovered")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_removed")
+        self.UNSET = 0
+        self.FAIL = 2000
+        self.PASS = 4000
+        self.mandala_devices = {
+            "avl-layer-1":{"tlc_id":29,"status":self.UNSET},
+            "avl-layer-2":{"tlc_id":30,"status":self.UNSET},
+            "avl-layer-3":{"tlc_id":31,"status":self.UNSET},
+
+            "avl-transport":{"tlc_id":27,"status":self.UNSET},
+            "avl-transport-encoder":{"tlc_id":10,"status":self.UNSET},
+
+            "avl-voice_keys":{"tlc_id":25,"status":self.UNSET},
+            "avl-voice-keys-encoder-1":{"tlc_id":6,"status":self.UNSET},
+            "avl-voice-keys-encoder-2":{"tlc_id":7,"status":self.UNSET},
+            "avl-voice-keys-encoder-3":{"tlc_id":8,"status":self.UNSET},
+
+            "avl-formant-1":{"tlc_id":33,"status":self.UNSET},
+            "avl-formant-1-amplifier":{"tlc_id":33,"status":self.UNSET},
+            "avl-formant-2":{"tlc_id":34,"status":self.UNSET},
+            "avl-formant-2-amplifier":{"tlc_id":34,"status":self.UNSET},
+            "avl-formant-3":{"tlc_id":35,"status":self.UNSET},
+            "avl-formant-3-amplifier":{"tlc_id":35,"status":self.UNSET},
+
+            "avl-pitch-keys":{"tlc_id":28,"status":self.UNSET},
+            "avl-pitch-keys-sensor-1":{"tlc_id":11,"status":self.UNSET},
+            "avl-pitch-keys-sensor-2":{"tlc_id":12,"status":self.UNSET},
+            "avl-pitch-keys-sensor-3":{"tlc_id":13,"status":self.UNSET},
+            "avl-pitch-keys-sensor-4":{"tlc_id":14,"status":self.UNSET},
+
+            "avl-settings":{"tlc_id":32,"status":self.UNSET},
+
+            "medulla":{"tlc_id":24,"status":self.UNSET},
+
+            "avl-voice-1":{"tlc_id":21,"status":self.UNSET},
+            "avl-voice-1-crystal-frequency-counter":{"tlc_id":0,"status":self.UNSET},
+            "avl-voice-1-voice_board":{"tlc_id":1,"status":self.UNSET},
+
+            "avl-voice-2":{"tlc_id":22,"status":self.UNSET},
+            "avl-voice-2-crystal-frequency-counter":{"tlc_id":2,"status":self.UNSET},
+            "avl-voice-2-voice_board":{"tlc_id":3,"status":self.UNSET},
+
+            "avl-voice-3":{"tlc_id":23,"status":self.UNSET},
+            "avl-voice-3-crystal-frequency-counter":{"tlc_id":4,"status":self.UNSET},
+            "avl-voice-3-voice_board":{"tlc_id":5,"status":self.UNSET},
+
+            "controller":{"tlc_id":26,"status":self.UNSET},
+        }
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -114,17 +161,8 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-
-                if topic == "voice_1":
-                    master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.1 else master_volume
-                    if master_volume != self.last_master_volume_level :
-                        gain = int(120 + master_volume * 40) if master_volume > 0.1 else 0
-                        print "master_volume", master_volume, "gain", gain
-                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                        self.last_master_volume_level = master_volume
+                if topic == "mandala_device_discovered":
+                    print topic, msg
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
