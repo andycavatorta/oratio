@@ -156,7 +156,7 @@ class Main(threading.Thread):
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "mandala_device_status":
-                    self.mandala_device_status = msg
+                    self.mandala_device_status = eval(msg)
                     devicenames = self.mandala_device_status.keys()
                     devicenames.sort()
                     for devicename in devicenames:
