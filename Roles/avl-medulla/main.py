@@ -4,23 +4,13 @@ import Queue
 import settings
 import time
 import threading
-import wiringpi as wpi
+import serial
 import sys
 import traceback
 
-#BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-#UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
-#DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
-#THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
-
-#sys.path.append(BASE_PATH)
-#sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Updates.manager import init as updates_init
-
-#wpi.wiringPiSetup()
-#wpi.wiringPiSPISetup(0, 500000)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -91,47 +81,52 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.last_master_volume_level = 0
+        self.ser=serial.Serial("/dev/ttyACM0",9600)
+        self.ser.baudrate=9600
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
         self.UNSET = 0
         self.FAIL = 2000
         self.PASS = 4000
         self.mandala_device_status = None
-        self.mandala_tlc_ids = [
-            "avl-controller",
-            "avl-formant-1",
-            "avl-formant-1-amplifier",
-            "avl-formant-2",
-            "avl-formant-2-amplifier",
-            "avl-formant-3",
-            "avl-formant-3-amplifier",
-            "avl-layer-1",
-            "avl-layer-2",
-            "avl-layer-3",
-            "avl-medulla",
-            "avl-pitch-keys",
-            "avl-pitch-keys-sensor-1",
-            "avl-pitch-keys-sensor-2",
-            "avl-pitch-keys-sensor-3",
-            "avl-pitch-keys-sensor-4",
-            "avl-settings",
-            "avl-transport",
-            "avl-transport-encoder",
-            "avl-voice-1",
-            "avl-voice-1-crystal-frequency-counter",
-            "avl-voice-1-voice-board",
-            "avl-voice-2",
-            "avl-voice-2-crystal-frequency-counter",
-            "avl-voice-2-voice-board",
-            "avl-voice-3",
-            "avl-voice-3-crystal-frequency-counter",
-            "avl-voice-3-voice-board",
-            "avl-voice-keys",
-            "avl-voice-keys-encoder-1",
-            "avl-voice-keys-encoder-2",
-            "avl-voice-keys-encoder-3",
-        ]
+        self.mandala_tlc_ids = {
+            "avl-controller":39,
+            "avl-formant-1":15,
+            "avl-formant-1-amplifier":4,
+            "avl-formant-2":16,
+            "avl-formant-2-amplifier":5,
+            "avl-formant-3":17,
+            "avl-formant-3-amplifier":6,
+            "avl-layer-1":40,
+            "avl-layer-2":11,
+            "avl-layer-3":12,
+            "avl-medulla":35,
+            "avl-pitch-keys":18,
+            "avl-pitch-keys-sensor-1":7,
+            "avl-pitch-keys-sensor-2":8,
+            "avl-pitch-keys-sensor-3":9,
+            "avl-pitch-keys-sensor-4":10,
+            "avl-settings":34,
+            "avl-settings-adcs":24,
+            "avl-transport":13,
+            "avl-transport-encoder":0,
+            "avl-voice-1":36,
+            "avl-voice-1-crystal-frequency-counter":25,
+            "avl-voice-1-harmonic-generators":26,
+            "avl-voice-1-harmonic-volume":27,
+            "avl-voice-2":37,
+            "avl-voice-2-crystal-frequency-counter":28,
+            "avl-voice-2-harmonic-generators":29,
+            "avl-voice-2-harmonic-volume":30,
+            "avl-voice-3":38,
+            "avl-voice-3-crystal-frequency-counter":31,
+            "avl-voice-3-harmonic-generators":32,
+            "avl-voice-3-harmonic-volume":33,
+            "avl-voice-keys":14,
+            "avl-voice-keys-encoder-1":1,
+            "avl-voice-keys-encoder-2":2,
+            "avl-voice-keys-encoder-3":3
+        }
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -159,8 +154,19 @@ class Main(threading.Thread):
                     devicenames = self.mandala_device_status.keys()
                     devicenames.sort()
                     for devicename in devicenames:
-                        tlc_id = self.mandala_tlc_ids.index(devicename)
-                        print self.mandala_device_status[devicename], tlc_id, devicename
+                        tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+                        tlc_id_str = "{}\n".format(tlc_id_int)
+                        if self.mandala_device_status[devicename] == "unset":
+                            tlc_level_int = 0
+                        if self.mandala_device_status[devicename] == "fail":
+                            tlc_level_int = 100
+                        if self.mandala_device_status[devicename] == "pass":
+                            tlc_level_int = 4000
+                        tlc_level_str = "{}\n".format(tlc_level_int)
+                        print tlc_id_int, tlc_level_int, devicename
+                        self.ser.write(tlc_id_str)
+                        self.ser.write(tlc_level_str)
+
                     print ""
                     print ""
                     #self.mandala_tlc_ids
