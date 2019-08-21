@@ -125,6 +125,7 @@ class Main(threading.Thread):
         current_volume_level = 0
         while True:
             try:
+                topic, msg = self.queue.get(True)
                 if topic == "voice_1":
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
