@@ -125,6 +125,14 @@ class Main(threading.Thread):
         current_volume_level = 0
         while True:
             try:
+                for v in range(100):
+                    wpi.wiringPiSPIDataRW(0, chr(v+120) + chr(0))
+                    time.sleep(0.05)
+
+                for v in range(100):
+                    wpi.wiringPiSPIDataRW(0, chr(220-v) + chr(0))
+                    time.sleep(0.05)
+                """
                 try:
                     topic, msg = self.queue.get(False)
                     if topic == "voice_1":
@@ -148,13 +156,7 @@ class Main(threading.Thread):
                     current_volume_level -= 1
                     wpi.wiringPiSPIDataRW(0, chr(current_volume_level) + chr(0))
                 """
-                    if master_volume != self.last_master_volume_level :
-                        gain
-                        print "master_volume", master_volume, "gain", gain
-                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                        self.last_master_volume_level = master_volume
-                """
-                time.sleep(0.05)
+                #time.sleep(0.05)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
