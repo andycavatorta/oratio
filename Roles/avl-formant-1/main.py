@@ -150,7 +150,7 @@ class Main(threading.Thread):
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
                 """
-                time.sleep(0.001)
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
