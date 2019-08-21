@@ -130,6 +130,7 @@ class Main(threading.Thread):
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
                     target_volume_level = int(120 + master_volume * 110) if master_volume > 0.01 else 0
+                    print current_volume_level
                     if target_volume_level > current_volume_level:
                         current_volume_level += 1
                         wpi.wiringPiSPIDataRW(0, chr(current_volume_level) + chr(0))
