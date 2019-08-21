@@ -148,7 +148,6 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
-        
         while True:
             if self.mandala_device_status == None:
                 time.sleep(1)
@@ -170,7 +169,6 @@ class Main(threading.Thread):
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
-
 
 def init(hostname):
     main = Main(hostname)
