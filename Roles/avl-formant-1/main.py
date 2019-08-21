@@ -125,40 +125,16 @@ class Main(threading.Thread):
         current_volume_level = 0
         while True:
             try:
-                """
-                for v in range(100):
-                    print v+120
-                    wpi.wiringPiSPIDataRW(0, chr(v+120) + chr(0))
-                    time.sleep(0.05)
-
-                for v in range(100):
-                    print 220-v
-                    wpi.wiringPiSPIDataRW(0, chr(220-v) + chr(0))
-                    time.sleep(0.05)
-                """
-                try:
-                    topic, msg = self.queue.get(False)
-                    if topic == "voice_1":
-                        master_volume = msg[1]
-                        master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
-                        target_volume_level = int(120 + master_volume * 110) if master_volume > 0.01 else 0
-                except Queue.Empty:
-                    # Handle empty queue here
-                    pass
-
-                if target_volume_level > current_volume_level:
-                    print master_volume, current_volume_level, target_volume_level
-                    #if current_volume_level < 120:
-                    #    current_volume_level = 120    
-                    current_volume_level += 1
-                    wpi.wiringPiSPIDataRW(0, chr(current_volume_level) + chr(0))
-                if target_volume_level < current_volume_level:
-                    #if current_volume_level < 120:
-                    #    current_volume_level = 120
-                    print master_volume, current_volume_level, target_volume_level
-                    current_volume_level -= 1
-                    wpi.wiringPiSPIDataRW(0, chr(current_volume_level) + chr(0))
-                #time.sleep(0.05)
+                if topic == "voice_1":
+                    master_volume = msg[1]
+                    master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
+                    if master_volume != self.last_master_volume_level :
+                        gain = int(120 + master_volume * 110) if master_volume > 0.01 else 0
+                        #gain = int(110 + master_volume * 55) if master_volume > 0.1 else 0
+                        print "master_volume", master_volume, "gain", gain
+                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
+                        self.last_master_volume_level = master_volume
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
