@@ -125,6 +125,7 @@ class Main(threading.Thread):
         current_volume_level = 0
         while True:
             try:
+                """
                 for v in range(100):
                     print v+120
                     wpi.wiringPiSPIDataRW(0, chr(v+120) + chr(0))
@@ -157,7 +158,6 @@ class Main(threading.Thread):
                     print master_volume, current_volume_level, target_volume_level
                     current_volume_level -= 1
                     wpi.wiringPiSPIDataRW(0, chr(current_volume_level) + chr(0))
-                """
                 #time.sleep(0.05)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
