@@ -126,10 +126,12 @@ class Main(threading.Thread):
         while True:
             try:
                 for v in range(100):
+                    print v+120
                     wpi.wiringPiSPIDataRW(0, chr(v+120) + chr(0))
                     time.sleep(0.05)
 
                 for v in range(100):
+                    print 220-v
                     wpi.wiringPiSPIDataRW(0, chr(220-v) + chr(0))
                     time.sleep(0.05)
                 """
