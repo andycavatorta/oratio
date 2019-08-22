@@ -81,8 +81,7 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.ser=serial.Serial("/dev/ttyACM0",9600)
-        self.ser.baudrate=9600
+        self.arduino_connection = open("/dev/ttyACM0",'w')
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
         self.UNSET = 0
@@ -143,23 +142,9 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
-        print self.ser
-
-        self.ser.write("5000\n")
-        self.ser.write("1000\n")
-        self.ser.write("5001\n")
-        self.ser.write("1000\n")
-        self.ser.write("5002\n")
-        self.ser.write("1000\n")
-        self.ser.write("5003\n")
-        self.ser.write("1000\n")
-        self.ser.write("5004\n")
-        self.ser.write("1000\n")
-
-        print "asdfasdfasdf"
-
 
         devicenames = self.mandala_tlc_ids.keys()
+        """
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
@@ -167,6 +152,7 @@ class Main(threading.Thread):
             print self.ser.readln()
             self.ser.write("0/n")
             print self.ser.readln()
+        """
         while True:
             if self.mandala_device_status == None:
                 time.sleep(1)
@@ -189,10 +175,11 @@ class Main(threading.Thread):
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
                         print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
+
                         time.sleep(1)
-                        self.ser.write(tlc_id_str)
+                        self.arduino_connection.write(tlc_id_str)
                         time.sleep(1)
-                        self.ser.write(tlc_level_str)
+                        self.arduino_connection.write(tlc_level_str)
 
                 time.sleep(0.01)
             except Exception as e:
