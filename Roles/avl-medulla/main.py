@@ -148,6 +148,7 @@ class Main(threading.Thread):
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
+            print tlc_id_str
             self.ser.write(tlc_id_str)
             self.ser.write("0/n")
         while True:
