@@ -143,13 +143,13 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        print self.ser
         devicenames = self.mandala_tlc_ids.keys()
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
             self.ser.write(tlc_id_str)
             self.ser.write("0/n")
-
         while True:
             if self.mandala_device_status == None:
                 time.sleep(1)
@@ -171,7 +171,7 @@ class Main(threading.Thread):
                         if self.mandala_device_status[devicename] == "pass":
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
-                        print repr(tlc_id_str), print(tlc_level_str), devicename
+                        print repr(tlc_id_str), repr(tlc_level_str), devicename
                         time.sleep(0.05)
                         self.ser.write(tlc_id_str)
                         time.sleep(0.05)
