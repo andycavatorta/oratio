@@ -171,7 +171,9 @@ class Main(threading.Thread):
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
                         print tlc_id_int, tlc_level_int, devicename
+                        time.sleep(0.05)
                         self.ser.write(tlc_id_str)
+                        time.sleep(0.05)
                         self.ser.write(tlc_level_str)
 
                     print ""
