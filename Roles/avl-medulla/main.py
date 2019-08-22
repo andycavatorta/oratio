@@ -147,7 +147,6 @@ class Main(threading.Thread):
 
     def run(self):
 
-        """
         devicenames = self.mandala_tlc_ids.keys()
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
@@ -156,7 +155,6 @@ class Main(threading.Thread):
             print self.ser.readln()
             self.ser.write("0/n")
             print self.ser.readln()
-        """
         print 10004
         while True:
             print 10005
