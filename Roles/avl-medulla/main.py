@@ -162,7 +162,6 @@ class Main(threading.Thread):
             print 10005
             if self.mandala_device_status == None:
                 print 10006
-                time.sleep(1)
                 self.network.thirtybirds.send("mandala_device_request", True)
                 print 10007
 
@@ -187,9 +186,9 @@ class Main(threading.Thread):
                         tlc_level_str = "{}\n".format(tlc_level_int)
                         print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
 
-                        time.sleep(0.1)
+                        time.sleep(0.01)
                         self.arduino_connection.write(tlc_id_str)
-                        time.sleep(0.1)
+                        time.sleep(0.01)
                         self.arduino_connection.write(tlc_level_str)
 
                 time.sleep(0.01)
