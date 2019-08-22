@@ -7,9 +7,9 @@ for id in range(47):
     rand_int = random.randint(0,1000)
     rand_str = "{}\n".format(rand_int)
     print repr(id_str), repr(rand_str)
-    time.sleep(0.75)
+    time.sleep(1)
     arduino_connection.write(id_str)
-    time.sleep(0.75)
+    time.sleep(1)
     arduino_connection.write(rand_str)
 
 arduino_connection.close()
