@@ -143,7 +143,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
-        devicenames = self.mandala_device_status.keys()
+        devicenames = self.mandala_tlc_ids.keys()
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
