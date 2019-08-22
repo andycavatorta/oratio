@@ -373,7 +373,7 @@ class Main(threading.Thread):
         self.voices = [ Voice(i) for i in range(3) ]
 
         self.mandala_devices = {
-            "avl-controller":"unset",
+            "avl-controller":"PASS", # because if this is sending data, it's online.
             "avl-formant-1":"unset",
             "avl-formant-1-amplifier":"unset",
             "avl-formant-2":"unset",
