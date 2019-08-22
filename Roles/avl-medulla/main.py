@@ -171,7 +171,7 @@ class Main(threading.Thread):
                         if self.mandala_device_status[devicename] == "pass":
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
-                        print repr(tlc_id_str), repr(tlc_level_str), devicename
+                        print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
                         time.sleep(0.05)
                         self.ser.write(tlc_id_str)
                         time.sleep(0.05)
