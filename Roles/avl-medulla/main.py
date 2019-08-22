@@ -171,7 +171,7 @@ class Main(threading.Thread):
                         if self.mandala_device_status[devicename] == "pass":
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
-                        print tlc_id_int, tlc_level_int, devicename
+                        print repr(tlc_id_str), print(tlc_level_str), devicename
                         time.sleep(0.05)
                         self.ser.write(tlc_id_str)
                         time.sleep(0.05)
@@ -183,7 +183,7 @@ class Main(threading.Thread):
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 def init(hostname):
-    main = Main(hostname)
+    main = Main(hostn   ame)
     main.daemon = True
     main.start()
     return main
