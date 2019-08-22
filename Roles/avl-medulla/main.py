@@ -144,11 +144,25 @@ class Main(threading.Thread):
 
     def run(self):
         print self.ser
+
+        self.ser.write("5000\n")
+        self.ser.write("1000\n")
+        self.ser.write("5001\n")
+        self.ser.write("1000\n")
+        self.ser.write("5002\n")
+        self.ser.write("1000\n")
+        self.ser.write("5003\n")
+        self.ser.write("1000\n")
+        self.ser.write("5004\n")
+        self.ser.write("1000\n")
+
+        print "asdfasdfasdf"
+
+
         devicenames = self.mandala_tlc_ids.keys()
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
-            
             self.ser.write(tlc_id_str)
             print self.ser.readln()
             self.ser.write("0/n")
