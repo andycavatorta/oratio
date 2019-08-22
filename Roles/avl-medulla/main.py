@@ -129,6 +129,7 @@ class Main(threading.Thread):
             "avl-voice-keys-encoder-2":2,
             "avl-voice-keys-encoder-3":3
         }
+        arduino_delay_time = 0.1
         print 10003
 
     def network_message_handler(self, topic_msg):
@@ -151,10 +152,11 @@ class Main(threading.Thread):
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
-            self.ser.write(tlc_id_str)
-            print self.ser.readln()
-            self.ser.write("0/n")
-            print self.ser.readln()
+            tlc_level_str = "0/n"
+            time.sleep(arduino_delay_time)
+            self.arduino_connection.write(tlc_id_str)
+            time.sleep(arduino_delay_time)
+            self.arduino_connection.write(tlc_level_str)
         print 10004
         while True:
             print 10005
@@ -184,9 +186,9 @@ class Main(threading.Thread):
                         tlc_level_str = "{}\n".format(tlc_level_int)
                         print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
 
-                        time.sleep(0.1)
+                        time.sleep(arduino_delay_time)
                         self.arduino_connection.write(tlc_id_str)
-                        time.sleep(0.1)
+                        time.sleep(arduino_delay_time)
                         self.arduino_connection.write(tlc_level_str)
 
                 time.sleep(0.01)
