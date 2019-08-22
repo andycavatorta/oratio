@@ -153,7 +153,7 @@ class Main(threading.Thread):
         while True:
             if self.mandala_device_status == None:
                 time.sleep(1)
-                self.network.thirtybirds.send("mandala_device_status_request", True)
+                self.network.thirtybirds.send("mandala_device_request", True)
             try:
                 topic, msg = self.queue.get(True)
                 if topic == "mandala_device_status":
@@ -176,10 +176,6 @@ class Main(threading.Thread):
                         time.sleep(0.05)
                         self.ser.write(tlc_level_str)
 
-                    print ""
-                    print ""
-                    #self.mandala_tlc_ids
-                    #print topic, msg
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

@@ -311,7 +311,7 @@ class Main(threading.Thread):
         self.client_monitor_server.daemon = True
         #self.client_monitor_server.start()
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
-        self.network.thirtybirds.subscribe_to_topic("mandala_device_status_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
 
         self.network.thirtybirds.subscribe_to_topic("pitch_key_touched")
         self.network.thirtybirds.subscribe_to_topic("transport_position")
@@ -677,7 +677,7 @@ class Main(threading.Thread):
                 if topic == "client_monitor_response":
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
                     continue
-                if topic == "mandala_device_status_request":
+                if topic == "mandala_device_request":
                     self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
                     continue
 
