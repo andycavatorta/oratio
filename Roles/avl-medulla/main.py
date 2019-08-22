@@ -187,9 +187,9 @@ class Main(threading.Thread):
                         tlc_level_str = "{}\n".format(tlc_level_int)
                         print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
 
-                        time.sleep(0.05)
+                        time.sleep(0.1)
                         self.arduino_connection.write(tlc_id_str)
-                        time.sleep(0.05)
+                        time.sleep(0.1)
                         self.arduino_connection.write(tlc_level_str)
 
                 time.sleep(0.01)
