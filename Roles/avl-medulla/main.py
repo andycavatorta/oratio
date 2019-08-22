@@ -156,6 +156,7 @@ class Main(threading.Thread):
                 self.network.thirtybirds.send("mandala_device_request", True)
             try:
                 topic, msg = self.queue.get(True)
+                print topic, msg
                 if topic == "mandala_device_status":
                     self.mandala_device_status = eval(msg)
                     devicenames = self.mandala_device_status.keys()
