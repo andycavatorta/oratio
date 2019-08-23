@@ -79,6 +79,8 @@ class Utils(object):
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
+        print os. system("stty -F /dev/ttyACM0 -hupcl")
+
         print 10000
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         print 10001
