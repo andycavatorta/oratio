@@ -159,11 +159,11 @@ class Main(threading.Thread):
             tlc_level_str = "0/n"
 
             print 10003.3, tlc_id_str, tlc_level_str
-            time.sleep(self.arduino_delay_time)
+            #time.sleep(self.arduino_delay_time)
             print 10003.4
             self.arduino_connection.write(tlc_id_str)
             print 10003.5
-            time.sleep(self.arduino_delay_time)
+            #time.sleep(self.arduino_delay_time)
             print 10003.6
             self.arduino_connection.write(tlc_level_str)
             print 10003.7
