@@ -150,7 +150,9 @@ class Main(threading.Thread):
 
     def run(self):
 
+        print 10003.1
         devicenames = self.mandala_tlc_ids.keys()
+        print 10003.2
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
