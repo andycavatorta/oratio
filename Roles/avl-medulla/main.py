@@ -170,12 +170,14 @@ class Main(threading.Thread):
             print 10003.7
         print 10004
         while True:
-            print 10005
-            if self.mandala_device_status == None:
-                print 10006
-                self.network.thirtybirds.send("mandala_device_request", True)
-                print 10007
-
+            try:
+                print 10005
+                if self.mandala_device_status == None:
+                    print 10006
+                    self.network.thirtybirds.send("mandala_device_request", True)
+                    print 10007
+            except Queue.Empty:
+                pass
             print 10008
             try:
                 print 10009
