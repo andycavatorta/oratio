@@ -423,11 +423,11 @@ class Main(threading.Thread):
         print "Main.network_status_handler", topic_msg
         if topic_msg["status"]=="device_discovered":
             self.mandala_devices[topic_msg["hostname"]] = "pass"
-            self.add_to_queue("mandala_device_status", (topic_msg["hostname"], status))
+            self.add_to_queue("mandala_device_status", (topic_msg["hostname"], topic_msg["status"]))
             #self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
         if topic_msg["status"]=="device_removed":
             self.mandala_devices[topic_msg["hostname"]] = "fail"
-            self.add_to_queue("mandala_device_status", (topic_msg["hostname"], status))
+            self.add_to_queue("mandala_device_status", (topic_msg["hostname"], topic_msg["status"]))
             #self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
 
     def add_to_queue(self, topic, msg):
