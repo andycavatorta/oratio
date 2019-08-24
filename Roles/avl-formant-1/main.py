@@ -105,7 +105,7 @@ class Main(threading.Thread):
         self.utils = Utils(hostname)
         self.status = {
             "avl-formant-1":"pass", # because this passes if it can respond.  maybe better tests in future
-            "avl-transport-encoder":"unset"
+            "avl-formant-1-amplifier":"unset"
         }
         self.network.thirtybirds.subscribe_to_topic("voice_1")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
@@ -133,13 +133,11 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
-        target_volume_level = 0
-        current_volume_level = 0
         try:
             wpi.wiringPiSPIDataRW(0, chr(0) + chr(0)) # set volume to zero as test of comms
-            self.update_device_status("avl-transport-encoder", "pass")
+            self.update_device_status("avl-formant-1-amplifier", "pass")
         except Exception as e:
-            self.update_device_status("avl-transport-encoder", "fail")
+            self.update_device_status("avl-formant-1-amplifier", "fail")
 
         while True:
             try:
