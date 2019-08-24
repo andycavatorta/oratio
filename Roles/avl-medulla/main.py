@@ -183,7 +183,7 @@ class Main(threading.Thread):
                 print topic, msg
                 if topic == "mandala_device_status":
                     self.mandala_device_status = eval(msg)
-                    print 10010 repr(self.mandala_device_status)
+                    print 10010, repr(self.mandala_device_status)
                     devicenames = self.mandala_device_status.keys()
                     print 10011
                     devicenames.sort()
