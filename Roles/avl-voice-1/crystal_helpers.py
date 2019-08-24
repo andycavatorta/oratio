@@ -93,8 +93,7 @@ def init():
 
   # in SPI mode 2, clock idle HIGH, data clocked on falling edge
   print 'Initialize SPI devices'
-  wpi.wiringPiSPISetupMode
-  (0, 500000, 2)
+  wpi.wiringPiSPISetupMode(0, 500000, 2)
 
   # setup pins for additional spi channels
   for v in spi_channel_lookup.itervalues():
@@ -103,23 +102,16 @@ def init():
 
   print "Reset AD9833 for all channels"
   for i in xrange(3):
-    print 101
+
     # reset AD9833, and set up to use consecutive writes for full 28-bt res
     spiRW(i, chr(0x21) + chr(0x00)) # enter reset mode
-    print 102
     wpi.delay(500)
-    print 103
     spiRW(i, chr(0x00) + chr(0x00))
-    print 104
     spiRW(i, chr(0x00) + chr(0x00))
-    print 105
     spiRW(i, chr(0x20) + chr(0x00)) # exit reset mode
-    print 106
 
     set_freq(i, 0)      # freq set to zero
-    print 107
-    set_volume(i, 0)    # volume set to zer
-    print 108
+    set_volume(i, 0)    # volume set to zero
 
   # setup i2c interfrace
   print 'Initialize I2C devices'
