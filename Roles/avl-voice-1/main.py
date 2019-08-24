@@ -139,6 +139,7 @@ class Main(threading.Thread):
         self.xtal_freq = 167218.6
         self.f_offset = 0           # adjust output freq
         self.status = {
+            "avl-voice-1":"pass", # because this passes if it can respond.  maybe better tests in future
             "avl-voice-1-crystal-frequency-counter":"unset",
             "avl-voice-1-harmonic-generators":"unset",
             "avl-voice-1-harmonic-volume":"unset",
