@@ -103,8 +103,20 @@ class Main(threading.Thread):
         self.queue = Queue.Queue()
         self.last_master_volume_level = 0
         self.utils = Utils(hostname)
+        self.status = {
+            "avl-formant-1":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-transport-encoder":"unset"
+        }
         self.network.thirtybirds.subscribe_to_topic("voice_1")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+
+    def update_device_status(self, devicename, status):
+        print "update_device_status",devicename, status
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -123,6 +135,12 @@ class Main(threading.Thread):
     def run(self):
         target_volume_level = 0
         current_volume_level = 0
+        try:
+            wpi.wiringPiSPIDataRW(0, chr(0) + chr(0)) # set volume to zero as test of comms
+            self.update_device_status("avl-transport-encoder", "pass")
+        except Exception as e:
+            self.update_device_status("avl-transport-encoder", "fail")
+
         while True:
             try:
                 topic, msg = self.queue.get(True)
