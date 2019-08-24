@@ -134,6 +134,7 @@ class Main(threading.Thread):
 
                     params = []
                     # mute if volume is below threshold
+
                     thresh = [0.01, 0.01, 0.01]
                     for i in xrange(6):
                         param = 0 if msg[1] < thresh[0] else msg[i]                   # master
@@ -141,6 +142,9 @@ class Main(threading.Thread):
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
+                    vol = max(vol-0.03, 0) 
+
+                    print "volume=", vol
                     # update intermediate frequency if new data is available
                     #measure_xtal_freq = crystal.measure_xtal_freq()
                     self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
