@@ -138,10 +138,26 @@ class Main(threading.Thread):
         #self.xtal_freq = 167233.6
         self.xtal_freq = 167218.6
         self.f_offset = 0           # adjust output freq
-
+        self.status = {
+            "avl-voice-1-crystal-frequency-counter":"unset",
+            "avl-voice-1-harmonic-generators":"unset",
+            "avl-voice-1-harmonic-volume":"unset",
+        }
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_1")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+
+    def update_device_status(self, devicename, status):
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self, devicename, status):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -174,27 +190,47 @@ class Main(threading.Thread):
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
+
+
+                    
+                    self.status[""]
+                    self.status[""]
+
                     vol = max(vol-0.03, 0) 
-                    #print "volume=", vol
-                    # update intermediate frequency if new data is available
-                    #measure_xtal_freq = crystal.measure_xtal_freq()
-                    self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
-                    print "adjusted:", params, self.xtal_freq
 
-                    # subvoice 1 (fundamental) frequency
-                    crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
+                    try:
+                        self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq
+                        self.update_device_status("avl-voice-1-crystal-frequency-counter", "pass")
+                    except Exception as e:
+                        self.update_device_status("avl-voice-1-crystal-frequency-counter", "fail")
 
-                    # subvoice 2 frequency and volume
-                    crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
-                    crystal.set_volume(1, map_subvoice_volume(vol_sub1))
+                    try:
+                        # subvoice 1 (fundamental) frequency
+                        crystal.set_freq(0, vol and (self.xtal_freq - (freq_root + self.f_offset)))
+                        # subvoice 2 frequency 
+                        crystal.set_freq(1, vol_sub1 and (self.xtal_freq - (freq_sub1 + self.f_offset)))
+                        # subvoice 3 frequency 
+                        crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
+                        self.update_device_status("avl-voice-1-harmonic-generators", "pass")
+                    except Exception as e:
+                        self.update_device_status("avl-voice-1-harmonic-generators", "fail")
 
-                    # subvoice 3 frequency and volume
-                    crystal.set_freq(2, vol_sub2 and (self.xtal_freq - (freq_sub2 + self.f_offset)))
-                    crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+                    try:
+                        # subvoice 2 volume
+                        crystal.set_volume(1, map_subvoice_volume(vol_sub1))
+                        # subvoice 3 volume
+                        crystal.set_volume(2, map_subvoice_volume(vol_sub2))
+                        self.update_device_status("avl-voice-1-harmonic-volume", "pass")
+                    except Exception as e:
+                        self.update_device_status("avl-voice-1-harmonic-volume", "fail")
+
+
 
                 if topic == "client_monitor_request":
                     self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-                    
+
+                if topic == "mandala_device_request":
+                    self.get_device_status()
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

@@ -677,8 +677,15 @@ class Main(threading.Thread):
                 if topic == "client_monitor_response":
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
                     continue
-                if topic == "mandala_device_request":
-                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
+
+                if topic == "mandala_device_request": # received from medulla
+                    self.network.thirtybirds.send("mandala_device_request", None) # send to all devices
+                    continue
+
+                if topic == "mandala_device_status": # response from all devices
+                    devicename, status = msg
+                    self.mandala_devices[devicename] = status
+                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
                     continue
 
             except Exception as e:

@@ -205,7 +205,6 @@ class Main(threading.Thread):
                         for devicename in devicenames:
                             if self.mandala_device_status[devicename] != mandala_device_status[devicename]:
                                 self.mandala_device_status[devicename] = mandala_device_status[devicename]
-
                                 tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
                                 tlc_id_str = "{}\n".format(tlc_id_int)
                                 if mandala_device_status[devicename] == "unset":
