@@ -131,7 +131,7 @@ class Main(threading.Thread):
             "avl-voice-keys-encoder-2":2,
             "avl-voice-keys-encoder-3":3
         }
-        self.arduino_delay_time = 001
+        self.arduino_delay_time = 0.01
         print 10003
 
     def network_message_handler(self, topic_msg):
