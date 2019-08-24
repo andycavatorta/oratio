@@ -383,7 +383,7 @@ class Main(threading.Thread):
             "avl-layer-1":"unset",
             "avl-layer-2":"unset",
             "avl-layer-3":"unset",
-            "avl-medulla":"unset",
+            "avl-medulla":"pass",# because if this is sending data, it's online.
             "avl-pitch-keys":"unset",
             "avl-pitch-keys-sensor-1":"unset",
             "avl-pitch-keys-sensor-2":"unset",
