@@ -191,11 +191,6 @@ class Main(threading.Thread):
                         params.append(param)
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
 
-
-                    
-                    self.status[""]
-                    self.status[""]
-
                     vol = max(vol-0.03, 0) 
 
                     try:
