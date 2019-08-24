@@ -131,18 +131,19 @@ class Main(threading.Thread):
             "avl-voice-keys-encoder-2":2,
             "avl-voice-keys-encoder-3":3
         }
-        self.arduino_delay_time = 0.01
+        self.arduino_delay_time = 0.05
         print 10003
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
+        print "network_message_handler", topic, msg
         #if len(msg) > 0: 
         #    msg = eval(msg)
         self.add_to_queue(topic, msg)
 
     def network_status_handler(self, topic_msg):
-        # this method runs in the thread of the caller, not the tread of Main
+        # this method runs in the thread of the caller, not the tread of Mains
         print "Main.network_status_handler", topic_msg
 
     def add_to_queue(self, topic, msg):
@@ -180,7 +181,7 @@ class Main(threading.Thread):
             try:
                 print 10009
                 try:
-                    topic, msg = self.queue.get(True, 1)
+                    topic, msg = self.queue.get(True, 5)
                 except Queue.Empty:
                     continue
                 print topic, msg
