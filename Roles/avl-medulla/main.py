@@ -4,23 +4,13 @@ import Queue
 import settings
 import time
 import threading
-import wiringpi as wpi
+import serial
 import sys
 import traceback
 
-#BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-#UPPER_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
-#DEVICES_PATH = "%s/Hosts/" % (BASE_PATH )
-#THIRTYBIRDS_PATH = "%s/thirtybirds_2_0" % (UPPER_PATH )
-
-#sys.path.append(BASE_PATH)
-#sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
 from thirtybirds_2_0.Updates.manager import init as updates_init
-
-#wpi.wiringPiSetup()
-#wpi.wiringPiSPISetup(0, 500000)
 
 class Network(object):
     def __init__(self, hostname, network_message_handler, network_status_handler):
@@ -89,47 +79,147 @@ class Utils(object):
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
+        print os. system("stty -F /dev/ttyACM0 -hupcl")
+
+        print 10000
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
+        print 10001
         self.queue = Queue.Queue()
-        self.last_master_volume_level = 0
+        self.arduino_connection = open("/dev/ttyACM0",'w')
+        print 10002
         self.utils = Utils(hostname)
-        self.network.thirtybirds.subscribe_to_topic("voice_1")
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
+        self.UNSET = 0
+        self.FAIL = 2000
+        self.PASS = 4000
+        self.mandala_device_status = None
+        self.mandala_tlc_ids = {
+            "avl-controller":39,
+            "avl-formant-1":15,
+            "avl-formant-1-amplifier":4,
+            "avl-formant-2":16,
+            "avl-formant-2-amplifier":5,
+            "avl-formant-3":17,
+            "avl-formant-3-amplifier":6,
+            "avl-layer-1":40,
+            "avl-layer-2":11,
+            "avl-layer-3":12,
+            "avl-medulla":35,
+            "avl-pitch-keys":18,
+            "avl-pitch-keys-sensor-1":7,
+            "avl-pitch-keys-sensor-2":8,
+            "avl-pitch-keys-sensor-3":9,
+            "avl-pitch-keys-sensor-4":10,
+            "avl-settings":34,
+            "avl-settings-adcs":24,
+            "avl-transport":13,
+            "avl-transport-encoder":0,
+            "avl-voice-1":36,
+            "avl-voice-1-crystal-frequency-counter":25,
+            "avl-voice-1-harmonic-generators":26,
+            "avl-voice-1-harmonic-volume":27,
+            "avl-voice-2":37,
+            "avl-voice-2-crystal-frequency-counter":28,
+            "avl-voice-2-harmonic-generators":29,
+            "avl-voice-2-harmonic-volume":30,
+            "avl-voice-3":38,
+            "avl-voice-3-crystal-frequency-counter":31,
+            "avl-voice-3-harmonic-generators":32,
+            "avl-voice-3-harmonic-volume":33,
+            "avl-voice-keys":14,
+            "avl-voice-keys-encoder-1":1,
+            "avl-voice-keys-encoder-2":2,
+            "avl-voice-keys-encoder-3":3
+        }
+
+        self.arduino_delay_time = 0.05
+        print 10003
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
-        if len(msg) > 0: 
-            msg = eval(msg)
+        print "network_message_handler", topic, msg
+        #if len(msg) > 0: 
+        #    msg = eval(msg)
         self.add_to_queue(topic, msg)
 
     def network_status_handler(self, topic_msg):
-        # this method runs in the thread of the caller, not the tread of Main
+        # this method runs in the thread of the caller, not the tread of Mains
         print "Main.network_status_handler", topic_msg
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
 
-    def run(self):
-        while True:
-            try:
-                topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
+    def write_to_arduino(self, id, level):
+        time.sleep(self.arduino_delay_time)
+        self.arduino_connection.write(id)
+        time.sleep(self.arduino_delay_time)
+        self.arduino_connection.write(level)
 
-                if topic == "voice_1":
-                    master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.1 else master_volume
-                    if master_volume != self.last_master_volume_level :
-                        gain = int(120 + master_volume * 40) if master_volume > 0.1 else 0
-                        print "master_volume", master_volume, "gain", gain
-                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                        self.last_master_volume_level = master_volume
+    def run(self):
+
+        print 10003.1
+        devicenames = self.mandala_tlc_ids.keys()
+        devicenames.sort()
+        print 10003.2
+        for devicename in devicenames:
+            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+            tlc_id_str = "{}\n".format(tlc_id_int)
+            tlc_level_str = "0/n"
+            self.write_to_arduino(tlc_id_str,tlc_level_str)
+        print 10004
+        while True:
+            print 10005
+            if self.mandala_device_status == None:
+                print 10006
+                self.network.thirtybirds.send("mandala_device_request", True)
+                print 10007
+
+            print 10008
+            try:
+                print 10009
+                try:
+                    topic, msg = self.queue.get(True, 5)
+                except Queue.Empty:
+                    continue
+                print topic, msg
+                if topic == "mandala_device_status":
+                    mandala_device_status = eval(msg)
+                    devicenames = mandala_device_status.keys()
+                    if self.mandala_device_status == None: # if this is the first data
+                        for devicename in devicenames:
+                            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+                            tlc_id_str = "{}\n".format(tlc_id_int)
+                            if mandala_device_status[devicename] == "unset":
+                                tlc_level_int = 0
+                            if mandala_device_status[devicename] == "fail":
+                                tlc_level_int = 100
+                            if mandala_device_status[devicename] == "pass":
+                                tlc_level_int = 4000
+                            tlc_level_str = "{}\n".format(tlc_level_int)
+
+                            self.write_to_arduino(tlc_id_str,tlc_level_str)
+
+                        self.mandala_device_status = mandala_device_status
+                    else:
+                        for devicename in devicenames:
+                            if self.mandala_device_status[devicename] != mandala_device_status[devicename]:
+                                self.mandala_device_status[devicename] = mandala_device_status[devicename]
+                                tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+                                tlc_id_str = "{}\n".format(tlc_id_int)
+                                if mandala_device_status[devicename] == "unset":
+                                    tlc_level_int = 0
+                                if mandala_device_status[devicename] == "fail":
+                                    tlc_level_int = 100
+                                if mandala_device_status[devicename] == "pass":
+                                    tlc_level_int = 4000
+                                tlc_level_str = "{}\n".format(tlc_level_int)
+                                self.write_to_arduino(tlc_id_str,tlc_level_str)
+                                
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
-
 
 def init(hostname):
     main = Main(hostname)

@@ -1,3 +1,34 @@
+"""
+pin info:
+  crystal frequency counter is connected via RS232
+    any USB interface
+  digital potentiometer for harmonic volume is connected via I2C
+    pin 1: +3.3VDC
+    pin 3: I2C Serial Data
+    pin 5: I2C Serial Clock
+    pin 6: Ground
+  AD9833 frequecy generator chip #1 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 29: Chip Select 1
+    pin 6: Ground
+  AD9833 frequecy generator chip #2 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 31: Chip Select 2
+    pin 6: Ground
+  AD9833 frequecy generator chip #3 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 33: Chip Select 3
+    pin 6: Ground
+  master volume amplifier board is connected via SPI
+    pin 16: SPI MOSI
+    pin 18: SPI Serial Clock
+"""
 import commands
 import os
 import sys

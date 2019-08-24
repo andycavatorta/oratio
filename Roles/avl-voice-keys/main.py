@@ -1,3 +1,36 @@
+"""
+pin info:
+  the staccato and hold buttons connect to generic digital GPIOs
+  pin 37: hold
+  pin 31: staccato_1
+  pin 33: staccato_2
+  pin 35: staccato_3
+
+  voice key 1 encoder is connected through SPI
+  pin 19: SPI 0 MOSI
+  pin 21: SPI 0 MISO
+  pin 23: SPI 0 CLOCK
+  pin 36: SPI 0 CHIP_SELECT_MASTER
+  pin 2: +5VDC
+  pin 6: Ground
+
+  voice key 2 encoder is connected through SPI
+  pin 19: SPI 0 MOSI
+  pin 21: SPI 0 MISO
+  pin 23: SPI 0 CLOCK
+  pin 38: SPI 0 CHIP_SELECT_MASTER
+  pin 2: +5VDC
+  pin 6: Ground
+
+  voice key 3 encoder is connected through SPI
+  pin 19: SPI 0 MOSI
+  pin 21: SPI 0 MISO
+  pin 23: SPI 0 CLOCK
+  pin 40: SPI 0 CHIP_SELECT_MASTER
+  pin 2: +5VDC
+  pin 6: Ground
+
+"""
 from __future__ import division
 
 import test_that_works

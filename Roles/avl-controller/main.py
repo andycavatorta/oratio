@@ -1,7 +1,7 @@
 
 import os
 import Queue
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import settings
 import time
 import threading
@@ -287,9 +287,9 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.pedals = Pedals(self.add_to_queue)
-        self.pedals.daemon = True
-        self.pedals.start()
+        #self.pedals = Pedals(self.add_to_queue)
+        #self.pedals.daemon = True
+        #self.pedals.start()
 
         self.hostnames = [
             "avl-formant-1",
@@ -298,6 +298,7 @@ class Main(threading.Thread):
             "avl-layer-1",
             "avl-layer-2",
             "avl-layer-3",
+            "avl-medulla",
             "avl-pitch-keys",
             "avl-settings",
             "avl-transport",
@@ -310,7 +311,7 @@ class Main(threading.Thread):
         self.client_monitor_server.daemon = True
         #self.client_monitor_server.start()
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_response")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
 
         self.network.thirtybirds.subscribe_to_topic("pitch_key_touched")
         self.network.thirtybirds.subscribe_to_topic("transport_position")
@@ -368,7 +369,47 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_half_steps")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_octave")
 
+
         self.voices = [ Voice(i) for i in range(3) ]
+
+        self.mandala_devices = {
+            "avl-controller":"pass", # because if this is sending data, it's online.
+            "avl-formant-1":"unset",
+            "avl-formant-1-amplifier":"unset",
+            "avl-formant-2":"unset",
+            "avl-formant-2-amplifier":"unset",
+            "avl-formant-3":"unset",
+            "avl-formant-3-amplifier":"unset",
+            "avl-layer-1":"unset",
+            "avl-layer-2":"unset",
+            "avl-layer-3":"unset",
+            "avl-medulla":"pass",# because if this is sending data, it's online.
+            "avl-pitch-keys":"unset",
+            "avl-pitch-keys-sensor-1":"unset",
+            "avl-pitch-keys-sensor-2":"unset",
+            "avl-pitch-keys-sensor-3":"unset",
+            "avl-pitch-keys-sensor-4":"unset",
+            "avl-settings":"unset",
+            "avl-settings-adcs":"unset",
+            "avl-transport":"unset",
+            "avl-transport-encoder":"unset",
+            "avl-voice-1":"unset",
+            "avl-voice-1-crystal-frequency-counter":"unset",
+            "avl-voice-1-harmonic-generators":"unset",
+            "avl-voice-1-harmonic-volume":"unset",
+            "avl-voice-2":"unset",
+            "avl-voice-2-crystal-frequency-counter":"unset",
+            "avl-voice-2-harmonic-generators":"unset",
+            "avl-voice-2-harmonic-volume":"unset",
+            "avl-voice-3":"unset",
+            "avl-voice-3-crystal-frequency-counter":"unset",
+            "avl-voice-3-harmonic-generators":"unset",
+            "avl-voice-3-harmonic-volume":"unset",
+            "avl-voice-keys":"unset",
+            "avl-voice-keys-encoder-1":"unset",
+            "avl-voice-keys-encoder-2":"unset",
+            "avl-voice-keys-encoder-3":"unset"
+        }
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -380,6 +421,12 @@ class Main(threading.Thread):
     def network_status_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         print "Main.network_status_handler", topic_msg
+        if topic_msg["status"]=="device_discovered":
+            self.mandala_devices[topic_msg["hostname"]] = "pass"
+            self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
+        if topic_msg["status"]=="device_removed":
+            self.mandala_devices[topic_msg["hostname"]] = "fail"
+            self.network.thirtybirds.send("mandala_device_status", self.mandala_devices)
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
@@ -629,7 +676,18 @@ class Main(threading.Thread):
                     continue
                 if topic == "client_monitor_response":
                     self.client_monitor_server.add_to_queue(msg[0],msg[1],msg[2],msg[3],msg[4],msg[5],msg[6])
-                    
+                    continue
+
+                if topic == "mandala_device_request": # received from medulla
+                    self.network.thirtybirds.send("mandala_device_request", None) # send to all devices
+                    continue
+
+                if topic == "mandala_device_status": # response from all devices
+                    devicename, status = msg
+                    self.mandala_devices[devicename] = status
+                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
+                    continue
+
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))

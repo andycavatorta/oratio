@@ -150,7 +150,7 @@ class SpiDevMraa(object):
 class BitBang(object):
     """Software-based implementation of the SPI protocol over GPIO pins."""
 
-    def __init__(self, gpio, sclk, mosi=None, miso=None):
+    def __init__(self, gpio, sclk, mosi=None, miso=None, ss=None):
         """Initialize bit bang (or software) based SPI.  Must provide a BaseGPIO
         class, the SPI clock, and optionally MOSI, MISO, and SS (slave select)
         pin numbers. If MOSI is set to None then writes will be disabled and fail
@@ -162,13 +162,17 @@ class BitBang(object):
         self._sclk = sclk
         self._mosi = mosi
         self._miso = miso
-        self._ss = None
+        self._ss = ss
         # Set pins as outputs/inputs.
         gpio.setup(sclk, GPIO.OUT)
         if mosi is not None:
             gpio.setup(mosi, GPIO.OUT)
         if miso is not None:
             gpio.setup(miso, GPIO.IN)
+        if ss is not None:
+            gpio.setup(ss, GPIO.OUT)
+            # Assert SS high to start with device communication off.
+            gpio.set_high(ss)
         # Assume mode 0.
         self.set_mode(0)
         # Assume most significant bit first order.
@@ -286,7 +290,7 @@ class BitBang(object):
             self._gpio.set_high(self._ss)
         return result
 
-    def transfer(self, chip_select_pin, data, assert_ss=True, deassert_ss=True):
+    def transfer(self, data, assert_ss=True, deassert_ss=True):
         """Full-duplex SPI read and write.  If assert_ss is true, the SS line
         will be asserted low, the specified bytes will be clocked out the MOSI
         line while bytes will also be read from the MISO line, and if
@@ -297,8 +301,8 @@ class BitBang(object):
             raise RuntimeError('Write attempted with no MOSI pin specified.')
         if self._mosi is None:
             raise RuntimeError('Read attempted with no MISO pin specified.')
-        if assert_ss and chip_select_pin is not None:
-            self._gpio.set_low(chip_select_pin)
+        if assert_ss and self._ss is not None:
+            self._gpio.set_low(self._ss)
         result = bytearray(len(data))
         for i in range(len(data)):
             for j in range(8):
@@ -327,6 +331,6 @@ class BitBang(object):
                     else:
                         # Set bit to 0 at appropriate location.
                         result[i] &= ~self._read_shift(self._mask, j)
-        if deassert_ss and chip_select_pin is not None:
-            self._gpio.set_high(chip_select_pin)
+        if deassert_ss and self._ss is not None:
+            self._gpio.set_high(self._ss)
         return result

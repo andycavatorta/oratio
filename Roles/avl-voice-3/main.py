@@ -1,3 +1,35 @@
+"""
+pin info:
+  crystal frequency counter is connected via RS232
+    any USB interface
+  digital potentiometer for harmonic volume is connected via I2C
+    pin 1: +3.3VDC
+    pin 3: I2C Serial Data
+    pin 5: I2C Serial Clock
+    pin 6: Ground
+  AD9833 frequecy generator chip #1 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 29: Chip Select 1
+    pin 6: Ground
+  AD9833 frequecy generator chip #2 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 31: Chip Select 2
+    pin 6: Ground
+  AD9833 frequecy generator chip #3 is connected via SPI
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 33: Chip Select 3
+    pin 6: Ground
+  master volume amplifier board is connected via SPI
+    pin 16: SPI MOSI
+    pin 18: SPI Serial Clock
+"""
+
 import commands
 import os
 import sys
@@ -137,6 +169,10 @@ class Main(threading.Thread):
                         param = 0 if msg[5] < thresh[2] and i in (4,5) else param     # subvoice 2
                         params.append(param)
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
+                    vol = max(vol-0.13, 0) 
+                    vol_sub1 = max(vol_sub1-0.09, 0) 
+                    vol_sub2 = max(vol_sub2-0.09, 0) 
+                    print "volume=", vol, vol_sub1, vol_sub2
                     # update intermediate frequency if new data is available
                     #measure_xtal_freq = crystal.measure_xtal_freq()
                     self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq

@@ -121,17 +121,16 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        target_volume_level = 0
+        current_volume_level = 0
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-
                 if topic == "voice_1":
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
                     if master_volume != self.last_master_volume_level :
-                        gain = int(120 + master_volume * 55) if master_volume > 0.01 else 0
+                        gain = int(120 + master_volume * 110) if master_volume > 0.01 else 0
                         #gain = int(110 + master_volume * 55) if master_volume > 0.1 else 0
                         print "master_volume", master_volume, "gain", gain
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))

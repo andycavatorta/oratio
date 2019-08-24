@@ -1,3 +1,38 @@
+"""
+pin info:
+  analog potentiometers are read via MCP3008 chip connected via SPI
+
+  MCP3008 ADC chip #1
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 38: Chip Select 
+  MCP3008 ADC chip #2
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 40: Chip Select 
+  MCP3008 ADC chip #3
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 32: Chip Select 
+  MCP3008 ADC chip #4
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 36: Chip Select 
+  MCP3008 ADC chip #5
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 24: Chip Select 
+  MCP3008 ADC chip #6
+    pin 21: SPI MISO
+    pin 19: SPI MOSI
+    pin 23: SPI Serial Clock
+    pin 26: Chip Select 
+"""
 import Adafruit_GPIO as GPIO
 import adafruit_spi_modified as SPI
 import commands
