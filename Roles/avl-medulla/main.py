@@ -170,18 +170,19 @@ class Main(threading.Thread):
             print 10003.7
         print 10004
         while True:
-            try:
-                print 10005
-                if self.mandala_device_status == None:
-                    print 10006
-                    self.network.thirtybirds.send("mandala_device_request", True)
-                    print 10007
-            except Queue.Empty:
-                pass
+            print 10005
+            if self.mandala_device_status == None:
+                print 10006
+                self.network.thirtybirds.send("mandala_device_request", True)
+                print 10007
+
             print 10008
             try:
                 print 10009
-                topic, msg = self.queue.get(True, 1)
+                try:
+                    topic, msg = self.queue.get(True, 1)
+                except Queue.Empty:
+                    continue
                 print topic, msg
                 if topic == "mandala_device_status":
                     self.mandala_device_status = eval(msg)
