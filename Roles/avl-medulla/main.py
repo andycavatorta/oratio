@@ -179,7 +179,7 @@ class Main(threading.Thread):
             print 10008
             try:
                 print 10009
-                topic, msg = self.queue.get(True)
+                topic, msg = self.queue.get(True, 1)
                 print topic, msg
                 if topic == "mandala_device_status":
                     self.mandala_device_status = eval(msg)
