@@ -152,6 +152,7 @@ class Main(threading.Thread):
 
         print 10003.1
         devicenames = self.mandala_tlc_ids.keys()
+        devicenames.sort()
         print 10003.2
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
@@ -182,11 +183,16 @@ class Main(threading.Thread):
                 print topic, msg
                 if topic == "mandala_device_status":
                     self.mandala_device_status = eval(msg)
+                    print 10010 repr(self.mandala_device_status)
                     devicenames = self.mandala_device_status.keys()
+                    print 10011
                     devicenames.sort()
                     for devicename in devicenames:
+                        print 10012, devicename
                         tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+                        print 10013
                         tlc_id_str = "{}\n".format(tlc_id_int)
+                        print 10014
                         if self.mandala_device_status[devicename] == "unset":
                             tlc_level_int = 0
                         if self.mandala_device_status[devicename] == "fail":
@@ -194,7 +200,7 @@ class Main(threading.Thread):
                         if self.mandala_device_status[devicename] == "pass":
                             tlc_level_int = 4000
                         tlc_level_str = "{}\n".format(tlc_level_int)
-                        print  repr(tlc_id_str),  repr(tlc_level_str),  devicename
+                        print  10015, repr(tlc_id_str),  repr(tlc_level_str),  devicename
 
                         time.sleep(self.arduino_delay_time)
                         self.arduino_connection.write(tlc_id_str)
