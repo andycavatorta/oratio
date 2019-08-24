@@ -191,7 +191,7 @@ class Main(threading.Thread):
                         params.append(param)
                     freq_root, vol, freq_sub1, vol_sub1, freq_sub2, vol_sub2 = params
 
-                    #vol = max(vol-0.03, 0) 
+                    #`vol = max(vol-0.03, 0) 
 
                     try:
                         self.xtal_freq = crystal.measure_xtal_freq() or self.xtal_freq

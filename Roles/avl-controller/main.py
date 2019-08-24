@@ -312,6 +312,7 @@ class Main(threading.Thread):
         #self.client_monitor_server.start()
         #self.network.thirtybirds.subscribe_to_topic("system")  # subscribe to all system messages
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
 
         self.network.thirtybirds.subscribe_to_topic("pitch_key_touched")
         self.network.thirtybirds.subscribe_to_topic("transport_position")
