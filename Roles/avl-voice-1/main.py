@@ -149,6 +149,7 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
 
     def update_device_status(self, devicename, status):
+        print "update_device_status",devicename, status
         if self.status[devicename] != status:
             self.status[devicename] = status
             msg = [devicename, status]
