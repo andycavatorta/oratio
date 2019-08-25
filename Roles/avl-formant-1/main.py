@@ -152,6 +152,10 @@ class Main(threading.Thread):
                         print "master_volume", master_volume, "gain", gain
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
+
+                if topic == "mandala_device_request":
+                    self.get_device_status()
+                        
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
