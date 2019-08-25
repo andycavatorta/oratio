@@ -123,7 +123,7 @@ class Main(threading.Thread):
                     topic, msg = self.queue.get(false)
                     if topic == "mandala_device_request":
                         self.get_device_status()
-                except Queue.empty:
+                except Queue.Empty:
                     pass
                 #print "main Main.run topic/queue", topic, msg
                 transport_position = self.transport.get_position()
