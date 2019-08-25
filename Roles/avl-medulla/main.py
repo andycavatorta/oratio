@@ -191,7 +191,7 @@ class Main(threading.Thread):
 
     def update_mandala_status(self, devicename, status):
         
-        if self.mandala_status[devicename] != status:
+        if str(self.mandala_status[devicename]) != str(status):
             print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
             self.mandala_status[devicename] = status
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
