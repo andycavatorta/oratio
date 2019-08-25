@@ -205,6 +205,7 @@ class Main(threading.Thread):
 
 
     def write_to_arduino(self, id, level):
+        print "write_to_arduino", id, level
         time.sleep(self.arduino_delay_time)
         self.arduino_connection.write(id)
         time.sleep(self.arduino_delay_time)
@@ -242,7 +243,7 @@ class Main(threading.Thread):
                         self.update_mandala_status(devicename, status)
                 except Queue.Empty:
                     continue
-                time.sleep(5)
+                time.sleep(10)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
