@@ -237,9 +237,9 @@ class Main(threading.Thread):
                     topic, msg_str = self.queue.get(True, 5)
                 except Queue.Empty:
                     continue
-                print topic, msg
                 if topic == "mandala_device_status":
                     msg = eval(msg_str)
+                    print topic, msg
                     devicename, status = msg
                     self.update_mandala_status(devicename, status)
                 time.sleep(0.01)
