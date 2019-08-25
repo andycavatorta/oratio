@@ -224,25 +224,25 @@ class Main(threading.Thread):
         print 10004
         while True:
             print 10005
-            #if not all(status == "pass" for status in self.mandala_device_status.values()):
+            if not all(status == "pass" for status in self.mandala_device_status.values()):
             #if self.mandala_device_status == None:
             #    print 10006
-            self.network.thirtybirds.send("mandala_device_request", True)
+                self.network.thirtybirds.send("mandala_device_request", True)
             #    print 10007
 
             print 10008
             try:
                 print 10009
                 try:
-                    topic, msg_str = self.queue.get(True, 5)
+                    topic, msg_str = self.queue.get(True, 1)
+                    if topic == "mandala_device_status":
+                        msg = eval(msg_str)
+                        print topic, msg
+                        devicename, status = msg
+                        self.update_mandala_status(devicename, status)
                 except Queue.Empty:
                     continue
-                if topic == "mandala_device_status":
-                    msg = eval(msg_str)
-                    print topic, msg
-                    devicename, status = msg
-                    self.update_mandala_status(devicename, status)
-                time.sleep(0.01)
+                time.sleep(5)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
