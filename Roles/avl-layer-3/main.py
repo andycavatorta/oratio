@@ -105,7 +105,7 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
         self.status = {
-            "avl-layer-1":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-layer-3":"pass", # because this passes if it can respond.  maybe better tests in future
         }
 
     def loop_callback(self):
