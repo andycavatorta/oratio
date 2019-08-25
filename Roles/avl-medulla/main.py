@@ -176,7 +176,7 @@ class Main(threading.Thread):
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
-        print "network_message_handler", topic, msg
+        #print "network_message_handler", topic, msg
         #if len(msg) > 0: 
         #    msg = eval(msg)
         self.add_to_queue(topic, msg)
@@ -184,6 +184,7 @@ class Main(threading.Thread):
     def network_status_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Mains
         print "Main.network_status_handler", topic_msg
+
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
@@ -236,7 +237,7 @@ class Main(threading.Thread):
             try:
                 print 10009
                 try:
-                    topic, msg_str = self.queue.get(True, 5)
+                    topic, msg_str = self.queue.get(True, 10)
                     if topic == "mandala_device_status":
                         msg = eval(msg_str)
                         print topic, msg
