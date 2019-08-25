@@ -85,7 +85,22 @@ class Main(threading.Thread):
         self.transport = Transport()
         self.transport.daemon = True
         self.transport.start()
-        #self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.status = {
+            "avl-transport":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-transport-encoder":"unset"
+        }
+
+    def update_device_status(self, devicename, status):
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -104,7 +119,12 @@ class Main(threading.Thread):
     def run(self):
         while True:
             try:
-                #topic, msg = self.queue.get(True)
+                try:
+                    topic, msg = self.queue.get(false)
+                    if topic == "mandala_device_request":
+                        self.get_device_status()
+                except Queue.empty:
+                    pass
                 #print "main Main.run topic/queue", topic, msg
                 transport_position = self.transport.get_position()
                 self.network.thirtybirds.send("transport_position", transport_position)
