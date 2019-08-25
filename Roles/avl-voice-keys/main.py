@@ -202,7 +202,27 @@ class Main(threading.Thread):
         self.staccato_2 = False
         self.staccato_3 = False
         #self.network.thirtybirds.subscribe_to_topic("door_closed")
+        self.status = {
+            "avl-voice-keys":"pass",
+            "avl-voice-keys-encoder-1":"pass",
+            "avl-voice-keys-encoder-2":"pass",
+            "avl-voice-keys-encoder-3":"pass"
+        }
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+
+    def update_device_status(self, devicename, status):
+        print "update_device_status 1",devicename, status
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            print "update_device_status 2",devicename, status
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -222,6 +242,12 @@ class Main(threading.Thread):
         topic_names = ["voice_key_1_position", "voice_key_2_position", "voice_key_3_position"]
         while True:
             try:
+                try:
+                    topic, msg = self.queue.get(False)
+                    if topic == "mandala_device_request":
+                        self.get_device_status()
+                except Queue.Empty:
+                    pass
                 # how do I add this with non-blocking queues
                 button_states = self.buttons.get_states()
                 for button_state in button_states:
