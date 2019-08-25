@@ -82,6 +82,7 @@ class Poller(threading.Thread):
         self.poll_delay_time = poll_delay_time
     def run(self):
         while True:
+            print "Poller Thread"
             _main_.network.thirtybirds.send("mandala_device_request", True)
             time.sleep(self.poll_delay_time)
 
