@@ -236,7 +236,7 @@ class Main(threading.Thread):
             try:
                 print 10009
                 try:
-                    topic, msg_str = self.queue.get(True, 1)
+                    topic, msg_str = self.queue.get(True, 5)
                     if topic == "mandala_device_status":
                         msg = eval(msg_str)
                         print topic, msg
@@ -244,7 +244,7 @@ class Main(threading.Thread):
                         self.update_mandala_status(devicename, status)
                 except Queue.Empty:
                     continue
-                time.sleep(10)
+                time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
