@@ -190,9 +190,9 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def update_mandala_status(self, devicename, status):
+        print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
         
         if str(self.mandala_status[devicename]) != str(status):
-            print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
             self.mandala_status[devicename] = status
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
@@ -238,7 +238,7 @@ class Main(threading.Thread):
             try:
                 print 10009
                 try:
-                    topic, msg_str = self.queue.get(True, 10)
+                    topic, msg_str = self.queue.get(True, 15)
                     if topic == "mandala_device_status":
                         msg = eval(msg_str)
                         #print topic, msg
