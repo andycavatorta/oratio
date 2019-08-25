@@ -126,7 +126,7 @@ class Main(threading.Thread):
         while True:
             #try:
                 try:
-                    topic, msg = self.queue.get(false)
+                    topic, msg = self.queue.get(False)
                     if topic == "mandala_device_request":
                         self.get_device_status()
                 except Queue.Empty:
