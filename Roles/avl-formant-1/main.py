@@ -119,6 +119,11 @@ class Main(threading.Thread):
             print "update_device_status 2",devicename, status
             self.network.thirtybirds.send("mandala_device_status", msg)
 
+    def get_device_status(self, devicename, status):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
+            
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
@@ -155,7 +160,7 @@ class Main(threading.Thread):
 
                 if topic == "mandala_device_request":
                     self.get_device_status()
-                        
+
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
