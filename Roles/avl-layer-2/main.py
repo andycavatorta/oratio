@@ -104,10 +104,25 @@ class Layer(threading.Thread):
 
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.status = {
+            "avl-layer-2":"pass", # because this passes if it can respond.  maybe better tests in future
+        }
 
     def loop_callback(self):
         # print "Sending layer trigger 2"
         self.network.thirtybirds.send("layer_2_trigger", "1")
+
+    def update_device_status(self, devicename, status):
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
@@ -132,8 +147,12 @@ class Layer(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
+
+                if topic == "mandala_device_request":
+                    self.get_device_status()
+
+                #if topic == "client_monitor_request":
+                #    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
                     
                 if topic == "layer_2_record":
                     if msg:
