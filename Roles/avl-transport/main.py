@@ -117,6 +117,12 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        try:
+            transport_position = self.transport.get_position()
+            self.update_device_status("avl-transport-encoder", "pass")
+        except Exception as e:
+            self.update_device_status("avl-transport-encoder", "fail")
+
         while True:
             #try:
                 try:
