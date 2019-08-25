@@ -107,6 +107,24 @@ class Main(threading.Thread):
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("voice_3")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.status = {
+            "avl-formant-3":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-formant-3-amplifier":"unset"
+        }
+
+    def update_device_status(self, devicename, status):
+        print "update_device_status 1",devicename, status
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            print "update_device_status 2",devicename, status
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -123,6 +141,12 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        try:
+            wpi.wiringPiSPIDataRW(0, chr(0) + chr(0)) # set volume to zero as test of comms
+            self.update_device_status("avl-formant-3-amplifier", "pass")
+        except Exception as e:
+            self.update_device_status("avl-formant-3-amplifier", "fail")
+
         while True:
             try:
                 topic, msg = self.queue.get(True)
@@ -138,6 +162,9 @@ class Main(threading.Thread):
                         print "master_volume", master_volume, "gain", gain
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         self.last_master_volume_level = master_volume
+                if topic == "mandala_device_request":
+                    self.get_device_status()
+                    
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
