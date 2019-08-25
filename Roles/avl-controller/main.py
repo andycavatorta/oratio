@@ -689,8 +689,9 @@ class Main(threading.Thread):
                 if topic == "mandala_device_status": # response from all devices
                     devicename, status = msg
                     print  "mandala_device_status", devicename, status
-                    self.mandala_devices[devicename] = status
-                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
+                    if self.mandala_devices[devicename] != status:
+                        self.mandala_devices[devicename] = status
+                        self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
                     continue
 
             except Exception as e:
