@@ -143,8 +143,28 @@ class Main(threading.Thread):
         self.capcitive_sensors.start()
 
         self.utils = Utils(hostname)
+        self.status = {
+            "avl-pitch-keys":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-pitch-keys-sensor-1":"pass",
+            "avl-pitch-keys-sensor-2":"pass",
+            "avl-pitch-keys-sensor-3":"pass",
+            "avl-pitch-keys-sensor-4":"pass",
+        }
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
 
+    def update_device_status(self, devicename, status):
+        print "update_device_status 1",devicename, status
+        if self.status[devicename] != status:
+            self.status[devicename] = status
+            msg = [devicename, status]
+            print "update_device_status 2",devicename, status
+            self.network.thirtybirds.send("mandala_device_status", msg)
+
+    def get_device_status(self):
+        for devicename in self.status:
+            msg = [devicename, self.status[devicename]]
+            self.network.thirtybirds.send("mandala_device_status", msg)
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -164,9 +184,9 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-
+                if topic == "mandala_device_request":
+                    self.get_device_status()
+                    
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
