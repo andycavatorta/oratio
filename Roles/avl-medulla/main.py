@@ -81,12 +81,9 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         print os. system("stty -F /dev/ttyACM0 -hupcl")
 
-        print 10000
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
-        print 10001
         self.queue = Queue.Queue()
         self.arduino_connection = open("/dev/ttyACM0",'w')
-        print 10002
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
         self.UNSET = 0
@@ -171,7 +168,6 @@ class Main(threading.Thread):
         }
 
         self.arduino_delay_time = 0.05
-        print 10003
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -216,27 +212,17 @@ class Main(threading.Thread):
 
     def run(self):
 
-        print 10003.1
         devicenames = self.mandala_tlc_ids.keys()
         devicenames.sort()
-        print 10003.2
         for devicename in devicenames:
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
             tlc_level_str = "0/n"
             self.write_to_arduino(tlc_id_str,tlc_level_str)
-        print 10004
         while True:
-            print 10005
             if not all(status == "pass" for status in self.mandala_status.values()):
-            #if self.mandala_device_status == None:
-            #    print 10006
                 self.network.thirtybirds.send("mandala_device_request", True)
-            #    print 10007
-
-            print 10008
             try:
-                print 10009
                 try:
                     topic, msg_str = self.queue.get(True, 15)
                     if topic == "mandala_device_status":
