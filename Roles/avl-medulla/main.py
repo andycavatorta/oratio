@@ -75,6 +75,16 @@ class Utils(object):
     def get_client_status(self):
         return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
 
+class Poller(threading.Thread):
+    def __init__(self, _main_, poll_delay_time):
+        threading.Thread.__init__(self)
+        self._main_ = _main_
+        self.poll_delay_time = poll_delay_time
+    def run(self):
+        while True:
+            _main_.network.thirtybirds.send("mandala_device_request", True)
+            time.sleep(self.poll_delay_time)
+
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
@@ -166,8 +176,10 @@ class Main(threading.Thread):
             "avl-voice-keys-encoder-2":"unset",
             "avl-voice-keys-encoder-3":"unset"
         }
-
         self.arduino_delay_time = 0.05
+
+        self.poller = Poller(self, 20)
+        self.poller.start()
 
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
@@ -220,18 +232,15 @@ class Main(threading.Thread):
             tlc_level_str = "0/n"
             self.write_to_arduino(tlc_id_str,tlc_level_str)
         while True:
-            if not all(status == "pass" for status in self.mandala_status.values()):
-                self.network.thirtybirds.send("mandala_device_request", True)
+            #if not all(status == "pass" for status in self.mandala_status.values()):
+            #    self.network.thirtybirds.send("mandala_device_request", True)
             try:
-                try:
-                    topic, msg_str = self.queue.get(True, 15)
-                    if topic == "mandala_device_status":
-                        msg = eval(msg_str)
-                        #print topic, msg
-                        devicename, status = msg
-                        self.update_mandala_status(devicename, status)
-                except Queue.Empty:
-                    continue
+                topic, msg_str = self.queue.get(True)
+                if topic == "mandala_device_status":
+                    msg = eval(msg_str)
+                    #print topic, msg
+                    devicename, status = msg
+                    self.update_mandala_status(devicename, status)
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
