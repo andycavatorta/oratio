@@ -201,27 +201,27 @@ class Main(threading.Thread):
     def update_mandala_status(self, devicename, status):
         print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
         
-        if str(self.mandala_status[devicename]) != str(status):
-            self.mandala_status[devicename] = status
-            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
-            tlc_id_str = "{}\n".format(tlc_id_int)
-            if self.mandala_status[devicename] == "unset":
-                tlc_level_int = 0
-            if self.mandala_status[devicename] == "fail":
-                tlc_level_int = 100
-            if self.mandala_status[devicename] == "pass":
-                tlc_level_int = 4000
-            tlc_level_str = "{}\n".format(tlc_level_int)
+        #if str(self.mandala_status[devicename]) != str(status):
+        self.mandala_status[devicename] = status
+        tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+        tlc_id_str = "{}\n".format(tlc_id_int)
+        if self.mandala_status[devicename] == "unset":
+            tlc_level_int = 0
+        if self.mandala_status[devicename] == "fail":
+            tlc_level_int = 100
+        if self.mandala_status[devicename] == "pass":
+            tlc_level_int = 4000
+        tlc_level_str = "{}\n".format(tlc_level_int)
 
-            self.write_to_arduino(tlc_id_str,tlc_level_str)
+        self.write_to_arduino(tlc_id_str,tlc_level_str)
 
 
     def write_to_arduino(self, id, level):
         print "write_to_arduino", repr(id), repr(level)
         time.sleep(self.arduino_delay_time)
-        #self.arduino_connection.write(id)
+        self.arduino_connection.write(id)
         time.sleep(self.arduino_delay_time)
-        #self.arduino_connection.write(level)
+        self.arduino_connection.write(level)
 
     def run(self):
 
