@@ -125,7 +125,7 @@ class Main(threading.Thread):
             self.update_device_status("avl-transport-encoder", "fail")
 
         while True:
-            #try:
+            try:
                 try:
                     topic, msg = self.queue.get(False)
                     if topic == "mandala_device_request":
@@ -136,7 +136,7 @@ class Main(threading.Thread):
                 transport_position = self.transport.get_position()
                 self.network.thirtybirds.send("transport_position", transport_position)
                 time.sleep(0.01)
-            #except Exception as e:
+            except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
