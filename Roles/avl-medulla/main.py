@@ -205,7 +205,7 @@ class Main(threading.Thread):
 
 
     def write_to_arduino(self, id, level):
-        print "write_to_arduino", id, level
+        print "write_to_arduino", repr(id), repr(level)
         time.sleep(self.arduino_delay_time)
         self.arduino_connection.write(id)
         time.sleep(self.arduino_delay_time)
