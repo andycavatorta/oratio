@@ -83,7 +83,7 @@ class Poller(threading.Thread):
     def run(self):
         while True:
             print "Poller Thread"
-            _main_.network.thirtybirds.send("mandala_device_request", True)
+            self._main_.network.thirtybirds.send("mandala_device_request", True)
             time.sleep(self.poll_delay_time)
 
 # Main handles network send/recv and can see all other classes directly
