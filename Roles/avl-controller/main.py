@@ -683,7 +683,7 @@ class Main(threading.Thread):
 
                 if topic == "mandala_device_request": # received from medulla
                     self.network.thirtybirds.send("mandala_device_request", None) # send to all devices
-                    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
+                    #self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
                     continue
 
                 if topic == "mandala_device_status": # response from all devices
