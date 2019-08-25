@@ -196,11 +196,11 @@ class Main(threading.Thread):
             self.mandala_status[devicename] = status
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
             tlc_id_str = "{}\n".format(tlc_id_int)
-            if mandala_device_status[devicename] == "unset":
+            if mandala_status[devicename] == "unset":
                 tlc_level_int = 0
-            if mandala_device_status[devicename] == "fail":
+            if mandala_status[devicename] == "fail":
                 tlc_level_int = 100
-            if mandala_device_status[devicename] == "pass":
+            if mandala_status[devicename] == "pass":
                 tlc_level_int = 4000
             tlc_level_str = "{}\n".format(tlc_level_int)
 
