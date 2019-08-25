@@ -146,7 +146,6 @@ class Main(threading.Thread):
         # get voice messages
         self.network.thirtybirds.subscribe_to_topic("voice_2")
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
-
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
 
     def update_device_status(self, devicename, status):
