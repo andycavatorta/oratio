@@ -687,12 +687,13 @@ class Main(threading.Thread):
                     continue
 
                 if topic == "mandala_device_status": # response from all devices
-                    devicename, status = msg
-                    print  "mandala_device_status", devicename, repr(status), repr(self.mandala_devices[devicename])
-                    if self.mandala_devices[devicename] != status:
-                        self.mandala_devices[devicename] = status
-                        self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
-                    continue
+                    self.network.thirtybirds.send("mandala_device_status", msg)
+                    #devicename, status = msg
+                    #print  "mandala_device_status", devicename, repr(status), repr(self.mandala_devices[devicename])
+                    #if self.mandala_devices[devicename] != status:
+                    #    self.mandala_devices[devicename] = status
+                    #    self.network.thirtybirds.send("mandala_device_status", self.mandala_devices) # send to medulla
+                    #continue
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

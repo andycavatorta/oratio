@@ -131,6 +131,44 @@ class Main(threading.Thread):
             "avl-voice-keys-encoder-2":2,
             "avl-voice-keys-encoder-3":3
         }
+        self.mandala_status = {
+            "avl-controller":"pass", # because if this is sending data, it's online.
+            "avl-formant-1":"unset",
+            "avl-formant-1-amplifier":"unset",
+            "avl-formant-2":"unset",
+            "avl-formant-2-amplifier":"unset",
+            "avl-formant-3":"unset",
+            "avl-formant-3-amplifier":"unset",
+            "avl-layer-1":"unset",
+            "avl-layer-2":"unset",
+            "avl-layer-3":"unset",
+            "avl-medulla":"pass",# because if this is sending data, it's online.
+            "avl-pitch-keys":"unset",
+            "avl-pitch-keys-sensor-1":"unset",
+            "avl-pitch-keys-sensor-2":"unset",
+            "avl-pitch-keys-sensor-3":"unset",
+            "avl-pitch-keys-sensor-4":"unset",
+            "avl-settings":"unset",
+            "avl-settings-adcs":"unset",
+            "avl-transport":"unset",
+            "avl-transport-encoder":"unset",
+            "avl-voice-1":"unset",
+            "avl-voice-1-crystal-frequency-counter":"unset",
+            "avl-voice-1-harmonic-generators":"unset",
+            "avl-voice-1-harmonic-volume":"unset",
+            "avl-voice-2":"unset",
+            "avl-voice-2-crystal-frequency-counter":"unset",
+            "avl-voice-2-harmonic-generators":"unset",
+            "avl-voice-2-harmonic-volume":"unset",
+            "avl-voice-3":"unset",
+            "avl-voice-3-crystal-frequency-counter":"unset",
+            "avl-voice-3-harmonic-generators":"unset",
+            "avl-voice-3-harmonic-volume":"unset",
+            "avl-voice-keys":"unset",
+            "avl-voice-keys-encoder-1":"unset",
+            "avl-voice-keys-encoder-2":"unset",
+            "avl-voice-keys-encoder-3":"unset"
+        }
 
         self.arduino_delay_time = 0.05
         print 10003
@@ -149,6 +187,22 @@ class Main(threading.Thread):
 
     def add_to_queue(self, topic, msg):
         self.queue.put((topic, msg))
+
+    def update_mandala_status(self, devicename, status):
+        if self.mandala_status[devicename] != status:
+            self.mandala_status[devicename] = status
+            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+            tlc_id_str = "{}\n".format(tlc_id_int)
+            if mandala_device_status[devicename] == "unset":
+                tlc_level_int = 0
+            if mandala_device_status[devicename] == "fail":
+                tlc_level_int = 100
+            if mandala_device_status[devicename] == "pass":
+                tlc_level_int = 4000
+            tlc_level_str = "{}\n".format(tlc_level_int)
+
+            self.write_to_arduino(tlc_id_str,tlc_level_str)
+
 
     def write_to_arduino(self, id, level):
         time.sleep(self.arduino_delay_time)
@@ -180,43 +234,14 @@ class Main(threading.Thread):
             try:
                 print 10009
                 try:
-                    topic, msg = self.queue.get(True, 5)
+                    topic, msg_str = self.queue.get(True, 5)
                 except Queue.Empty:
                     continue
                 print topic, msg
                 if topic == "mandala_device_status":
-                    mandala_device_status = eval(msg)
-                    devicenames = mandala_device_status.keys()
-                    if self.mandala_device_status == None: # if this is the first data
-                        for devicename in devicenames:
-                            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
-                            tlc_id_str = "{}\n".format(tlc_id_int)
-                            if mandala_device_status[devicename] == "unset":
-                                tlc_level_int = 0
-                            if mandala_device_status[devicename] == "fail":
-                                tlc_level_int = 100
-                            if mandala_device_status[devicename] == "pass":
-                                tlc_level_int = 4000
-                            tlc_level_str = "{}\n".format(tlc_level_int)
-
-                            self.write_to_arduino(tlc_id_str,tlc_level_str)
-
-                        self.mandala_device_status = mandala_device_status
-                    else:
-                        for devicename in devicenames:
-                            if self.mandala_device_status[devicename] != mandala_device_status[devicename]:
-                                self.mandala_device_status[devicename] = mandala_device_status[devicename]
-                                tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
-                                tlc_id_str = "{}\n".format(tlc_id_int)
-                                if mandala_device_status[devicename] == "unset":
-                                    tlc_level_int = 0
-                                if mandala_device_status[devicename] == "fail":
-                                    tlc_level_int = 100
-                                if mandala_device_status[devicename] == "pass":
-                                    tlc_level_int = 4000
-                                tlc_level_str = "{}\n".format(tlc_level_int)
-                                self.write_to_arduino(tlc_id_str,tlc_level_str)
-                                
+                    msg = eval(msg_str)
+                    devicename, status = msg
+                    self.update_mandala_status(devicename, status)
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
