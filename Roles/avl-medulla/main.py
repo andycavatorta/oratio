@@ -189,6 +189,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def update_mandala_status(self, devicename, status):
+        print "update_mandala_status", devicename, self.mandala_status[devicename], status
         if self.mandala_status[devicename] != status:
             self.mandala_status[devicename] = status
             tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
