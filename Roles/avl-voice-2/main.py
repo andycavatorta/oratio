@@ -156,7 +156,7 @@ class Main(threading.Thread):
             msg = [devicename, status]
             self.network.thirtybirds.send("mandala_device_status", msg)
 
-    def get_device_status(self, devicename, status):
+    def get_device_status(self):
         for devicename in self.status:
             msg = [devicename, self.status[devicename]]
             self.network.thirtybirds.send("mandala_device_status", msg)
