@@ -165,7 +165,7 @@ class Main(threading.Thread):
                     gain = int(100 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
                     print "upside master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                    #time.sleep(0.001)
+                    time.sleep(0.005)
                     continue
                 if master_volume < self.last_master_volume_level :
                     self.last_master_volume_level = self.last_master_volume_level - 0.01
@@ -174,7 +174,7 @@ class Main(threading.Thread):
                     gain = int(100 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
                     print "downside master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                    #time.sleep(0.001)
+                    time.sleep(0.005)
                     continue
                 time.sleep(0.01)
             except Exception as e:
