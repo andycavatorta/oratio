@@ -5,11 +5,13 @@ wpi.wiringPiSetup()
 wpi.wiringPiSPISetup(0, 500000)
 
 while True:
-    for gain in range(192):
-        print gain
-        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-        time.sleep(0.02)
-    for ungain in range(192):
-        print 192-ungain
-        wpi.wiringPiSPIDataRW(0, chr(192-ungain) + chr(0))
-        time.sleep(0.02)
+    for gain in range(92):
+        gain_offset = gain + 100
+        print gain_offset
+        wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
+        time.sleep(0.1)
+    for ungain in range(92):
+        gain_offset = 192-ungain
+        #print 192-ungain
+        wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
+        time.sleep(0.1)
