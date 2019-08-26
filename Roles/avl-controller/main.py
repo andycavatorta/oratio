@@ -438,7 +438,7 @@ class Main(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                #print topic, msg
+                print topic, msg
 
                 if topic == "pitch_key_touched":
                     self.network.thirtybirds.send("voice_1", self.voices[0].update("pitch_key", msg))
