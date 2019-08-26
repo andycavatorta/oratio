@@ -254,6 +254,7 @@ class Main(threading.Thread):
                     pass
                 # how do I add this with non-blocking queues
                 button_states = self.buttons.get_states()
+                print "----- start main run - button_states", button_states
                 for button_state in button_states:
                     name, state = button_state
                     if name == "hold":
