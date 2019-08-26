@@ -11,13 +11,13 @@ while True:
 
 """
 while True:
-    for gain in range(18):
-        gain_offset = (gain*5) + 100 
+    for gain in range(46):
+        gain_offset = (gain*2) + 100 
         print gain_offset
         wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
         time.sleep(0.05)
-    for ungain in range(18):
-        gain_offset = 192-(ungain*5) 
+    for ungain in range(46):
+        gain_offset = 192-(ungain*2) 
         print gain_offset
         wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
         time.sleep(0.05)
