@@ -162,30 +162,37 @@ class Layer(threading.Thread):
 
                 if topic == "mandala_device_request":
                     self.get_device_status()
-
+                    continue
                 #if topic == "client_monitor_request":
                 #    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                if topic == "layer_1_record":
+                elif topic == "layer_1_record":
                     if msg:
                         self.looperController.handleShortPedalDown()
                     else:
                         self.looperController.handleShortPedalUp()
+                    continue
                 elif topic == "layer_1_play":
                     if msg:
                         self.looperController.handleLongPedalDown()
                     else:
                         self.looperController.handleLongPedalUp()
+                    continue
                 elif topic == "layer_1_volume":
                     self.looperController.setVolume(msg)
+                    continue
                 elif topic == "layer_speed":
                     self.looperController.setLoopLength(msg)
+                    continue
                 elif topic == "clear_loop":
                     self.looperController.clear()
+                    continue
                 elif topic == "__heartbeat__":
                     print "heartbeat received", msg
+                    continue
                 elif topic == "__print__":
                     print "Layer.network_status_handler", msg
+                    continue
                 else:
                     print ("Unhandled message type %s" % topic)
 
