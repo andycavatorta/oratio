@@ -157,7 +157,7 @@ class Main(threading.Thread):
                     master_volume = msg[1]
                     master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
                     if master_volume != self.last_master_volume_level :
-                        gain = int(192 * master_volume) if master_volume > 0.01 else 0
+                        gain = int(20 + (192 * master_volume)) if master_volume > 0.01 else 0
                         print "master_volume=", master_volume, " gain=", gain
                         #gain = int(120 + master_volume * 110) if master_volume > 0.01 else 0
                         #gain = int(110 + master_volume * 55) if master_volume > 0.1 else 0
