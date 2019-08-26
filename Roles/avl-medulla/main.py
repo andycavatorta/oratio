@@ -179,7 +179,7 @@ class Main(threading.Thread):
         }
         self.arduino_delay_time = 0.05
 
-        self.poller = Poller(self, 20)
+        self.poller = Poller(self, 5)
         self.poller.start()
 
     def network_message_handler(self, topic_msg):
