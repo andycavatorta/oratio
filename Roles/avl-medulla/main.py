@@ -224,7 +224,6 @@ class Main(threading.Thread):
         self.arduino_connection.write(level)
 
     def run(self):
-
         devicenames = self.mandala_tlc_ids.keys()
         devicenames.sort()
         for devicename in devicenames:
