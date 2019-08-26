@@ -163,7 +163,7 @@ class Main(threading.Thread):
                             self.last_master_volume_level-=1
                         gain = int(100 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
                         #gain = int(100 + (100 * master_volume)) if master_volume > 0.01 else 0
-                        print "master_volume=", master_volume, " gain=", gain
+                        print "master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
                         wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                         #self.last_master_volume_level = master_volume
                 if topic == "mandala_device_request":
