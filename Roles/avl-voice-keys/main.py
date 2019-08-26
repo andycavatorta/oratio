@@ -178,7 +178,7 @@ class Buttons(object):
         button_states = []
         for button in self.buttons:
             name, state = button.get_state()
-            print "Button get_states() name=", name, " state=", state
+            #print "Button get_states() name=", name, " state=", state
             if state is not None:
                 button_states.append((name, state))
         return button_states
@@ -245,19 +245,15 @@ class Main(threading.Thread):
         print "----- start main run - before loop"
         topic_names = ["voice_key_1_position", "voice_key_2_position", "voice_key_3_position"]
         while True:
-            print "----- start main run - start loop"
             try:
-                """
                 try:
                     topic, msg = self.queue.get(False)
                     if topic == "mandala_device_request":
                         self.get_device_status()
                 except Queue.Empty:
                     pass
-                """
                 # how do I add this with non-blocking queues
                 button_states = self.buttons.get_states()
-                print "----- start main run - button_states", button_states
                 for button_state in button_states:
                     name, state = button_state
                     if name == "hold":
@@ -285,8 +281,6 @@ class Main(threading.Thread):
                         self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
                 time.sleep(0.03)
-
-                print "----- start main run - end loop"
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
