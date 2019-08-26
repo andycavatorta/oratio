@@ -141,6 +141,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        master_volume = 0
         try:
             wpi.wiringPiSPIDataRW(0, chr(0) + chr(0)) # set volume to zero as test of comms
             self.update_device_status("avl-formant-3-amplifier", "pass")
@@ -157,7 +158,7 @@ class Main(threading.Thread):
                         master_volume = msg[1]
                 except Queue.Empty:
                     pass
-                
+
                 master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
                 if master_volume != self.last_master_volume_level :
                     if master_volume > self.last_master_volume_level :
