@@ -178,6 +178,7 @@ class Buttons(object):
         button_states = []
         for button in self.buttons:
             name, state = button.get_state()
+            print "Button get_states() name=", name, " state=", state
             if state is not None:
                 button_states.append((name, state))
         return button_states
