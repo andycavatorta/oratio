@@ -149,26 +149,26 @@ class Main(threading.Thread):
 
         while True:
             try:
-                topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-
-                if topic == "voice_3":
-                    master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
-                    if master_volume != self.last_master_volume_level :
-                        if master_volume > self.last_master_volume_level :
-                            self.last_master_volume_level+=0.01
-                        if master_volume < self.last_master_volume_level :
-                            self.last_master_volume_level-=0.01
-                        gain = int(100 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
-                        #gain = int(100 + (100 * master_volume)) if master_volume > 0.01 else 0
-                        print "master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
-                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                        #self.last_master_volume_level = master_volume
-                if topic == "mandala_device_request":
-                    self.get_device_status()
-                    
+                try:
+                    topic, msg = self.queue.get(False)
+                    if topic == "mandala_device_request":
+                        self.get_device_status()
+                    if topic == "voice_3":
+                        master_volume = msg[1]
+                except Queue.Empty:
+                    pass
+                
+                master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
+                if master_volume != self.last_master_volume_level :
+                    if master_volume > self.last_master_volume_level :
+                        self.last_master_volume_level+=0.01
+                    if master_volume < self.last_master_volume_level :
+                        self.last_master_volume_level-=0.01
+                    gain = int(100 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
+                    #gain = int(100 + (100 * master_volume)) if master_volume > 0.01 else 0
+                    print "master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
+                    wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
+                    #self.last_master_volume_level = master_volume
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
