@@ -185,6 +185,7 @@ class Buttons(object):
 # Main handles network send/recv and can see all other classes directly
 class Main(threading.Thread):
     def __init__(self, hostname):
+        print "----- start main init"
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
@@ -210,6 +211,7 @@ class Main(threading.Thread):
         }
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        print "----- end main init"
 
     def update_device_status(self, devicename, status):
         print "update_device_status 1",devicename, status
@@ -239,8 +241,10 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        print "----- start main run - before loop"
         topic_names = ["voice_key_1_position", "voice_key_2_position", "voice_key_3_position"]
         while True:
+            print "----- start main run - start loop"
             try:
                 try:
                     topic, msg = self.queue.get(False)
@@ -277,6 +281,8 @@ class Main(threading.Thread):
                         self.network.thirtybirds.send(topic_names[key_number], voice_key_new_position)
 
                 time.sleep(0.03)
+
+                print "----- start main run - end loop"
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
