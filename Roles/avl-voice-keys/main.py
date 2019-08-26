@@ -246,12 +246,14 @@ class Main(threading.Thread):
         while True:
             print "----- start main run - start loop"
             try:
+                """
                 try:
                     topic, msg = self.queue.get(False)
                     if topic == "mandala_device_request":
                         self.get_device_status()
                 except Queue.Empty:
                     pass
+                """
                 # how do I add this with non-blocking queues
                 button_states = self.buttons.get_states()
                 print "----- start main run - button_states", button_states
