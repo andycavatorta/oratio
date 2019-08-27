@@ -168,15 +168,15 @@ class Layer(threading.Thread):
 
                 elif topic == "layer_1_record":
                     if msg:
-                        self.looperController.handleShortPedalDown()
+                        self.looperController.handleRecordPedalDown()
                     else:
-                        self.looperController.handleShortPedalUp()
+                        self.looperController.handleRecordPedalUp()
                     continue
                 elif topic == "layer_1_play":
                     if msg:
-                        self.looperController.handleLongPedalDown()
+                        self.looperController.handlePlayPedalDown()
                     else:
-                        self.looperController.handleLongPedalUp()
+                        self.looperController.handlePlayPedalUp()
                     continue
                 elif topic == "layer_1_volume":
                     self.looperController.setVolume(msg)
@@ -188,7 +188,7 @@ class Layer(threading.Thread):
                     self.looperController.clear()
                     continue
                 elif topic == "__heartbeat__":
-                    print "heartbeat received", msg
+                    #print "heartbeat received", msg
                     continue
                 elif topic == "__print__":
                     print "Layer.network_status_handler", msg
