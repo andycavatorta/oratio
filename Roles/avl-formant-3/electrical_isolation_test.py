@@ -2,9 +2,9 @@ import wiringpi as wpi
 import time
 import random
 
-"""
 wpi.wiringPiSetup()
 wpi.wiringPiSPISetup(0, 500000)
+"""
 while True:
     wpi.wiringPiSPIDataRW(0, chr(180) + chr(0))
     time.sleep(0.001)
