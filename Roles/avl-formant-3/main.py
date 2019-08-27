@@ -161,22 +161,22 @@ class Main(threading.Thread):
                     pass
                 #if master_volume != self.last_master_volume_level :
                 if master_volume > self.last_master_volume_level :
-                    print "upside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
+                    #print "upside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
                     self.last_master_volume_level = self.last_master_volume_level + 1
                     gain = int(102 + (self.last_master_volume_level)) if self.last_master_volume_level > 1 else 0
-                    print "upside B master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
+                    print "upside B master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level, gain
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                    time.sleep(0.0005)
+                    time.sleep(0.001)
                     continue
                 if master_volume < self.last_master_volume_level :
-                    print "downside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
+                    #print "downside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
                     self.last_master_volume_level = self.last_master_volume_level - 1
                     if self.last_master_volume_level < 0:
                         self.last_master_volume_level = 0
                     gain = int(102 + (self.last_master_volume_level)) if self.last_master_volume_level > 1 else 0
-                    print "downside B master_volume=", master_volume,  "self.last_master_volume_level", self.last_master_volume_level
+                    print "downside B master_volume=", master_volume,  "self.last_master_volume_level", self.last_master_volume_level, gain
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                    time.sleep(0.0005)
+                    time.sleep(0.001)
                     continue
                 time.sleep(0.01)
             except Exception as e:
