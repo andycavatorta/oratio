@@ -104,9 +104,8 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("layer_1_volume")
         self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
-        self.utils = Utils(hostname)
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.utils = Utils(hostname)
         self.blinkTimer = None
         self.status = {
             "avl-layer-1":"pass", # because this passes if it can respond.  maybe better tests in future
@@ -139,6 +138,7 @@ class Layer(threading.Thread):
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
+        print "Main network_message_handler", topic, msg
         if len(msg) > 0:
             msg = eval(msg)
         self.add_to_queue(topic, msg)
