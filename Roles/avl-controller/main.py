@@ -127,8 +127,8 @@ class Pedals(threading.Thread):
         while True:
             for i, pedal in enumerate(self.pedals):
                 pedal_change = pedal.detect_change()
-                print pedal, pedal_change
                 if pedal_change is not None:
+                    print pedal, pedal_change
                     # Layer code expects 1 for down and 0 for up
                     pedal_change = 1 if pedal_change is 0 else 0
                     pedal_name = 'pedal_{}'.format(str(i+1))
