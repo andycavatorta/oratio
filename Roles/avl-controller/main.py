@@ -338,6 +338,7 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_1_formant_front_back")
         self.network.thirtybirds.subscribe_to_topic("voice_1_root_half_steps")
         self.network.thirtybirds.subscribe_to_topic("voice_1_root_octave")
+        self.network.thirtybirds.subscribe_to_topic("voice_1_emergence")
 
         self.network.thirtybirds.subscribe_to_topic("voice_key_2_position")
         self.network.thirtybirds.subscribe_to_topic("voice_2_root_harmonic")
@@ -355,6 +356,7 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_2_root_half_steps")
         self.network.thirtybirds.subscribe_to_topic("voice_2_root_octave")
 
+        self.network.thirtybirds.subscribe_to_topic("voice_2_emergence")
         self.network.thirtybirds.subscribe_to_topic("voice_key_3_position")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_harmonic")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_fine")
@@ -370,7 +372,7 @@ class Main(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("voice_3_formant_front_back")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_half_steps")
         self.network.thirtybirds.subscribe_to_topic("voice_3_root_octave")
-
+        self.network.thirtybirds.subscribe_to_topic("voice_3_emergence")
 
         self.voices = [ Voice(i) for i in range(3) ]
 

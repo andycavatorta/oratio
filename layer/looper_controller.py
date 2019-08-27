@@ -23,6 +23,7 @@ class LooperController():
 		self.delayedShortPedalChecker = None
 
 	def startPlayingIfNotTap(self, tapTimestamp):
+		print "looper_control startPlayingIfNotTap" 
 		print("Checking to see whether you should start playing")
 		print("Function arg timestamp: %f" % tapTimestamp)
 		print("Last tap timestamp: %f" % self.lastLongPedalDownTime)
@@ -33,6 +34,7 @@ class LooperController():
 			self.looper.setPlaying(True)
 
 	def startRecordingIfNotTap(self, tapTimestamp):
+		print "looper_control startRecordingIfNotTap" 
 		print("Checking to see whether you should start recording")
 		print("Function arg timestamp: %f" % tapTimestamp)
 		print("Last tap timestamp: %f" % self.lastShortPedalDownTime)
@@ -43,6 +45,7 @@ class LooperController():
 			self.looper.setRecording(True)
 
 	def handleLongPedalDown(self):
+		print "looper_control handleLongPedalDown" 
 		# If the short pedal is already down (somehow) then ignore this event
 		if self.longPedalDown:
 			print("Long pedal down event, but the long pedal is already down")
@@ -56,6 +59,7 @@ class LooperController():
 		print("Long pedal down")
 
 	def handleLongPedalUp(self):
+		print "looper_control handleLongPedalUp" 
 		# If the short pedal is already up (somehow) then ignore this event
 		if not self.longPedalDown:
 			print("Long pedal up event, but the long pedal is already up")
@@ -83,6 +87,7 @@ class LooperController():
 			print("Ignoring a super short long pedal tap")
 
 	def handleShortPedalDown(self):
+		print "looper_control handleShortPedalDown" 
 		# If the short pedal is already down (somehow) then ignore this event
 		if self.shortPedalDown:
 			print("Short pedal down event, but the short pedal is already down")
@@ -101,6 +106,7 @@ class LooperController():
 		print("Short pedal down")
 
 	def handleShortPedalUp(self):
+		print "looper_control handleShortPedalUp" 
 		# If the short pedal is already up (somehow) then ignore this event
 		if not self.shortPedalDown:
 			print("Short pedal up event, but the short pedal is already up")
@@ -141,6 +147,7 @@ class LooperController():
 		self.looper.clear()
 
 	def setLoopLength(self, length):
+		print "looper_control setLoopLength", length
 		self.looper.setLoopLength(length)
 
 	def setVolume(self, vol):

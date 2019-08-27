@@ -212,19 +212,19 @@ class Potentiometers(threading.Thread):
                 "voice_3_overtone_2_fine", 
                 "voice_3_overtone_2_volume",
                 "voice_3_emergence",
-                "v3a",
-                "v3b",
-                "v3c",
+                "layer_speed",
+                "",
+                "",
             ],
             [
                 "voice_3_root_half_steps",
                 "voice_3_root_fine",
                 "voice_3_overtone_1_harmonic",
                 "voice_3_overtone_1_fine",
-                "v3d",
-                "v3e",
-                "v3f",
-                "v3g",
+                "",
+                "",
+                "",
+                "",
             ]
         ]
 
