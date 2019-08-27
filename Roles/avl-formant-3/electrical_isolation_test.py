@@ -16,7 +16,7 @@ while True:
         print gain_offset
         wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
         #time.sleep(0.001)
-    for ungain in range(46):
+    for ungain in range(92):
         gain_offset = 192-(ungain*1) 
         print gain_offset
         wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
