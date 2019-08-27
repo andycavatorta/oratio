@@ -161,18 +161,20 @@ class Main(threading.Thread):
                     pass
                 #if master_volume != self.last_master_volume_level :
                 if master_volume > self.last_master_volume_level :
+                    print "upside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
                     self.last_master_volume_level = self.last_master_volume_level + 0.02
                     gain = int(102 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
-                    print "upside master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
+                    print "upside B master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                     time.sleep(0.01)
                     continue
                 if master_volume < self.last_master_volume_level :
+                    print "downside master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
                     self.last_master_volume_level = self.last_master_volume_level - 0.02
                     if self.last_master_volume_level < 0.0:
                         self.last_master_volume_level = 0.0
                     gain = int(102 + (100 * self.last_master_volume_level)) if self.last_master_volume_level > 0.01 else 0
-                    print "downside master_volume=", master_volume, " gain=", gain,  "self.last_master_volume_level", self.last_master_volume_level
+                    print "downside master_volume=", master_volume,  "self.last_master_volume_level", self.last_master_volume_level
                     wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
                     time.sleep(0.01)
                     continue
