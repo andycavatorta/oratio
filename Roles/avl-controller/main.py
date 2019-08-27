@@ -106,7 +106,6 @@ class Pedal(object):
             self.last_value = 0
     def detect_change(self):
             current_value = GPIO.input(self.pin_number)
-            print "Pedal detect_change ", self.pin_number, current_value
             if current_value == self.last_value:
                 return None
             else:
@@ -128,6 +127,7 @@ class Pedals(threading.Thread):
         while True:
             for i, pedal in enumerate(self.pedals):
                 pedal_change = pedal.detect_change()
+                print pedal, pedal_change
                 if pedal_change is not None:
                     # Layer code expects 1 for down and 0 for up
                     pedal_change = 1 if pedal_change is 0 else 0
