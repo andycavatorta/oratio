@@ -1,7 +1,7 @@
 
 import os
 import Queue
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import settings
 import time
 import threading
@@ -287,9 +287,9 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        #self.pedals = Pedals(self.add_to_queue)
-        #self.pedals.daemon = True
-        #self.pedals.start()
+        self.pedals = Pedals(self.add_to_queue)
+        self.pedals.daemon = True
+        self.pedals.start()
 
         self.hostnames = [
             "avl-formant-1",
