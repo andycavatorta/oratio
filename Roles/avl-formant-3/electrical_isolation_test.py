@@ -2,7 +2,6 @@ import wiringpi as wpi
 import time
 import random
 
-"""
 wpi.wiringPiSetup()
 wpi.wiringPiSPISetup(0, 500000)
 while True:
@@ -21,3 +20,4 @@ while True:
         print gain_offset
         wpi.wiringPiSPIDataRW(0, chr(gain_offset) + chr(0))
         time.sleep(0.001)
+"""
