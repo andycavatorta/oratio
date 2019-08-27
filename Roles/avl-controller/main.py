@@ -106,6 +106,7 @@ class Pedal(object):
             self.last_value = 0
     def detect_change(self):
             current_value = GPIO.input(self.pin_number)
+            print "Pedal detect_change ", self.pin_number, current_value
             if current_value == self.last_value:
                 return None
             else:
