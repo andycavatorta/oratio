@@ -17,7 +17,7 @@ import traceback
 #sys.path.append(UPPER_PATH)
 
 from thirtybirds_2_0.Network.manager import init as network_init
-from thirtybirds_2_0.Adaptors.Sensors import AMT20_expanded_spi
+from thirtybirds_2_0.Adaptors.Sensors import AMT203_expanded_spi
 from thirtybirds_2_0.Updates.manager import init as updates_init
 
 wpi.wiringPiSetup()
