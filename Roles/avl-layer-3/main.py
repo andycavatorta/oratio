@@ -1,9 +1,11 @@
 import commands
 import os
+import RPi.GPIO as GPIO
 import sys
 import Queue
 import settings
 import threading
+import time
 import traceback
 
 from thirtybirds_2_0.Network.manager import init as network_init
@@ -58,7 +60,7 @@ class Utils(object):
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/oratio')
         if thirtybirds:
             subprocess.call(['sudo', 'git', 'pull'], cwd='/home/pi/thirtybirds_2_0')
-        return 
+        return
 
     def remote_update_scripts(self):
         updates_init("/home/pi/oratio", False, True)
@@ -69,7 +71,7 @@ class Utils(object):
         return updates.read_version_pickle()
 
     def get_git_timestamp(self):
-        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]   
+        return commands.getstatusoutput("cd /home/pi/oratio/; git log -1 --format=%cd")[1]
 
     def get_temp(self):
         return commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_temp")[1]
@@ -91,6 +93,7 @@ class Utils(object):
     def get_client_status(self):
         return (self.hostname, self.get_update_script_version(), self.get_git_timestamp(), self.get_temp(), self.get_cpu(), self.get_uptime(), self.get_disk())
 
+
 class Layer(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
@@ -101,16 +104,25 @@ class Layer(threading.Thread):
         self.network.thirtybirds.subscribe_to_topic("layer_3_volume")
         self.network.thirtybirds.subscribe_to_topic("layer_speed")
         self.network.thirtybirds.subscribe_to_topic("clear_loop")
-        self.utils = Utils(hostname)
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.utils = Utils(hostname)
+        self.blinkTimer = None
         self.status = {
-            "avl-layer-3":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-layer-1":"pass", # because this passes if it can respond.  maybe better tests in future
         }
 
+    def lights_out(self):
+        GPIO.output(26, GPIO.LOW)
+        self.blinkTimer = None
+
     def loop_callback(self):
-        # print "Sending layer trigger 3"
+        # print "Sending layer trigger 1"
         self.network.thirtybirds.send("layer_3_trigger", "1")
+        GPIO.output(26, GPIO.HIGH)
+        if (self.blinkTimer is not None):
+            self.blinkTimer.cancel()
+        self.blinkTimer = threading.Timer(0.3, self.lights_out)
+        self.blinkTimer.start()
 
     def update_device_status(self, devicename, status):
         if self.status[devicename] != status:
@@ -126,6 +138,7 @@ class Layer(threading.Thread):
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the thread of Layer
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
+        #print "Main network_message_handler", topic, msg
         if len(msg) > 0:
             msg = eval(msg)
         self.add_to_queue(topic, msg)
@@ -149,27 +162,37 @@ class Layer(threading.Thread):
 
                 if topic == "mandala_device_request":
                     self.get_device_status()
+                    continue
+                #if topic == "client_monitor_request":
+                #    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
 
-                if topic == "layer_3_record":
+                elif topic == "layer_3_record":
                     if msg:
-                        self.looperController.handleShortPedalDown()
+                        self.looperController.handleRecordPedalDown()
                     else:
-                        self.looperController.handleShortPedalUp()
+                        self.looperController.handleRecordPedalUp()
+                    continue
                 elif topic == "layer_3_play":
                     if msg:
-                        self.looperController.handleLongPedalDown()
+                        self.looperController.handlePlayPedalDown()
                     else:
-                        self.looperController.handleLongPedalUp()
+                        self.looperController.handlePlayPedalUp()
+                    continue
                 elif topic == "layer_3_volume":
                     self.looperController.setVolume(msg)
+                    continue
                 elif topic == "layer_speed":
                     self.looperController.setLoopLength(msg)
+                    continue
                 elif topic == "clear_loop":
                     self.looperController.clear()
+                    continue
                 elif topic == "__heartbeat__":
-                    print "heartbeat received", msg
+                    #print "heartbeat received", msg
+                    continue
                 elif topic == "__print__":
                     print "Layer.network_status_handler", msg
+                    continue
                 else:
                     print ("Unhandled message type %s" % topic)
 
@@ -178,6 +201,8 @@ class Layer(threading.Thread):
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
 
 def init(hostname):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(26, GPIO.OUT)
     layer = Layer(hostname)
     layer.daemon = True
     layer.start()

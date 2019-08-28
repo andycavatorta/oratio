@@ -151,6 +151,7 @@ class LiveLooper():
 		# And finally, multiply that output by an overall output
 		self.sigVolume = SigTo(1, time=0.025, init=1)
 		(self.sigVolume * self.masterLoopOutput[0]).out()
+		self.sigVolume.setValue(200)
 
 	def isPlaying(self):
 		return self.playing
@@ -184,6 +185,7 @@ class LiveLooper():
 			print("Start playing")
 		else:
 			print("Stop playing")
+		a = Sine().out()
 		self.masterLoopOutput.setAmp(0, 0, 1 if isPlaying else 0)
 
 	def setRecording(self, isRecording):
@@ -227,7 +229,7 @@ class LiveLooper():
 			self.loopLenSynced = self.loopLen
 			self.loopLenSyncedSig.setValue(self.loopLenSynced)
 			self.loopIndexCounter.setMax(trunc(self.loopLenSynced * SAMPLE_RATE))
-		print("Maximum valid length %d" % self.validMaximumSynced)
+		#print("Maximum valid length %d" % self.validMaximumSynced)
 		self.validMaximumSyncedSig.setValue(self.validMaximumSynced)
 		if self.loopCallback is not None:
 			self.loopCallback()
