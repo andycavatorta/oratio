@@ -23,6 +23,7 @@ class LiveLooper():
 
 		self.audioServer = Server(nchnls=1, sr=SAMPLE_RATE, duplex=1, buffersize=BUFFER_SIZE)
 
+		self.audioServer.setInOutDevice(0)
 		# Set the input offset to 1, since all these boards want right channel
 		self.audioServer.setInputOffset(1)
 		self.audioServer.boot()
