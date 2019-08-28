@@ -105,13 +105,13 @@ class Main(threading.Thread):
         self.queue = Queue.Queue()
         self.last_master_volume_level = 0
         self.utils = Utils(hostname)
+        self.network.thirtybirds.subscribe_to_topic("voice_2")
+        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
         self.status = {
             "avl-formant-2":"pass", # because this passes if it can respond.  maybe better tests in future
             "avl-formant-2-amplifier":"unset"
         }
-        self.network.thirtybirds.subscribe_to_topic("voice_2")
-        self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
-        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
 
     def update_device_status(self, devicename, status):
         print "update_device_status 1",devicename, status
@@ -129,7 +129,6 @@ class Main(threading.Thread):
     def network_message_handler(self, topic_msg):
         # this method runs in the thread of the caller, not the tread of Main
         topic, msg =  topic_msg # separating just to eval msg.  best to do it early.  it should be done in TB.
-        print "network_message_handler", topic, msg
         if len(msg) > 0: 
             msg = eval(msg)
         self.add_to_queue(topic, msg)
@@ -142,6 +141,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def run(self):
+        master_volume = 0
         try:
             wpi.wiringPiSPIDataRW(0, chr(0) + chr(0)) # set volume to zero as test of comms
             self.update_device_status("avl-formant-2-amplifier", "pass")
@@ -150,26 +150,39 @@ class Main(threading.Thread):
 
         while True:
             try:
-                topic, msg = self.queue.get(True)
-                if topic == "client_monitor_request":
-                    self.network.thirtybirds.send("client_monitor_response", self.utils.get_client_status())
-
-                if topic == "voice_2":
-                    master_volume = msg[1]
-                    master_volume = 0 if master_volume < 0.1 else master_volume - 0.1
-                    if master_volume != self.last_master_volume_level :
-                        gain = int(100 + (100 * master_volume)) if master_volume > 0.01 else 0
-                        #gain = int(110 + master_volume * 55) if master_volume > 0.1 else 0
-                        print "master_volume", master_volume, "gain", gain
-                        wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
-                        self.last_master_volume_level = master_volume
-                if topic == "mandala_device_request":
-                    self.get_device_status()
-
+                try:
+                    topic, msg = self.queue.get(False)
+                    if topic == "mandala_device_request":
+                        self.get_device_status()
+                    if topic == "voice_2":
+                        master_volume = msg[1] * 100
+                        master_volume = 0 if master_volume < 10 else master_volume - 10
+                except Queue.Empty:
+                    pass
+                #if master_volume != self.last_master_volume_level :
+                if master_volume > self.last_master_volume_level :
+                    #print "upside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
+                    self.last_master_volume_level = self.last_master_volume_level + 1
+                    gain = int(102 + (self.last_master_volume_level)) if self.last_master_volume_level > 1 else 0
+                    print "upside B master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level, gain
+                    wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
+                    time.sleep(0.001)
+                    continue
+                if master_volume < self.last_master_volume_level :
+                    #print "downside A master_volume=", master_volume, "self.last_master_volume_level", self.last_master_volume_level
+                    self.last_master_volume_level = self.last_master_volume_level - 1
+                    if self.last_master_volume_level < 0:
+                        self.last_master_volume_level = 0
+                    gain = int(102 + (self.last_master_volume_level)) if self.last_master_volume_level > 1 else 0
+                    print "downside B master_volume=", master_volume,  "self.last_master_volume_level", self.last_master_volume_level, gain
+                    wpi.wiringPiSPIDataRW(0, chr(gain) + chr(0))
+                    time.sleep(0.001)
+                    continue
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback))
+
 
 def init(hostname):
     main = Main(hostname)
