@@ -186,6 +186,7 @@ class LiveLooper():
 		else:
 			print("Stop playing")
 		a = Sine().out()
+		print "sine wave playing"
 		self.masterLoopOutput.setAmp(0, 0, 1 if isPlaying else 0)
 
 	def setRecording(self, isRecording):
