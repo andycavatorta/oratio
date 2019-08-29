@@ -94,10 +94,11 @@ class Main(threading.Thread):
         time.sleep(1)
         print os. system("stty -F  -hupcl /dev/ttyACM0 -9600")
         time.sleep(1)
-
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
-        self.arduino_connection = open("/dev/ttyACM0",'w')
+        #self.arduino_connection = open("/dev/ttyACM0",'w')
+        self.arduino_connection = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        time.sleep(1) #give the connection a second to settle
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
         self.UNSET = 0
