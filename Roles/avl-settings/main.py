@@ -356,6 +356,8 @@ class Main(threading.Thread):
         }
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("settings_state_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_request")
+        self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
 
     def update_device_status(self, devicename, status):
         print "update_device_status 1",devicename, status

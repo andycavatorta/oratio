@@ -1,0 +1,54 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exec 2> /home/pi/rc.local.log  # send stderr from rc.local to a log file
+exec 1>&2                      # send stdout to the same log file
+set -x                         # tell sh to display commands before execution
+
+sleep 2
+
+# Toggle for running Network test loop or not; set to 0 to disable
+_NetworkTest=1
+
+if [ "$_NetworkTest" != 0 ]; then
+until [ $(hostname -I) ]
+do
+sleep 2
+done
+fi
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+sleep 2
+
+#sudo python /home/pi/email-notification.py -l quiet -u true &
+
+#sudo stdbuf -i0 -o0 -e0 python /home/pi/oratio/main.py -l quiet -u true  > /home/pi/or
+atio.log &
+
+sudo python /home/pi/oratio/main.py --skip-update &
+
+(
+until ping -nq -c3 8.8.8.8; do
+   echo Waiting for network
+   sleep 5
+done
+/usr/bin/ssh -o StrictHostKeychecking=no -t -t -l pi -R 9991:localhost:22 irvine@web619.webfaction.com &
+echo $?
+)
+
+exit 0

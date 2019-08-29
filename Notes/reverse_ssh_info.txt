@@ -1,0 +1,33 @@
+10000 avl-controller 
+9999 avl-voice-1 
+9998 avl-voice-2
+9997 avl-voice-3
+9996 avl-formant-1
+9995 avl-formant-2
+9994 avl-formant-3
+9993 avl-layer-1
+9992 avl-layer-2
+9991 avl-layer-3
+9990 avl-pitch-keys
+9989 avl-settings
+9988 avl-medulla
+9987 avl-transport
+9986 avl-voice-keys
+
+===== code for rc.local =====
+(
+until ping -nq -c3 8.8.8.8; do
+   echo Waiting for network
+   sleep 5
+done
+/usr/bin/ssh -o StrictHostKeychecking=no -t -t -l pi -R 9999:localhost:22 irvine@web619.webfaction.com &
+ &
+echo $?
+)
+
+===== to connect to server =====
+ssh irvine@web619.webfaction.com
+p:alisonjayne
+
+===== to connect from server to Irvine pis =====
+ssh -p 10000 pi@localhost
