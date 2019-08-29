@@ -206,7 +206,7 @@ class Main(threading.Thread):
         self.queue.put((topic, msg))
 
     def update_mandala_status(self, devicename, status):
-        print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
+        #print "update_mandala_status", devicename, self.mandala_status[devicename], status, self.mandala_status[devicename] == status
         
         #if str(self.mandala_status[devicename]) != str(status):
         self.mandala_status[devicename] = status
@@ -226,7 +226,7 @@ class Main(threading.Thread):
         return all(status == "pass" for status in self.mandala_status.values())
 
     def write_to_arduino(self, id, level):
-        print "write_to_arduino", repr(id), repr(level)
+        #print "write_to_arduino", repr(id), repr(level)
         time.sleep(self.arduino_delay_time)
         self.arduino_connection.write(id)
         time.sleep(self.arduino_delay_time)
