@@ -80,11 +80,14 @@ class Poller(threading.Thread):
         threading.Thread.__init__(self)
         self._main_ = _main_
         self.poll_delay_time = poll_delay_time
+    def set_poll_period(self, period):
+        self.poll_delay_time = period
     def run(self):
         while True:
             print "Poller Thread"
             self._main_.network.thirtybirds.send("mandala_device_request", True)
             self._main_.queue.put(("mandala_device_status", "('avl-medulla','pass')"))
+            self._main_.queue.put(("mandala_check_finished", ""))
             time.sleep(self.poll_delay_time)
 
 # Main handles network send/recv and can see all other classes directly
@@ -219,6 +222,8 @@ class Main(threading.Thread):
 
         self.write_to_arduino(tlc_id_str,tlc_level_str)
 
+    def check_finished(self):
+        return all(status == "pass" for status in self.mandala_status.values()):
 
     def write_to_arduino(self, id, level):
         print "write_to_arduino", repr(id), repr(level)
@@ -239,7 +244,7 @@ class Main(threading.Thread):
         self.write_to_arduino("5035\n", "4000\n") # set medulla as pass
         self.write_to_arduino("5039\n", "4000\n") # set medulla as pass
         while True:
-            #if not all(status == "pass" for status in self.mandala_status.values()):
+            
             #    self.network.thirtybirds.send("mandala_device_request", True)
             try:
                 topic, msg_str = self.queue.get(True)
@@ -248,6 +253,9 @@ class Main(threading.Thread):
                     #print topic, msg
                     devicename, status = msg
                     self.update_mandala_status(devicename, status)
+                if topic == "mandala_check_finished":
+                    if self.check_finished():
+                        self.poller.set_poll_period(60)
                 time.sleep(0.01)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
