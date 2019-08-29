@@ -351,8 +351,8 @@ class Main(threading.Thread):
         self.potentiometers.start()
         self.utils = Utils(hostname)
         self.status = {
-            "avl-settings":"unset",
-            "avl-settings-adcs":"unset",
+            "avl-settings":"pass",
+            "avl-settings-adcs":"pass",
         }
         self.network.thirtybirds.subscribe_to_topic("client_monitor_request")
         self.network.thirtybirds.subscribe_to_topic("settings_state_request")
