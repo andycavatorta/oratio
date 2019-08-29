@@ -91,7 +91,7 @@ class Poller(threading.Thread):
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
-        print os. system("stty -F /dev/ttyACM0 -hupcl")
+        print os. system("stty -F  -hupcl /dev/ttyACM0 -9600")
 
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
