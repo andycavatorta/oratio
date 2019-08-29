@@ -84,6 +84,7 @@ class Poller(threading.Thread):
         while True:
             print "Poller Thread"
             self._main_.network.thirtybirds.send("mandala_device_request", True)
+            self._main_.queue.put(("mandala_device_status", ("avl-medulla":"pass")))
             time.sleep(self.poll_delay_time)
 
 # Main handles network send/recv and can see all other classes directly
