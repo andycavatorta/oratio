@@ -254,6 +254,7 @@ class Main(threading.Thread):
                     devicename, status = msg
                     self.update_mandala_status(devicename, status)
                 if topic == "mandala_check_finished":
+                    print "self.check_finished()",self.check_finished()
                     if self.check_finished():
                         self.poller.set_poll_period(60)
                 time.sleep(0.01)
