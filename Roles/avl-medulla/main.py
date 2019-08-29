@@ -223,7 +223,7 @@ class Main(threading.Thread):
         self.write_to_arduino(tlc_id_str,tlc_level_str)
 
     def check_finished(self):
-        return all(status == "pass" for status in self.mandala_status.values()):
+        return all(status == "pass" for status in self.mandala_status.values())
 
     def write_to_arduino(self, id, level):
         print "write_to_arduino", repr(id), repr(level)
