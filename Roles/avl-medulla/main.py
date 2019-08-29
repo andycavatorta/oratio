@@ -91,7 +91,9 @@ class Poller(threading.Thread):
 class Main(threading.Thread):
     def __init__(self, hostname):
         threading.Thread.__init__(self)
+        time.sleep(1)
         print os. system("stty -F  -hupcl /dev/ttyACM0 -9600")
+        time.sleep(1)
 
         self.network = Network(hostname, self.network_message_handler, self.network_status_handler)
         self.queue = Queue.Queue()
@@ -232,6 +234,7 @@ class Main(threading.Thread):
             tlc_id_str = "{}\n".format(tlc_id_int)
             tlc_level_str = "0/n"
             self.write_to_arduino(tlc_id_str,tlc_level_str)
+            time.sleep(0.01)
         self.write_to_arduino("5035\n", "4000\n") # set medulla as pass
         self.write_to_arduino("5039\n", "4000\n") # set medulla as pass
         while True:
