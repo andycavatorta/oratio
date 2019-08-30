@@ -244,7 +244,7 @@ class Main(threading.Thread):
             self.write_to_arduino(tlc_id_str,tlc_level_str)
             time.sleep(0.01)
         self.write_to_arduino("5035\n", "4000\n") # set medulla as pass
-        self.write_to_arduino("5039\n", "4000\n") # set medulla as pass
+        #self.write_to_arduino("5039\n", "4000\n") # set medulla as pass
         while True:
             
             #    self.network.thirtybirds.send("mandala_device_request", True)
