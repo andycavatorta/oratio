@@ -59,9 +59,9 @@ class LiveLooper():
 			dur=self.loopLenSigUnsynced,
 			startfromloop=True,
 			mul=1.0,
-			xfade=20,
+			xfade=30,
 			autosmooth=True,
-			xfadeshape=1
+			xfadeshape=0
 		).play()
 		self.readA.appendFadeTime(True)
 		self.readB = Looper(
@@ -71,9 +71,9 @@ class LiveLooper():
 			dur=self.loopLenSigUnsynced,
 			startfromloop=True,
 			mul=1.0,
-			xfade=20,
+			xfade=30,
 			autosmooth=True,
-			xfadeshape=1
+			xfadeshape=0
 		).play()
 		self.readB.appendFadeTime(True)
 

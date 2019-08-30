@@ -469,7 +469,7 @@ class Main(threading.Thread):
                     continue
 
                 if topic == "layer_speed":
-                    self.network.thirtybirds.send("layer_speed", float(msg)*10.0)
+                    self.network.thirtybirds.send("layer_speed", float(msg)*30.0)
                     self.network.thirtybirds.send("",msg)
                     continue
                 if topic == "layer_1_volume":
