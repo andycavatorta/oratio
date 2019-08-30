@@ -157,7 +157,7 @@ class LiveLooper():
 		# And finally, multiply that output by an overall output
 		self.sigVolume = SigTo(1, time=0.025, init=1)
 		(self.sigVolume * self.masterLoopOutput[0]).out()
-		self.sigVolume.setValue(200)
+		self.sigVolume.setValue(100)
 		self.audioServer.start()
 
 	def isPlaying(self):
