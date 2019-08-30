@@ -104,9 +104,11 @@ class Main(threading.Thread):
         time.sleep(1) #give the connection a second to settle
         self.utils = Utils(hostname)
         self.network.thirtybirds.subscribe_to_topic("mandala_device_status")
+        self.finished = False
         self.UNSET = 0
-        self.FAIL = 2000
+        self.FAIL = 500
         self.PASS = 4000
+        self.QUIET = 2000
         self.mandala_device_status = None
         self.mandala_tlc_ids = {
             "avl-controller":39,
@@ -215,15 +217,14 @@ class Main(threading.Thread):
         if self.mandala_status[devicename] == "unset":
             tlc_level_int = 0
         if self.mandala_status[devicename] == "fail":
-            tlc_level_int = 100
+            tlc_level_int = self.FAIL
         if self.mandala_status[devicename] == "pass":
-            tlc_level_int = 4000
+            tlc_level_int = self.QUIET if self.finished else self.PASS
         tlc_level_str = "{}\n".format(tlc_level_int)
 
         self.write_to_arduino(tlc_id_str,tlc_level_str)
 
     def check_finished(self):
-        print self.mandala_status
         return all(status == "pass" for status in self.mandala_status.values())
 
     def write_to_arduino(self, id, level):
@@ -257,6 +258,16 @@ class Main(threading.Thread):
                 if topic == "mandala_check_finished":
                     print "self.check_finished()",self.check_finished()
                     if self.check_finished():
+                        self.finished = True
+
+                        devicenames = self.mandala_tlc_ids.keys()
+                        for devicename in devicenames:
+                            tlc_id_int = self.mandala_tlc_ids[devicename] + 5000
+                            tlc_id_str = "{}\n".format(self.QUIET)
+                            tlc_level_str = "0/n"
+                            self.write_to_arduino(tlc_id_str,tlc_level_str)
+                            time.sleep(0.01)
+
                         self.poller.set_poll_period(60)
                 time.sleep(0.01)
             except Exception as e:
