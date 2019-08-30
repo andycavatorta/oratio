@@ -108,7 +108,7 @@ class Layer(threading.Thread):
         self.utils = Utils(hostname)
         self.blinkTimer = None
         self.status = {
-            "avl-layer-1":"pass", # because this passes if it can respond.  maybe better tests in future
+            "avl-layer-3":"pass", # because this passes if it can respond.  maybe better tests in future
         }
 
     def lights_out(self):
