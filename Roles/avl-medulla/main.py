@@ -219,7 +219,8 @@ class Main(threading.Thread):
         if self.mandala_status[devicename] == "fail":
             tlc_level_int = self.FAIL
         if self.mandala_status[devicename] == "pass":
-            tlc_level_int = self.QUIET if self.finished else self.PASS
+            tlc_level_int = self.PASS
+            #tlc_level_int = self.QUIET if self.finished else self.PASS
         tlc_level_str = "{}\n".format(tlc_level_int)
 
         self.write_to_arduino(tlc_id_str,tlc_level_str)
