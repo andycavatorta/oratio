@@ -28,6 +28,7 @@ class LiveLooper():
 		self.audioServer.setInputOffset(1)
 		self.audioServer.boot()
 
+
 		# Retrieves the mono input, write the dry signal directly to the output
 		self.input = Input().out()
 
@@ -153,6 +154,7 @@ class LiveLooper():
 		self.sigVolume = SigTo(1, time=0.025, init=1)
 		(self.sigVolume * self.masterLoopOutput[0]).out()
 		self.sigVolume.setValue(200)
+		self.audioServer.start()
 
 	def isPlaying(self):
 		return self.playing
