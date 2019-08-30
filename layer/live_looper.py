@@ -25,7 +25,7 @@ class LiveLooper():
 
 		self.audioServer.setInOutDevice(0)
 		# Set the input offset to 1, since all these boards want right channel
-		self.audioServer.setInputOffset(1)
+		#self.audioServer.setInputOffset(1)
 		self.audioServer.boot()
 
 
@@ -188,7 +188,6 @@ class LiveLooper():
 			print("Start playing")
 		else:
 			print("Stop playing")
-		a = Sine().out()
 		print "sine wave playing"
 		self.masterLoopOutput.setAmp(0, 0, 1 if isPlaying else 0)
 
