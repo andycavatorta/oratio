@@ -63,7 +63,7 @@ class LiveLooper():
 			autosmooth=True,
 			xfadeshape=0
 		).play()
-		self.readA.appendFadeTime(True)
+		#self.readA.appendFadeTime(True)
 		self.readB = Looper(
 			table=self.tableB,
 			pitch=1.0,
@@ -75,7 +75,7 @@ class LiveLooper():
 			autosmooth=True,
 			xfadeshape=0
 		).play()
-		self.readB.appendFadeTime(True)
+		#self.readB.appendFadeTime(True)
 
 		# Any audio beyond this point in the buffer is 'invalid' and should be replaced with silence
 		self.validMaximumSynced = MAX_LOOP_LENGTH * SAMPLE_RATE
